@@ -32,7 +32,8 @@ export default ({ mode }) => {
 			}
 		},
 		build: {
-			outDir: env.VITE_OUT_DIR || 'dist'
+			outDir: env.VITE_OUT_DIR || 'dist',
+			cssCodeSplit: false, //默认ture,将css分割提取到css文件中，false将全部css提取到一个文件里
 		},
 		server: {
 			port: 80, // 启动端口号

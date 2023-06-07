@@ -1,11 +1,30 @@
 import axios from "axios"
 import qs from "qs"
 import router from '../router'
+import { showToast } from 'vant'
+import 'vant/es/toast/style'
+import { useUserStore } from '@/stores/modules/user'
+import { useCommonStoreInfo } from '@/stores/modules/common'
+const useCommonStore = useCommonStoreInfo()
+const isLoading = useCommonStore.getLoading
 
-import { showFailToast } from 'vant'
+// 身份验证失败
+const toast = (msg) => {
+    showToast(
+        { 
+            message: msg,
+            icon: 'cross',
+            onClose:()=> {
+                router.push({
+                    path: "/auth"
+                })
+            }
+        }
+    )
+}
 
 const http = axios.create({
-    baseURL: '/api',
+    baseURL: import.meta.env.VITE_API_BASEPATH,
     timeout: 50000
 })
 
@@ -17,11 +36,11 @@ http.interceptors.request.use((config) => {
 
     // 全局loading
     if (!config.hideLoading) {
-        store.dispatch('onLoading', true)
+        useCommonStore.setLoading(true)
     }
-    // // 缓存取token
-    // let token = store.state.token
-    // config.headers["token"] = token
+    // 缓存取token
+    const userStore = useUserStore()
+    config.headers["token"] = userStore.getToken
     // post，put请求前处理
     if ((config.method.toLowerCase() === 'post' || config.method.toLowerCase() === 'put') && config.data &&
         config.headers['Content-Type'] === 'application/x-www-form-urlencoded') {
@@ -35,10 +54,10 @@ http.interceptors.request.use((config) => {
 // 返回响应数据拦截
 http.interceptors.response.use((res) => {
     // 全局loading
-    // store.dispatch('onLoading', false)
-    // if (!store.state.isLoading) {
+    useCommonStore.setLoading(false)
+    if (!isLoading) {
         if (res.data.code===401) {
-            showFailToast({ message: '身份验证失败,请重新登陆', icon: 'cross' })
+            toast('身份验证失败,请重新登陆')
             return
         }
         const data = res.data
@@ -46,21 +65,16 @@ http.interceptors.response.use((res) => {
             return Promise.resolve(data)
         }
         if (res.status === 200 && (res.data.code == 401 || res.data.code == 403)) {
-            showFailToast({ message: '身份验证失败,请重新登陆', icon: 'cross' })
-            // 清空缓存
-            // localStorage.clear()
-            router.push({
-                path: "/login"
-            })
+            toast('身份验证失败,请重新登陆')
             return
         }
         // 其他状态码
-        return showFailToast({ message: data.msg, icon: 'cross' })
-    // }
+        return showToast({ message: data.msg, icon: 'cross' })
+    }
 }, (error) => {
     // 全局loading
-    // store.dispatch('onLoading', false)
-    // if (!store.state.isLoading) {
+    useCommonStore.setLoading(false)
+    if (!isLoading) {
         let msg = ''
         if (error.response.status) {
             switch (error.response.status) {
@@ -71,9 +85,7 @@ http.interceptors.response.use((res) => {
                     if (error.response.data) {
                         msg = error.response.data.msg
                         if (error.response.data.code == 401) {
-                            router.push({
-                                path: "/login"
-                            })
+                            toast('身份验证失败,请重新登陆')
                         }
                     } else {
                         msg = '服务器内部错误！'
@@ -82,11 +94,11 @@ http.interceptors.response.use((res) => {
                 default:
                     msg = '未知错误！'
                     break
+            }
         }
-        }
-        showFailToast({ message: msg, icon: 'cross' })
+        showToast({ message: msg, icon: 'cross' })
         return Promise.reject(error)
-    // }
+    }
   })
 
   export default http

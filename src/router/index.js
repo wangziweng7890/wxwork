@@ -4,14 +4,19 @@ const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
 	routes: [
 		{
+			path: '/auth',
+			name: 'Auth',
+			component:() => import("@/views/Auth/Auth.vue")
+		},
+		{
 			path: '/login',
 			name: 'Login',
-			component: import("@/views/Login/Login.vue")
+			component:() => import("@/views/Login/Login.vue")
 		},
 		{
 			path: '/order_list',
 			name: 'OrderList',
-			component: import("@/views/OrderList/OrderList.vue")
+			component:() => import("@/views/OrderList/OrderList.vue")
 		}
 	]
 })

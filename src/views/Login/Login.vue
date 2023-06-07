@@ -1,21 +1,29 @@
 <script setup>
-// import wx from 'weixin-js-sdk'
+import { workWechatOauth } from '@/api/user'
+import { useRoute, useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/modules/user'
 
-import { getCurrentInstance, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+const userStore = useUserStore()
 const route = useRoute()
-console.log(route,'理由')
-const appid = 'ww12f0c60e7eb68bc3'
-const redirect_uri = 'http://test.workh5.galaxy-immi.com/order_list'
-const agentid = '1000180#wechat_redirect'
-const url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_base&state=STATE&agentid=${agentid}`
-// console.log(route.query.code, '--------------')
-if (!route.query.code) {
-    window.location.href = url
+const router = useRouter()
+
+// 登录
+const login = async () => {
+    try {
+        const { data } = await workWechatOauth({ code: route.query.code })
+        userStore.setToken(data.token)
+        userStore.setUserInfo(data.corp_user_info)
+        // 跳转订单列表
+        router.push('/order_list')
+    } catch (error) {
+        
+    }
 }
-console.log(route.query, '参数11')
+
+login()
+
 </script>
 
 <template>
-	<div>我是登录页11</div>
+	<div>登陆中...</div>
 </template>

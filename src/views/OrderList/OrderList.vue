@@ -6,7 +6,7 @@ import { reactive, ref } from 'vue'
 const parm = reactive({
     phone: '',
     page: 1,
-    page_size: 20
+    page_size: 500
 })
 
 const orderData = ref([])
@@ -83,26 +83,39 @@ getWxConfig()
 </script>
 
 <template>
-    <div class="order-list" v-if="orderData.length > 0">
-        <div class="mt-10">咨询用户：<span class="c-3c86f8">{{ clientName }}</span></div>
-        <div class="order-info mt-10" v-for="(item, index) in orderData" :key="index"  @click="toCrm(item)">
+    <div class="order-list c-90" v-if="orderData.length > 0">
+        <div class="order-title mt-10 c-222 fs-16">咨询用户：<span class="c-357FE2 fw-bold">{{ clientName }}</span></div>
+        <div class="order-info fs-12" v-for="(item, index) in orderData" :key="index"  @click="toCrm(item)">
             <van-row>
-                <van-col class="label-w120">订单ID：<span class="c-3c86f8">{{ item.order_id }}</span></van-col>
-                <van-col class="flex-1">合同编号：<span class="c-3c86f8">{{ item.order_sn }}</span></van-col>
+                <van-col span="12">
+                    <span class="label">订单ID</span>
+                    <span class="c-357FE2">{{ item.order_id }}</span>
+                </van-col>
+                <van-col span="12">
+                    <span class="label">合同编号</span>
+                    <span class="c-357FE2">{{ item.order_sn }}</span>
+                </van-col>
             </van-row>
             <van-row>
-                <van-col class="label-w120">签约人：<span class="c-3c86f8">{{ item.sign_name }}</span></van-col>
-                <van-col class="flex-1">主申：<span class="c-3c86f8">{{ item.sign_name }}</span></van-col>
+                <van-col span="12">
+                    <span class="label">签约人</span>
+                    <span class="c-357FE2">{{ item.sign_name }}</span>
+                </van-col>
+                <van-col span="12">
+                    <span class="label">主申人</span>
+                    <span class="c-357FE2">{{ item.information_username }}</span>
+                </van-col>
             </van-row>
             <van-row>
-                <van-col>服务产品：</van-col>
-                <van-col class="flex-1">{{ item.product_name }}</van-col>
+                <van-col class="label">服务产品</van-col>
+                <van-col class="flex-1 c-222">{{ item.product_name }}</van-col>
             </van-row>
             <van-row>
-                <van-col>当前任务：</van-col>
-                <van-col class="flex-1">{{ item.task_name }}</van-col>
+                <van-col class="label">当前任务</van-col>
+                <van-col class="flex-1 c-222">{{ item.task_name }}</van-col>
             </van-row>
         </div>
+        <div class="tc c-90 fs-12 order-footer">已显示全部订单</div>
     </div>
     <van-empty v-if="isEmpty" description="暂无订单" />
 </template>
@@ -112,19 +125,34 @@ getWxConfig()
     height: 100vh;
     overflow-y: auto !important;
     overflow: hidden;
-    background: #f1f1f1;
-    padding: 0 15px 15px;
+    background: #F4F5FA;
+    padding: 0 8px;
+    .order-title {
+        border-left: 4px solid #357FE2;
+        height: 16px;
+        line-height: 16px;
+        padding-left: 8px;
+        margin: 16px 0;
+        font-weight: bold;
+    }
     .order-info {
-        font-size: 13px;
         background: #fff;
         padding: 10px 15px;
         border-radius: 10px;
-        .label-w120 {
-            min-width: 120px;
+        margin-bottom: 8px;
+        cursor: pointer;
+        span {
+            display: inline-block;
+        }
+        .label {
+            min-width: 55px;
         }
         .van-row {
-            line-height: 25px;
+            line-height: 35px;
         }
+    }
+    .order-footer {
+        padding: 0 0 24px;
     }
 }
 

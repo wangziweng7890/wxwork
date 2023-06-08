@@ -1,11 +1,20 @@
-.c-3c86f8 {
-  color: #4991f0;
+.c-357FE2 {
+  color: #357FE2;
+}
+.c-222 {
+  color: #222;
+}
+.c-90 {
+  color: #909090;
 }
 .d-flex {
   display: flex;
 }
 .flex-1 {
   flex: 1;
+}
+.tc {
+  text-align: center;
 }
 .mt-10 {
   margin-top: 10px;
@@ -18,4 +27,28 @@
 }
 .mt-40 {
   margin-top: 40px;
+}
+.fw-bold {
+  font-weight: bold;
+}
+.fw-500 {
+  font-weight: 500;
+}
+.fs-12 {
+  font-size: 12px;
+}
+.fs-14 {
+  font-size: 14px;
+}
+.fs-16 {
+  font-size: 16 px;
+}
+.fs-18 {
+  font-size: 18px;
+}
+.fs-20 {
+  font-size: 20px;
+}
+.fs-22 {
+  font-size: 22px;
 }

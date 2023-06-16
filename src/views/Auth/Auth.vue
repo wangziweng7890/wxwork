@@ -6,9 +6,9 @@ const router = useRouter()
 
 // 企业微信静默授权重定向获取code
 const getWorkCode = () => {
-    const appid = 'ww12f0c60e7eb68bc3'
-    const redirect_uri = encodeURIComponent('http://test.workh5.galaxy-immi.com/login')
-    const agentid = '1000180'
+    const appid = import.meta.env.VITE_APPID
+    const redirect_uri = encodeURIComponent(`${import.meta.env.VITE_REDIRECT_URI}/login`)
+    const agentid = import.meta.env.VITE_AGENTID
     const url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_base&state=STATE&agentid=${agentid}#wechat_redirect`
     return url
 }

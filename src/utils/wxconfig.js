@@ -3,8 +3,8 @@ export const agentConfig = (data, callback) => {
     wx.agentConfig({
         beta: true, // 必须这么写，否则wx.invoke调用形式的jsapi会有问题
         // debug: true,
-        corpid: 'ww12f0c60e7eb68bc3', // 必填，企业微信的corpid，必须与当前登录的企业一致
-        agentid: '1000180', // 必填，企业微信的应用id （e.g. 1000247）
+        corpid: import.meta.env.VITE_APPID, // 必填，企业微信的corpid，必须与当前登录的企业一致
+        agentid: import.meta.env.VITE_AGENTID, // 必填，企业微信的应用id （e.g. 1000247）
         timestamp: data.timestamp, // 必填，生成签名的时间戳
         nonceStr: data.nonceStr, // 必填，生成签名的随机串
         signature: data.signature, // 必填，签名，见附录-JS-SDK使用权限签名算法

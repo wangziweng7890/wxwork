@@ -3,6 +3,7 @@ import { RouterView } from 'vue-router'
 import vLoading from './components/Loading/Loading.vue'
 import { useCommonStoreInfo } from '@/stores/modules/common'
 const useCommonStore = useCommonStoreInfo()
+
 </script>
 
 <template>

@@ -1,3 +1,11 @@
+<!--
+ * @Author: Autumn.again
+ * @Date: 2023-09-12 17:15:47
+ * @LastEditors: Autumn.again
+ * @LastEditTime: 2023-09-14 09:48:45
+ * @FilePath: \workwexin-h5-sidebar\src\views\Login\Login.vue
+ * Copyright: 2023 by Autumn.again, All Rights Reserved.
+-->
 <script setup>
 import { workWechatOauth } from '@/api/user'
 import { useRoute, useRouter } from 'vue-router'
@@ -25,5 +33,5 @@ login()
 </script>
 
 <template>
-	<div>登陆中...</div>
+	<div>登陆中ddd...</div>
 </template>

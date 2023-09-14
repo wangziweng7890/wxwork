@@ -1,3 +1,11 @@
+/*
+ * @Author: Autumn.again
+ * @Date: 2023-09-12 17:15:47
+ * @LastEditors: Autumn.again
+ * @LastEditTime: 2023-09-13 17:41:32
+ * @FilePath: \workwexin-h5-sidebar\src\utils\wxconfig.js
+ * Copyright: 2023 by Autumn.again, All Rights Reserved.
+ */
 // 企业微信jsdk授权
 export const agentConfig = (data, callback) => {
     wx.agentConfig({
@@ -17,6 +25,8 @@ export const agentConfig = (data, callback) => {
             "openEnterpriseChat",
             "shareToExternalContact",
             "shareToExternalChat",
+            "chooseImage", // 图片选择
+            "shareAppMessage", // 自定义转发会话
             "getCurExternalChat", //获取当前客户群的群ID
         ], //必填
         success: (res) => {

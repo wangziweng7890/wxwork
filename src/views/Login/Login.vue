@@ -10,7 +10,7 @@ const router = useRouter()
 // 登录
 const login = async () => {
     try {
-        const { data } = await workWechatOauth({ code: route.query.code })
+        const { data } = await workWechatOauth({ code: route.query.code, appid: route.query.appid })
         userStore.setToken(data.token)
         userStore.setUserInfo(data.corp_user_info)
         // 跳转订单列表

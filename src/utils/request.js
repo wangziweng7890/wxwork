@@ -15,7 +15,10 @@ const toast = (msg) => {
     icon: "cross",
     onClose: () => {
       router.push({
-        path: "/auth",
+        path: "/login",
+        query: {
+          redirect_uri: encodeURIComponent(location.href),
+        },
       });
     },
   });
@@ -62,18 +65,21 @@ http.interceptors.response.use(
     // 全局loading
     useCommonStore.setLoading(false);
     if (!isLoading) {
-      // if (res.data.code===401) {
-      //     toast('身份验证失败,请重新登陆')
-      //     return
-      // }
-      // const data = res.data
-      // if (res.status === 200 && data.code === 200) {
-      //     return Promise.resolve(data)
-      // }
-      // if (res.status === 200 && (res.data.code == 401 || res.data.code == 403)) {
-      //     toast('身份验证失败,请重新登陆')
-      //     return
-      // }
+      if (res.data.code === 401) {
+        toast("身份验证失败,请重新登陆");
+        return;
+      }
+      const data = res.data;
+      if (res.status === 200 && data.code === 200) {
+        return Promise.resolve(data);
+      }
+      if (
+        res.status === 200 &&
+        (res.data.code == 401 || res.data.code == 403)
+      ) {
+        toast("身份验证失败,请重新登陆");
+        return;
+      }
       // 其他状态码
       return showToast({ message: data.msg, icon: "cross" });
     }

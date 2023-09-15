@@ -16,7 +16,10 @@ const toast = (msg) => {
             icon: 'cross',
             onClose:()=> {
                 router.push({
-                    path: "/auth"
+                    path: "/login",
+                    query: {
+                        redirect_uri: encodeURIComponent(location.href) 
+                    }
                 })
             }
         }

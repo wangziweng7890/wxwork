@@ -1,40 +1,48 @@
 export default [
-    {
-        path: '/',
-        component:() => import("@/views/Login/Login.vue")
+  {
+    path: "/",
+    component: () => import("@/views/Login/Login.vue"),
+  },
+  {
+    path: "/login",
+    name: "Login",
+    component: () => import("@/views/Login/Login.vue"),
+    meta: {
+      title: "登录",
     },
-    {
-        path: '/login',
-        name: 'Login',
-        component:() => import("@/views/Login/Login.vue"),
-        meta: {
-            title: '登录'
-        }
+  },
+  {
+    path: "/order_list",
+    name: "OrderList",
+    component: () => import("@/views/OrderList/OrderList.vue"),
+    meta: {
+      jsApiList: ["openDefaultBrowser", "getCurExternalContact"],
+      title: "订单管理",
     },
-    {
-        path: '/order_list',
-        name: 'OrderList',
-        component:() => import("@/views/OrderList/OrderList.vue"),
-        meta: {
-            jsApiList: ['openDefaultBrowser', 'getCurExternalContact'],
-            title: '订单管理'
-        }
+  },
+  {
+    path: "/daily_affairs",
+    component: () => import("@/views/daily_affairs/index.vue"),
+    meta: {
+      title: "香港事务日常协同",
     },
-    {
-        path: '/daily_affairs',
-        component:() => import("@/views/daily_affairs/index.vue"),
+    children: [
+      {
+        path: "list",
+        name: "daily_affairs",
+        component: () => import("@/views/daily_affairs/daily_affairs.vue"),
         meta: {
-            title: '香港事务日常协同'
+          jsApiList: ["shareAppMessage"],
         },
-        children: [
-            {
-                path: 'list',
-                name: 'daily_affairs',
-                component:() => import("@/views/daily_affairs/daily_affairs.vue"),
-                meta: {
-                    jsApiList: ['shareAppMessage'],
-                },
-            }
-        ]
-    }
-]
+      },
+      {
+        path: "detail",
+        name: "/daily_detail",
+        component: () => import("@/views/daily_affairs/detail/detail.vue"),
+        meta: {
+          title: "客户信息",
+        },
+      },
+    ],
+  },
+];

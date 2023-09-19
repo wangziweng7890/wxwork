@@ -6,13 +6,13 @@
  * @FilePath: \workwexin-h5-sidebar\src\main.js
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
  */
-import "./assets/base.css";
+import './assets/base.css'
+import init from '@/config/init'
+import { createApp } from 'vue'
 
-import { createApp } from "vue";
-import "./style/index.scss";
-import App from "./App.vue";
-import router from "./router";
-import "vant/es/toast/style";
+import App from './App.vue'
+import router from './router'
+import 'vant/es/toast/style'
 // 引入状态管理
 import { setupStore } from "@/stores";
 import VueHashCalendar from "vue3-hash-calendar";
@@ -27,4 +27,5 @@ const setupAll = async () => {
   app.mount("#app");
 };
 
-setupAll();
+init()
+setupAll()

@@ -10,19 +10,23 @@ const isLoading = useCommonStore.getLoading;
 
 // 身份验证失败
 const toast = (msg) => {
-  showToast({
-    message: msg,
-    icon: "cross",
-    onClose: () => {
-      router.push({
-        path: "/login",
-        query: {
-          redirect_uri: encodeURIComponent(location.href),
-        },
-      });
-    },
-  });
-};
+    const userStore = useUserStore()
+    userStore.clear()
+    showToast(
+        { 
+            message: msg,
+            icon: 'cross',
+            onClose:()=> {
+                router.replace({
+                    path: "/login",
+                    query: {
+                        redirect_uri: encodeURIComponent(location.href) 
+                    }
+                })
+            }
+        }
+    )
+}
 
 const http = axios.create({
   baseURL: import.meta.env.VITE_API_BASEPATH,

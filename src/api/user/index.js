@@ -2,7 +2,6 @@ import api from '@/utils/request'
 
 // 企业微信授权
 export const workWechatOauth = params => api.get(`/frontend/work-wechat/oauth`, { params })
-
 // 获取客户信息
 export const getClientInfo = params => api.get(`/frontend/work-wechat/user_info`, { params })
 

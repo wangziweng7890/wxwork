@@ -10,12 +10,14 @@ const isLoading = useCommonStore.getLoading
 
 // 身份验证失败
 const toast = (msg) => {
+    const userStore = useUserStore()
+    userStore.clear()
     showToast(
         { 
             message: msg,
             icon: 'cross',
             onClose:()=> {
-                router.push({
+                router.replace({
                     path: "/login",
                     query: {
                         redirect_uri: encodeURIComponent(location.href) 

@@ -7,7 +7,7 @@
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
  */
 import './assets/base.css'
-
+import init from '@/config/init'
 import { createApp } from 'vue'
 
 import App from './App.vue'
@@ -27,4 +27,5 @@ const setupAll = async () => {
     app.mount('#app')
 }
 
+init()
 setupAll()

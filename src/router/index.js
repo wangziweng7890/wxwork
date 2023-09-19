@@ -1,33 +1,20 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { agentConfig } from '@/config/wxconfig'
 
+import routes from './routes'
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
-	routes: [
-		{
-			path: '/',
-			component:() => import("@/views/Auth/Auth.vue")
-		},
-		{
-			path: '/auth',
-			name: 'Auth',
-			component:() => import("@/views/Auth/Auth.vue")
-		},
-		{
-			path: '/login',
-			name: 'Login',
-			component:() => import("@/views/Login/Login.vue")
-		},
-		{
-			path: '/order_list',
-			name: 'OrderList',
-			component:() => import("@/views/OrderList/OrderList.vue")
-		},
-		{
-			path: '/daily_affairs',
-			name: 'daily_affairs',
-			component:() => import("@/views/daily_affairs/daily_affairs.vue")
-		}
-	]
+	routes: routes
 })
 
 export default router
+
+// 设置页面 title
+router.afterEach((to) => {
+    to.meta.title && (document.title = typeof to.meta.title === 'function' ? to.meta.title() : to.meta.title)
+})
+
+// 为当前页面设置企微调用权限
+router.afterEach(async (to, from) => {
+	to.meta.jsApiList &&  await agentConfig(to.meta.jsApiList)
+})

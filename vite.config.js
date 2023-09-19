@@ -23,6 +23,18 @@ export default ({ mode }) => {
       vue(),
       vueJsx(),
       Components({
+        imports: [
+          'vue',
+          'vue-router',
+          {
+              vue: [
+                  'defineProps',
+                  'defineEmits',
+                  'defineExpose',
+                  'withDefaults',
+              ],
+          },
+        ],
         dts: true,
         resolvers: [VantResolver()],
         include: [/\.vue$/, /\.vue\?vue/, /\.jsx?$/, /\.tsx?$/],
@@ -66,7 +78,6 @@ export default ({ mode }) => {
       },
     },
     build: {
-      outDir: env.VITE_OUT_DIR || "dist",
       cssCodeSplit: false, //默认ture,将css分割提取到css文件中，false将全部css提取到一个文件里
     },
     server: {

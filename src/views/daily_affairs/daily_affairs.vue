@@ -7,34 +7,7 @@
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
 -->
 <script setup name="daily_affairs" lang="tsx">
-import * as ww from '@wecom/jssdk'
-import { getWorkWechatConfig } from '@/api/user'
-import { agentConfig } from '@/utils/wxconfig'
 import { useI18n } from 'vue-i18n'
-import PendingList from './C/pending_list.vue'
-// 获取的企业微信授权初始化jsdk
-// const getWxConfig = async () => {
-//     try {
-//         const { code, data } = await getWorkWechatConfig({url: location.href}) as any
-//         if (code === 200) {
-//             agentConfig(data.config, () => {
-//             })
-//         }
-//     } 
-//     catch (error) {
-//         // error
-//     }
-// }
-// getWxConfig()
-
-const showCalender = () => {
-  ww.shareAppMessage({
-      title: '分享链接',
-      desc: '点击下载Xlsx表格',
-      link: 'https://cache.galaxy-immi.com/%E5%AE%A2%E6%88%B7%E8%BF%9B%E5%BA%A6%E6%A8%A1%E6%9D%BF.xlsx',
-      imgUrl: 'https://res.mail.qq.com/node/ww/wwmng/style/images/index_share_logo$13c64306.png',
-  })
-}
 
 const chooseDate = ref('')
 // 选择日期变更

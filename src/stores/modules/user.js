@@ -26,6 +26,10 @@ export const useUserStore = defineStore('user', {
         // set用户信息
         setUserInfo(data) {
             this.userInfo = data
+        },
+        clear() {
+            this.token = ''
+            this.userInfo = {}
         }
     },
     persist: {

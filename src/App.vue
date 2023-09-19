@@ -7,7 +7,7 @@ const useCommonStore = useCommonStoreInfo()
 </script>
 
 <template>
-	<div id="app">
+	<div>
 		<!-- 全局loading -->
         <v-loading v-show="useCommonStore.getLoading" />
 		<!-- 路由 -->

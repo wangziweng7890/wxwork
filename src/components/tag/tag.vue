@@ -41,6 +41,7 @@ const activeTag = id => {
   grid-gap: 16px;
   justify-content: space-between;
   .tag {
+    cursor: pointer;
     width: 142px;
     height: 65px;
     border-radius: 12px;
@@ -66,3 +67,4 @@ const activeTag = id => {
   }
 }
 </style>
+../../views/daily_affairs/detail/modules

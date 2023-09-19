@@ -1,9 +1,14 @@
 .van-tab {
   font-size: 34px !important;
+  color: #888f98 !important;
 }
 .van-tabs__line {
-  //   background: #198cff !important;
-  //   border-radius: 16px !important;
-  //   width: 34px !important;
-  //   height: 6px !important;
+  background: #198cff !important;
+  border-radius: 16px !important;
+  width: 34px !important;
+  height: 6px !important;
+}
+.van-tab--active {
+  color: #198cff !important;
+  font-weight: 600 !important;
 }

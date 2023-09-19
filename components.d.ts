@@ -12,11 +12,8 @@ declare module '@vue/runtime-core' {
     Loading: typeof import('./src/components/Loading/Loading.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    VanCalendar: typeof import('vant/es')['Calendar']
-    VanCell: typeof import('vant/es')['Cell']
-    VanIcon: typeof import('vant/es')['Icon']
+    Tag: typeof import('./src/components/tag/tag.vue')['default']
     VanLoading: typeof import('vant/es')['Loading']
-    VanSearch: typeof import('vant/es')['Search']
     VanTab: typeof import('vant/es')['Tab']
     VanTabs: typeof import('vant/es')['Tabs']
   }

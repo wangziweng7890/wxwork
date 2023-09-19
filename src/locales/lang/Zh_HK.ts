@@ -1,7 +1,7 @@
 const HK_message = {
     HK: {
         message: {
-            hello: '中门来噶'
+            hello: '繁体字模式'
         }
     }
 }

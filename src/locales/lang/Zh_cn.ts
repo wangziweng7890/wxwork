@@ -9,7 +9,7 @@
 const Zh_message = {
     ZH: {
         message: {
-            hello: '中文模式'
+            hello: '简体中文模式'
         }
     }
 }

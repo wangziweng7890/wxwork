@@ -2,7 +2,7 @@
  * @Author: Autumn.again
  * @Date: 2023-09-14 17:42:21
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-09-14 18:10:07
+ * @LastEditTime: 2023-09-15 09:33:42
  * @FilePath: \workwexin-h5-sidebar\src\locales\setupI18n.ts
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
  */
@@ -16,9 +16,9 @@ const messages = {
   ...HK_message
 }
 const i18n = createI18n({
-  // legacy: false,
-  // globalInjection: true,
-  locale: 'ZH',
+  legacy: false, // legacy为false，开启compositionAPI方法
+  globalInjection: true, // globalInjection为true, 允许全局注册i18n为 $t 方法
+  locale: 'HK', // 默认指定是什么语言格式
   messages
 })
 

@@ -6,25 +6,25 @@
  * @FilePath: \workwexin-h5-sidebar\src\main.js
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
  */
-import './assets/base.css'
+import "./assets/base.css";
 
-import { createApp } from 'vue'
-
-import App from './App.vue'
-import router from './router'
-import 'vant/es/toast/style'
+import { createApp } from "vue";
+import "./style/index.scss";
+import App from "./App.vue";
+import router from "./router";
+import "vant/es/toast/style";
 // 引入状态管理
-import { setupStore } from '@/stores'
-import VueHashCalendar from 'vue3-hash-calendar';
-import 'vue3-hash-calendar/es/index.css';
-import i18n from './locales/setupI18n'
+import { setupStore } from "@/stores";
+import VueHashCalendar from "vue3-hash-calendar";
+import "vue3-hash-calendar/es/index.css";
+import i18n from "./locales/setupI18n";
 
 // 创建实例
 const setupAll = async () => {
-    const app = createApp(App)
-    await setupStore(app)
-    app.use(router).use(VueHashCalendar).use(i18n)
-    app.mount('#app')
-}
+  const app = createApp(App);
+  await setupStore(app);
+  app.use(router).use(VueHashCalendar).use(i18n);
+  app.mount("#app");
+};
 
-setupAll()
+setupAll();

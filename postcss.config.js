@@ -10,7 +10,7 @@ module.exports = {
   plugins: [
     require("postcss-px-to-viewport")({
       unitToConvert: "px",
-      viewportWidth: 1920,
+      viewportWidth: 750,
       viewportHeight: 1080,
       unitPrecision: 3,
       propList: ["*"],

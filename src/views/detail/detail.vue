@@ -5,7 +5,6 @@
       <van-tab title="家庭信息">家庭信息</van-tab>
       <van-tab title="过关证件">过关证件</van-tab>
       <van-tab title="客户标签">
-        <div>客户标签</div>
         <Tag :tagArray="clientArray"></Tag>
       </van-tab>
     </van-tabs>

@@ -38,7 +38,8 @@ const activeTag = id => {
 .tagBox {
   display: grid;
   grid-template-columns: repeat(auto-fill, 142px);
-  grid-gap: 16px;
+  grid-row-gap:18px;
+  // grid-column-gap:24px;
   justify-content: space-between;
   .tag {
     cursor: pointer;
@@ -67,4 +68,3 @@ const activeTag = id => {
   }
 }
 </style>
-../../views/daily_affairs/detail/modules

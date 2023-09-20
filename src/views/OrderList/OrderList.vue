@@ -1,5 +1,5 @@
 <script setup>
-import { getClientInfo, getOrderInfo, getWorkWechatConfig } from '@/api/user'
+import { getClientInfo, getOrderInfo } from '@/api/user'
 import { reactive, ref } from 'vue'
 import * as wx from '@wecom/jssdk'
 

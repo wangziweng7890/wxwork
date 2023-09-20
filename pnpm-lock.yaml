@@ -20,7 +20,7 @@ dependencies:
     specifier: ^1.66.1
     version: 1.66.1
   vant:
-    specifier: ^4.6.8
+    specifier: ^4.3.2
     version: 4.6.8(vue@3.3.4)
   vue:
     specifier: ^3.3.2

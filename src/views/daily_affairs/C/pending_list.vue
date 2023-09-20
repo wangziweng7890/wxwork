@@ -1,54 +1,14 @@
 <script setup name="pending_list" lang="tsx">
-
 // 获取DOM值
 const fold = ref(null)
 // 下一天的loading
 const next_loading = ref(false)
 // 折叠面板
 const collArray = ref(['1'])
+const props = defineProps<{
+    listData: any
+}>()
 // 列表参数
-const listData = ref([
-    {
-        time: '2022-01-01',
-        user_name: '张三',
-        processor: '',
-        visa_type: 1,
-        applicant_name: '张1',
-        userList: ['张1_父亲', '张1_母亲', '张1_儿子'],
-        address: '港湾入境处',
-        id: 1
-    },
-    {
-        time: '2022-01-01',
-        user_name: '张三',
-        processor: '香港同事A',
-        visa_type: 3,
-        applicant_name: '张1',
-        userList: ['张1_父亲', '张1_母亲', '张1_儿子'],
-        address: '港湾入境处',
-        id: 2
-    },
-    {
-        time: '2022-01-01',
-        user_name: '张三',
-        processor: '',
-        visa_type: 1,
-        applicant_name: '张1',
-        userList: ['张1_父亲', '张1_母亲', '张1_儿子'],
-        address: '港湾入境处',
-        id: 3
-    },
-    {
-        time: '2022-01-01',
-        user_name: '张三',
-        processor: '香港同事BBB',
-        visa_type: 1,
-        applicant_name: '张1',
-        userList: ['张1_父亲', '张1_母亲', '张1_儿子'],
-        address: '港湾入境处',
-        id: 4
-    },
-])
 const next_date = () => {
     console.log('进行到下一天');
     
@@ -84,31 +44,55 @@ onMounted(() => {
 onUnmounted(() => {
     window.removeEventListener("scroll", onScroll);
 })
+
 </script>
 <template>
     <div class="pending_list">
         <van-collapse v-model="collArray" class="fold" ref="fold">
-            <van-collapse-item :name="collIndex + 1" v-for="(res, collIndex) in listData" :key="collIndex" class="fold_item">
+            <van-collapse-item :name="collIndex + 1" v-for="(res, collIndex) in props.listData" :key="collIndex" class="fold_item">
                 <template #title>
                     <div class="title_box">
                         <div class="title_box_left">
                             <div class="time">
                                 {{ res.time }}
                             </div>
-                            <div>
-                                {{ res.processor || '待分配' }}
-                            </div>
                         </div>
                         <div class="title_box_name">
                             {{ res.user_name || '-' }}
                         </div>
-                        <div class="title_box_visa">
-                            {{ res.visa_type || '-' }}
+                        <div class="title_box_type">
+                            <!-- {{ res.visa_type || '-' }} -->
+                            已领证
                         </div>
+                    </div>
+                    <div class="title_manage">
+                        接待人：待分配
                     </div>
                 </template>
                 <div class="fold_item_content">
+                    <div class="fold_item_content_message block">
 
+                    </div>
+                    <div class="fold_item_content_servise block">
+                        期望银河提供服务：
+                    </div>
+                    <div class="fold_item_content_action block">
+                        <div>
+                            <span>
+                                意向需求：
+                            </span>
+                            <span>
+                                查看历史需求
+                            </span>
+                        </div>
+                        <div>
+
+                        </div>
+                    </div>
+                    <div class="fold_item_content_action block" @click="">
+                        上传证件：
+                        <van-icon name="arrow" />
+                    </div>
                 </div>
             </van-collapse-item>
         </van-collapse>
@@ -120,42 +104,78 @@ onUnmounted(() => {
 <style lang="scss" scoped>
 .pending_list {
     background: #f6f6f6;
-    padding: 30px 0;
-    // min-height: 77vh;
-    // max-height: 77vh;
-    height: 77.5vh;
+    flex: 1;
     overflow-y: auto;
     .fold {
-        // height: 100vh;
-        // overflow-y: auto;
         &_item {
             margin: 20px;
             border-radius: 20px;
             overflow: hidden;
             .title_box {
                 display: flex;
-                justify-content: space-between;
+                // justify-content: space-between;
                 align-items: center;
-
+                font-size: 32px;
+                div {
+                    margin-right: 16px;
+                }
                 &_left {
-                    min-width: 500px;
                     display: flex;
                     .time {
-                        padding-right: 20px;
-                        margin-right: 20px;
-                        border-right: 1px solid #ccc;
+                        padding-right: 16px;
+                        margin-right: 0;
+                        position: relative;
+                        &::after {
+                            content: '';
+                            position: absolute;
+                            right: 0;
+                            top: 50%;
+                            transform: translateY(-50%);
+                            width: 1px;
+                            height: 24px;
+                            background: #E1E1E1;
+                        }
                     }
                 }
-            }
-            :deep(.van-cell) {
-                &::after {
-                    border-bottom: none;
+                &_type {
+                    font-size: 22px;
+                    padding: 0 8px;
+                    color: #3ECDC3;
+                    border-radius: 8px;
+                    height: 38px;
+                    background: rgba(62, 205, 195, 0.08);
                 }
             }
-
+            .title_manage {
+                font-size: 26px;
+                color: #888F98;
+            }
+            // :deep(.van-cell) {
+            //     &::after {
+            //         border-bottom: none;
+            //     }
+            // }
             &_content {
-                min-height: 700px;
-                background: aqua;
+                color: #222222;
+                font-size: 30px;
+                .block {
+                    margin-bottom: 42px;
+                    &:last-of-type {
+                        margin-bottom: 0;
+                    }
+                }
+                &_message {
+                    background: #F8F9FB;
+                    border-radius: 12px;
+                    min-height: 560px;
+                }
+                &_action {
+                    display: flex;
+                    justify-content: space-between;
+                    .van-icon {
+                        color: #9B9B9B;
+                    }
+                }
             }
         }
     }

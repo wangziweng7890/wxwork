@@ -1,10 +1,5 @@
 <template>
   <div class="detailPage">
-    <div class="header">
-      <div>《</div>
-      <div>客户信息</div>
-      <div></div>
-    </div>
     <div class="content">
       <div class="peopleDetail">
         <div><img src="@/assets/defaultimage.png" alt="" /></div>
@@ -91,13 +86,6 @@ const componentsName = computed(() => {
 
 <style lang="scss" scoped>
 .detailPage {
-  .header {
-    height: 50px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
   .mb-32 {
     margin-bottom: 32px;
   }

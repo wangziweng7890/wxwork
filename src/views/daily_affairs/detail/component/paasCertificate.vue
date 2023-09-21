@@ -5,8 +5,10 @@
       <div class="content">
         <div class="item">
           <div class="label">姓名:</div>
-          <div class="value">查看</div>
+          <div class="value" @click="showPreview">查看</div>
         </div>
+        <van-image-preview v-model:show="show" :images="images">
+        </van-image-preview>
         <div class="item">
           <div class="label">曾用名:</div>
           <div class="value">查看</div>
@@ -28,7 +30,17 @@
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+const show = ref(false)
+const images = [
+  new URL(`@/assets/defaultimage.png`, import.meta.url),
+  'https://fastly.jsdelivr.net/npm/@vant/assets/apple-2.jpeg'
+]
+
+const showPreview = () => {
+  show.value = true
+}
+</script>
 
 <style lang="scss" scoped>
 .passCertificate {

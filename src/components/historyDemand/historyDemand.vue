@@ -1,9 +1,9 @@
 <template>
   <div class="historyDemand">
-    <div class="row">
+    <div class="row" v-for="(item, index) in arr" :key="index">
       <div class="line">
         <img class="Group" src="@/assets/Group.svg" alt="" />
-        <img class="lineClass" src="@/assets/line.svg" alt="" />
+        <img class="lineClass" v-if="index!== arr.length-1" src="@/assets/line.svg" alt="" />
       </div>
       <div class="content">
         <div class="title">
@@ -19,26 +19,27 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const arr=[0,1,222,2,2,2,2]
+</script>
 
 <style lang="scss" scoped>
 .historyDemand {
   .row {
     display: flex;
     .line {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
+    //   display: flex;
+    //   flex-direction: column;
+    //   align-items: center;
+    //   justify-content: center;
       .Group {
         width: 16px;
         height: 16px;
       }
       .lineClass {
-        //                width: 2px;
-        margin-top: 10px;
-
-        height: 203px;
+        position: relative;
+        left: 6px;
+        height: 200px;
       }
     }
     .content {

@@ -55,7 +55,6 @@
 <script setup name="detail">
 import { ref } from 'vue'
 import Tag from '@/components/tag/tag.vue'
-import Textarea from '@/components/textarea/textarea.vue'
 import ClientTag from './component/clientTag.vue'
 import FamilyDetail from './component/familyDetail.vue'
 import OrderDetail from './component/orderDetail.vue'
@@ -86,6 +85,7 @@ const componentsName = computed(() => {
 
 <style lang="scss" scoped>
 .detailPage {
+  font-size: 28px;
   .mb-32 {
     margin-bottom: 32px;
   }
@@ -181,6 +181,8 @@ const componentsName = computed(() => {
       color: #222222;
       align-items: center;
       justify-content: space-between;
+      font-size: 28px;
+
     }
     .proof {
       color: #198cff;

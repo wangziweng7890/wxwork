@@ -15,7 +15,8 @@ const listData = ref([
         applicant_name: '张1',
         userList: ['张1_父亲', '张1_母亲', '张1_儿子'],
         address: '港湾入境处',
-        id: 1
+        id: 1,
+        message: ''
     },
     {
         time: '2022-01-01',
@@ -25,7 +26,8 @@ const listData = ref([
         applicant_name: '张1',
         userList: ['张1_父亲', '张1_母亲', '张1_儿子'],
         address: '港湾入境处',
-        id: 2
+        id: 2,
+        message: ''
     },
     {
         time: '2022-01-01',
@@ -35,7 +37,8 @@ const listData = ref([
         applicant_name: '张1',
         userList: ['张1_父亲', '张1_母亲', '张1_儿子'],
         address: '港湾入境处',
-        id: 3
+        id: 3,
+        message: ''
     },
     {
         time: '2022-01-01',
@@ -45,7 +48,8 @@ const listData = ref([
         applicant_name: '张1',
         userList: ['张1_父亲', '张1_母亲', '张1_儿子'],
         address: '港湾入境处',
-        id: 4
+        id: 4,
+        message: ''
     },
 ])
 </script>
@@ -70,7 +74,6 @@ const listData = ref([
 <style lang="scss" scoped>
 .detail {
     background: #F8F8F8;
-    /* flex-wrap: wrap; */
     .search_button {
         font-size: 28px;
         color: #198CFF;
@@ -78,9 +81,6 @@ const listData = ref([
 }
 :deep(.van-search) {
     padding: 24px 32px;
-    // .van-search__content {
-    //     border-radius: 70px;
-    // }
     .van-search__action {
         padding: 0;
         margin-left: 24px;

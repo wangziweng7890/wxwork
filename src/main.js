@@ -2,7 +2,7 @@
  * @Author: Autumn.again
  * @Date: 2023-09-12 17:15:47
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-09-14 17:52:17
+ * @LastEditTime: 2023-09-21 14:28:56
  * @FilePath: \workwexin-h5-sidebar\src\main.js
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
  */
@@ -18,6 +18,7 @@ import { setupStore } from "@/stores";
 import VueHashCalendar from "vue3-hash-calendar";
 import "vue3-hash-calendar/es/index.css";
 import i18n from "./locales/setupI18n";
+import 'virtual:iconfont'
 
 // 创建实例
 const setupAll = async () => {

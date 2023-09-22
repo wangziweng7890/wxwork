@@ -25,6 +25,8 @@
         "web-storage-cache": "^1.1.1"
     },
     "devDependencies": {
+        "unplugin-icons": "^0.16.1",
+        "@galaxy-fe/vite-plugin-unocss-iconfont": "^1.2.1",
         "@antfu/eslint-config": "^0.25.2",
         "@typescript-eslint/eslint-plugin": "^5.61.0",
         "@typescript-eslint/parser": "^5.61.0",

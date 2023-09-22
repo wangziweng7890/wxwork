@@ -11,6 +11,13 @@ const router = useRouter()
 const search_params: search_params = reactive({
   customer_name: ''
 })
+const filterData: filter_params = reactive({
+    customer_name: '',
+    fellow_name: '', // 香港同事
+    adress: '',// 地点
+    status: '',// 状态
+    create_at: ''
+})
 const showBottom = ref(false)
 const showAction = ref(false)
 
@@ -44,7 +51,8 @@ watch(() => date.value, (newVal, oldVal) => {
         applicant_name: '张1',
         userList: ['张1_父亲', '张1_母亲', '张1_儿子'],
         address: '港湾入境处',
-        id: 1
+        id: 1,
+        message: ''
     },
     {
         time: '2022-01-01',
@@ -54,7 +62,8 @@ watch(() => date.value, (newVal, oldVal) => {
         applicant_name: '张1',
         userList: ['张1_父亲', '张1_母亲', '张1_儿子'],
         address: '港湾入境处',
-        id: 2
+        id: 2,
+        message: ''
     },
     {
         time: '2022-01-01',
@@ -64,7 +73,8 @@ watch(() => date.value, (newVal, oldVal) => {
         applicant_name: '张1',
         userList: ['张1_父亲', '张1_母亲', '张1_儿子'],
         address: '港湾入境处',
-        id: 3
+        id: 3,
+        message: ''
     },
     {
         time: '2022-01-01',
@@ -74,7 +84,8 @@ watch(() => date.value, (newVal, oldVal) => {
         applicant_name: '张1',
         userList: ['张1_父亲', '张1_母亲', '张1_儿子'],
         address: '港湾入境处',
-        id: 4
+        id: 4,
+        message: ''
     },
   ]
 })
@@ -87,8 +98,10 @@ const handler_action = (index?: number) => {
     case 0:
     wx.selectEnterpriseContact({
       fromDepartmentId: -1,
-      mode: 'single',
+      mode: 'multi',
       type: ['department', 'user'],
+      selectedDepartmentIds: ['2', '3'],
+      selectedUserIds: ['lisi', 'lisi2']
     })
       break;
     case 1:
@@ -106,8 +119,8 @@ const handler_action = (index?: number) => {
 <template>
   <div class="daily">
     <div class="title_action">
-      <van-icon name="search" @click="searchClick()"/>
-      <van-icon @click="searchClick('search')" name="filter-o" />
+      <i class="iconfont icon-icon_sousuo" @click="searchClick()"></i>
+      <i class="iconfont icon-icon_luodou" @click="searchClick('search')"></i>
     </div>
     <van-tabs v-model:active="active" class="tables">
       <van-tab :title="`标签${item}`" v-for="(item, index) in 8" :key="index" class="table_items">
@@ -123,7 +136,7 @@ const handler_action = (index?: number) => {
       close-icon="close"
       closeable
     >
-      <SearchForm />
+      <SearchForm v-model:filterData="filterData"/>
     </van-popup>
     <van-popup
       v-model:show="showAction"
@@ -149,7 +162,7 @@ const handler_action = (index?: number) => {
 .daily {
   position: relative;
   font-size: 28px;
-  // height: 100%;
+  height: 100%;
 }
 .title_action {
   position: absolute;
@@ -159,31 +172,21 @@ const handler_action = (index?: number) => {
   justify-content: space-between;
   align-items: center;
   width: 195px;
+  height: 42px;
   z-index: 99;
   background: #fff;
   padding: 0 32px 0 47px;
-  .van-icon {
+  .iconfont {
     font-size: 42px;
   }
   background: linear-gradient(to right, transparent 0%, #fff 25%);
   // background: linear-gradient(270deg, #FFF 0%, #FFF 81.31%, rgba(255, 255, 255, 0.00) 100%);
 }
-// .table_items {
-//   display: flex;
-//   flex-wrap: wrap;
-//   height: auto;
-// }
 .tables {
   :deep(.van-tabs__content) {
     flex: 1;
   }
 }
-// :deep(.van-tabs__content) {
-//   height: 100%;
-//   .table_items {
-//     height: 100%;
-//   }
-// }
 :deep(.van-tabs__nav--complete) {
   padding-right: 160px;
   padding-left: 0;

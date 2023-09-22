@@ -16,5 +16,5 @@ router.afterEach((to) => {
 
 // 为当前页面设置企微调用权限
 router.afterEach(async (to, from) => {
-	to.meta.jsApiList &&  await agentConfig(to.meta.jsApiList)
+	// to.meta.jsApiList &&  await agentConfig(to.meta.jsApiList)
 })

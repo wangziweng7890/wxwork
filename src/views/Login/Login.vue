@@ -47,11 +47,11 @@ const login = async () => {
     }
 }
 // 如果需要登录
-if (!userStore.getToken) {
-    !route.query.hasCode ? getWorkCode() : login()
-} else {
-    router.replace(decodeURIComponent(route.query.redirect_uri))
-}
+// if (!userStore.getToken) {
+//     !route.query.hasCode ? getWorkCode() : login()
+// } else {
+//     router.replace(decodeURIComponent(route.query.redirect_uri))
+// }
 
 </script>
 

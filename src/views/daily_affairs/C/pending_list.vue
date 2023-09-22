@@ -1,4 +1,5 @@
 <script setup name="pending_list" lang="tsx">
+import uploaderPopup from './uploader_popup.vue'
 // 获取DOM值
 const fold = ref(null)
 // 下一天的loading
@@ -44,7 +45,24 @@ onMounted(() => {
 onUnmounted(() => {
     window.removeEventListener("scroll", onScroll);
 })
-
+// 保存或者清除
+const submitMessage = (res?: any, index?: number) => {
+    if (!res.message) {
+        return false
+    }
+    if (index === undefined) {
+        // 提交
+        console.log('submitMessage--------------->');
+    } else {
+        // 取消则清空
+        props.listData[index].message = ''
+    }
+}
+const showUploder = ref(false)
+// 打开上传组件
+const openUploader = () => {
+    showUploder.value = true
+}
 </script>
 <template>
     <div class="pending_list">
@@ -71,13 +89,52 @@ onUnmounted(() => {
                 </template>
                 <div class="fold_item_content">
                     <div class="fold_item_content_message block">
-
+                        <div class="info">
+                            <span>
+                                主申人：
+                            </span>
+                            <div>
+                                
+                            </div>
+                        </div>
+                        <div class="info">
+                            <span>
+                                办证者：
+                            </span>
+                            <div>
+                                {{ res.userList.join('、') }}
+                            </div>
+                        </div>
+                        <div class="info">
+                            <span>
+                                地点：
+                            </span>
+                            <div>
+                                {{  }}
+                            </div>
+                        </div>
+                        <div class="info">
+                            <span>
+                                时间：
+                            </span>
+                            <div>
+                                {{  }}
+                            </div>
+                        </div>
+                        <div class="info">
+                            <span>
+                                客户经理：
+                            </span>
+                            <div>
+                                {{  }}
+                            </div>
+                        </div>
                     </div>
                     <div class="fold_item_content_servise block">
                         期望银河提供服务：
                     </div>
-                    <div class="fold_item_content_action block">
-                        <div>
+                    <div class="fold_item_content_text block">
+                        <div class="histroy flex-jusify-between d-flex">
                             <span>
                                 意向需求：
                             </span>
@@ -85,13 +142,31 @@ onUnmounted(() => {
                                 查看历史需求
                             </span>
                         </div>
-                        <div>
-
+                        <div class="content">
+                            <van-field
+                                v-model="res.message"
+                                rows="3"
+                                autosize
+                                label=""
+                                type="textarea"
+                                placeholder="请输入备注内容"
+                            />
+                            <div class="buttones" :class="{default: !res.message}">
+                                <span class="cencel" @click="submitMessage(res, collIndex)">
+                                    取消
+                                </span>
+                                <span class="save" @click="submitMessage(res)">
+                                    保存
+                                </span>
+                            </div>
                         </div>
                     </div>
-                    <div class="fold_item_content_action block" @click="">
+                    <div class="fold_item_content_action block">
                         上传证件：
-                        <van-icon name="arrow" />
+                        <div class="upload flex-center-center" @click="openUploader">
+                            <i class="iconfont icon-btn_upload"></i>
+                            去上传
+                        </div>
                     </div>
                 </div>
             </van-collapse-item>
@@ -99,6 +174,7 @@ onUnmounted(() => {
         <div class="pending_list_loadingText" v-if="next_loading">
             已经到底，继续上拉可翻到下一日
         </div>
+        <uploaderPopup v-model:show-uploder="showUploder"/>
     </div>
 </template>
 <style lang="scss" scoped>
@@ -150,11 +226,6 @@ onUnmounted(() => {
                 font-size: 26px;
                 color: #888F98;
             }
-            // :deep(.van-cell) {
-            //     &::after {
-            //         border-bottom: none;
-            //     }
-            // }
             &_content {
                 color: #222222;
                 font-size: 30px;
@@ -167,13 +238,66 @@ onUnmounted(() => {
                 &_message {
                     background: #F8F9FB;
                     border-radius: 12px;
-                    min-height: 560px;
+                    max-height: 570px;
+                    padding: 32px 28px;
                 }
                 &_action {
-                    display: flex;
-                    justify-content: space-between;
-                    .van-icon {
-                        color: #9B9B9B;
+                    .upload {
+                        margin-top: 24px;
+                        width: 100%;
+                        height: 90px;
+                        color: #4388FF;
+                        border-radius: 12px;
+                        border: 1px dashed #4388FF;
+                        background: #FFF;
+                        font-size: 28px;
+                        .iconfont {
+                            font-size: 32px;
+                            margin-right: 8px;
+                        }
+                    }
+                }
+                &_text {
+                    .histroy {
+                    }
+                    .content {
+                        margin-top: 24px;
+                        .van-field {
+                            background: #F8F9FB;
+                            border-top-right-radius: 12px;
+                            border-top-left-radius: 12px;
+                            padding: 24px 28px;
+                        }
+                        border-radius: 12px;
+                        background: #F8F9FB;
+                        .buttones {
+                            padding: 16px 0;
+                            text-align: right;
+                            font-size: 24px;
+                            display: flex;
+                            justify-content: flex-end;
+                            span {
+                                margin-right: 16px;
+                                width: 112px;
+                                height: 55px;
+                                flex-shrink: 0;
+                                border-radius: 8px;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                color: #222222;
+                            }
+                            .save {
+                                background:#198CFF;
+                                color: #fff;
+                            }
+                        }
+                        .default {
+                            span {
+                                opacity: 0.3;
+                                cursor: not-allowed;
+                            }
+                        }
                     }
                 }
             }

@@ -2,7 +2,7 @@
  * @Author: Autumn.again
  * @Date: 2023-09-19 13:53:38
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-09-20 16:39:45
+ * @LastEditTime: 2023-09-22 15:08:24
  * @FilePath: \workwexin-h5-sidebar\src\views\daily_affairs\C\week_calender.vue
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
 -->
@@ -24,14 +24,12 @@ const chooseDate = computed({
         emit('update:date', value)
     },
 })
-
+const loading = ref(false)
 const calendar = ref(null);
-const today_content = ref('')
 // 选择日期变更
 const dateClickhandler = (val: any) => {
   chooseDate.value = val
 }
-
 // 过滤每天展示在日历当中的参数
 const filterDay = (scope: any) => {
     let day_text = ''
@@ -39,8 +37,15 @@ const filterDay = (scope: any) => {
     return scope?.extendAttr.isToday ? '今' : day_text
 }
 
+const isFullDate = (scope: any) => {
+    const {year, month} = scope?.date
+    const date_content = chooseDate.value.split('-')
+    return Number(date_content[0]) === year && Number(date_content[1]) === (month + 1)
+}
+
 // 过滤展示天数
 const filter_text = ref('日一二三四五六')
+
 const arrow_date = () => {
     const week_day = '星期' + filter_text.value[new Date(chooseDate.value).getDay()]
     const date = chooseDate.value.split('-')
@@ -49,6 +54,12 @@ const arrow_date = () => {
         date_content,
         week_day
     }
+    // const date_content = new_date.getFullYear() + '年' + (new_date.getMonth() + 1) + '月' + new_date.getDate() + '日'
+    // const week_day = '星期' + filter_text.value[new_date.getDay()]
+    // const params = {
+    //     date_content,
+    //     week_day
+    // }
     return  params
 }
 
@@ -58,17 +69,20 @@ const backToday = () => {
 }
 // 是否今天
 const show_back_today = () => {
-    return today_content.value !== chooseDate.value
+    const new_date = new Date()
+    const month = new_date.getMonth() + 1
+    let today = new_date.getFullYear() + '-' + (month < 10 ? '0' + month : month ) + '-' + new_date.getDate()
+    return today !== chooseDate.value
 }
 onMounted(() => {
-    today_content.value = chooseDate.value
+    loading.value = true
 })
 const click_action = () => {
     emit('click_action')
 }
 </script>
 <template>
-    <div class="calender">
+    <div class="calender" v-if="loading">
         <vue-hash-calendar
             select-type="single"
             :show-arrow="true"
@@ -87,14 +101,14 @@ const click_action = () => {
             </template>
             <template v-slot:day="scope">
                 <div class="lunar-content">
-                <div class="lunar-content_day">{{ filterDay(scope) }} </div>
+                <div class="lunar-content_day">{{ isFullDate(scope) ? filterDay(scope) : scope?.date.day }} </div>
                 <div class="lunar-content_people normal_text_color"> 7人</div>
                 </div>
             </template>
             <template #arrow="scope">
                 <div class="bottom_arrow">
                     <div class="bottom_arrow_show">
-                        {{ scope?.isShowWeek ? '展开' : '收起' }}
+                        <i class="iconfont" :class="scope?.isShowWeek ? 'icon-expand' : 'icon-retract'"></i>
                     </div>
                 </div>
             </template>
@@ -115,7 +129,7 @@ const click_action = () => {
             <!-- <div @click="click_action">
                 icon
             </div> -->
-            <van-icon name="more-o" @click="click_action" class="action_iocn"/>
+            <i class="iconfont icon-a-icon_Otherinformation" @click="click_action"></i>
         </div>
     </div>
 </template>
@@ -181,9 +195,28 @@ const click_action = () => {
                     color: #198CFF;
                 }
         }
+        .iconfont {
+            font-size: 42px;
+        }
     }
 }
-.action_iocn {
-    font-size: 38px;
+.bottom_arrow_show {
+    .iconfont {
+        color: #9B9B9B;
+        font-size: 22px;
+        position: relative;
+        &::after {
+            content: '';
+            border-radius: 8px;
+            background: #F8F8F8;
+            width: 32px;
+            height: 32px;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            z-index: -1;
+            transform: translate(-50%, -50%);
+        }
+    }
 }
 </style>

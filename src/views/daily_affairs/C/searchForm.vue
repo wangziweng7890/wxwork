@@ -1,45 +1,126 @@
 <script lang="ts" setup>
-const showPicker = ref(false);
-const columns = [
-    { text: '杭州', value: 'Hangzhou' },
-    { text: '宁波', value: 'Ningbo' },
-    { text: '温州', value: 'Wenzhou' },
-    { text: '绍兴', value: 'Shaoxing' },
-    { text: '湖州', value: 'Huzhou' },
-]
-const onConfirm = ({ selectedOptions }) => {
-    showPicker.value = false
-}
-
-const filterData: filter_params = reactive({
-    customer_name: '',
-    fellow_name: '', // 香港同事
-    adress: '',// 地点
-    status: '',// 状态
-    create_at: ''
+const props = defineProps({
+    filterData: Object
+});
+const emit = defineEmits(['update:filterData'])
+const formData = computed({
+    get: () => props.filterData,
+    set: value => {
+        console.log(value, 'formData-------------->');
+        emit('update:filterData', value)
+    },
 })
+const showPicker = ref(false);
+const columns = ref([])
+
+const showCalendar = ref(false)
+const customFieldName = {
+      text: 'label',
+      value: 'value',
+    };
 // 打开弹出层的类型
 const picker_type =  ref('')
 // 打开弹出层
 const openPicker = (type?: string) => {
     // type = ''/时间选择，fellow_name/同事选择，adress/地点选择，status/状态选择
     picker_type.value = type
-    showPicker.value = true
+    if (type === 'create_at') {
+        showCalendar.value = true
+        return 
+    } else {
+        showPicker.value = true
+    }
 }
 // 过滤展示标题
 const picker_title = () => {
     switch (picker_type.value) {
         case 'fellow_name':
+        columns.value = [
+                {
+                    label: '田博恩',
+                    value: 1
+                },
+                {
+                    label: '林夕戏',
+                    value: 2
+                },
+                {
+                    label: '林大咩',
+                    value: 3
+                },
+            ]
             return '请选择香港同事';
         case 'adress':
+        columns.value = [
+                {
+                    label: '东九龙办事处',
+                    value: 1
+                },
+                {
+                    label: '西九龙办事处',
+                    value: 2
+                },
+                {
+                    label: '沙田办事处',
+                    value: 3
+                },
+                {
+                    label: '香港湾仔告士打道7号入境事务大楼',
+                    value: 4
+                },
+                {
+                    label: '火炭办事处',
+                    value: 5
+                },
+                {
+                    label: '屯门办事处',
+                    value: 6
+                },
+                {
+                    label: '元朗办事处',
+                    value: 7
+                },
+            ]
             return '入境处地点';
         case 'status':
+        columns.value = [
+                {
+                    label: '待办理',
+                    value: 1
+                },
+                {
+                    label: '待分配',
+                    value: 2
+                },
+                {
+                    label: '已办理',
+                    value: 3
+                },
+                {
+                    label: '已领证',
+                    value: 4
+                },
+            ]
             return '请选择状态';
         default:
             break;
     }
 }
-const showCalendar = ref(false)
+// 过滤时间
+const formatDate = (date) => `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+
+// popup弹出层确认
+const onConfirm = (values) => {
+    if (picker_type.value === 'create_at') {
+        const [start, end] = values;
+        formData.value.create_at = formatDate(start) + ' - ' + formatDate(end)
+        showCalendar.value = false
+    } else {
+        const { selectedOptions } = values
+        formData.value[picker_type.value] = selectedOptions[0]?.label
+        showPicker.value = false
+    }
+}
 </script>
 <template>
     <div class="search">
@@ -47,47 +128,57 @@ const showCalendar = ref(false)
             筛选
         </div>
         <!-- <van-form @submit="onSubmit"> -->
-        <van-cell-group>
+        <van-cell-group inset>
             <van-field
-                v-model="filterData.customer_name"
+                v-model="formData.customer_name"
                 name="客户姓名"
                 label="客户姓名"
                 placeholder="请输入"
             />
-            <!-- <van-cell title="香港同事" :value="filterData.fellow_name" @click="openPicker('fellow_name')" is-link/> -->
             <van-field
-                v-model="filterData.fellow_name"
+                v-model="formData.fellow_name"
                 is-link
                 readonly
-                name="picker"
+                name="fellow_name"
                 label="香港同事"
                 placeholder="请选择"
                 @click="openPicker('fellow_name')"
             />
-            <van-cell title="时间" :value="filterData.create_at" @click="showCalendar = true" is-link/>
             <van-field
-                v-model="filterData.adress"
+                v-model="formData.create_at"
                 is-link
                 readonly
-                name="picker"
+                name="create_at"
+                label="时间"
+                placeholder="请选择"
+                @click="openPicker('create_at')"
+            />
+            <van-field
+                v-model="formData.adress"
+                is-link
+                readonly
+                name="adress"
                 label="地点"
                 placeholder="请选择"
                 @click="openPicker('adress')"
             />
             <van-field
-                v-model="filterData.status"
+                v-model="formData.status"
                 is-link
                 readonly
-                name="picker"
+                name="status"
                 label="状态"
                 placeholder="请选择"
                 @click="openPicker('status')"
             />
         </van-cell-group>
-        <div style="margin: 16px;">
-            <van-button round block type="primary" native-type="submit">
-            提交
-            </van-button>
+        <div style="margin: 16px;" class="action_bottom flex-jusify-between d-flex">
+            <div class="reset flex-center-center">
+                重置
+            </div>
+            <div class="confirm flex-center-center">
+                确定
+            </div>
         </div>
         <!-- </van-form> -->
         <van-popup
@@ -99,6 +190,7 @@ const showCalendar = ref(false)
                 :columns="columns"
                 @confirm="onConfirm"
                 @cancel="showPicker = false"
+                :columns-field-names="customFieldName"
             >
             <template #title>
                 <div class="popup_title">
@@ -108,7 +200,6 @@ const showCalendar = ref(false)
             </van-picker>
         </van-popup>
         <van-calendar v-model:show="showCalendar" type="range" @confirm="onConfirm" :allow-same-day="true">
-            
         </van-calendar>
     </div>
 </template>
@@ -156,15 +247,27 @@ const showCalendar = ref(false)
         left: 32px;
     }
 }
-// :deep(.van-picker-column__item--selected) {
-//     border-radius: 16px;
-//     background: rgba(68, 135, 249, 0.06);   
-// }
 :deep(.van-picker__frame) {
     border-radius: 16px;
     background: rgba(68, 135, 249, 0.06);   
     &::after {
         border: none;
+    }
+}
+.action_bottom {
+    div {
+        border-radius: 16px;
+        height: 88px;
+    }
+    .reset {
+        background: #F8F9FB;
+        width: 172px;
+        margin-right: 20px;
+    }
+    .confirm {
+        color: #fff;
+        background: #198CFF;
+        flex: 1;
     }
 }
 </style>

@@ -9,6 +9,11 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    IconFontAIcon_Otherinformation: typeof import('~icons/font/a-icon_-otherinformation')['default']
+    IconFontIcon_luodou: typeof import('~icons/font/icon_luodou')['default']
+    IconFontIcon_Otherinformation: typeof import('~icons/font/icon_-otherinformation')['default']
+    IconFontIcon_sousuo: typeof import('~icons/font/icon_sousuo')['default']
+    IconFontMeishi: typeof import('~icons/font/meishi')['default']
     Loading: typeof import('./src/components/Loading/Loading.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
@@ -32,5 +37,6 @@ declare module '@vue/runtime-core' {
     VanSearch: typeof import('vant/es')['Search']
     VanTab: typeof import('vant/es')['Tab']
     VanTabs: typeof import('vant/es')['Tabs']
+    VanUploader: typeof import('vant/es')['Uploader']
   }
 }

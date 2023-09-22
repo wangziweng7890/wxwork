@@ -84,11 +84,18 @@ export default ({ mode }) => {
       port: 80, // 启动端口号
       proxy: {
         // 选项写法
-        "/api": {
+        "/api/frontend": {
           // target: 'http://192.168.25.68:8181',
           target: "https://test.api.gateway.galaxy-immi.com",
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, ""),
+          rewrite: (path) => {
+            return path.replace(/^\/api/, "")
+          },
+        },
+        "/api": {
+          // target: 'http://192.168.25.68:8181',
+          target: "https://test.dwp.galaxy-immi.com/api",
+          changeOrigin: true,
         },
       },
     },

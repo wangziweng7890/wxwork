@@ -13,14 +13,14 @@ const toast = (msg) => {
     const userStore = useUserStore()
     userStore.clear()
     showToast(
-        { 
+        {
             message: msg,
             icon: 'cross',
-            onClose:()=> {
+            onClose: () => {
                 router.replace({
                     path: "/login",
                     query: {
-                        redirect_uri: encodeURIComponent(location.href) 
+                        redirect_uri: encodeURIComponent(location.href)
                     }
                 })
             }
@@ -28,95 +28,105 @@ const toast = (msg) => {
     )
 }
 
-const http = axios.create({
-  baseURL: import.meta.env.VITE_API_BASEPATH,
-  timeout: 50000,
-});
-
-// 数据请求拦截
-http.interceptors.request.use(
-  (config) => {
-    axios.defaults.headers = {
-      "Content-Type": "application/x-www-form-urlencoded",
-    };
+function requestHook(config, isDwp) {
+    !isDwp && (axios.defaults.headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+    });
 
     // 全局loading
     if (!config.hideLoading) {
-      useCommonStore.setLoading(true);
+        useCommonStore.setLoading(true);
     }
     // 缓存取token
     const userStore = useUserStore();
-    config.headers["token"] = userStore.getToken;
+    config.headers["App"] = 'galaxy-admin'
+    config.headers["Token"] = config.headers["Token"] || (isDwp ? userStore.getDwpToken : userStore.getToken);
     // post，put请求前处理
     if (
-      (config.method.toLowerCase() === "post" ||
-        config.method.toLowerCase() === "put") &&
-      config.data &&
-      config.headers["Content-Type"] === "application/x-www-form-urlencoded"
+        (config.method.toLowerCase() === "post" ||
+            config.method.toLowerCase() === "put") &&
+        config.data &&
+        config.headers["Content-Type"] === "application/x-www-form-urlencoded"
     ) {
-      config.data = qs.stringify(config.data);
+        config.data = qs.stringify(config.data);
     }
     return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
+}
 
-// 返回响应数据拦截
-http.interceptors.response.use(
-  (res) => {
+function responseHook(res) {
     // 全局loading
     useCommonStore.setLoading(false);
-    if (!isLoading) {
-      if (res.data.code === 401) {
+    if (res.data.code === 401) {
         toast("身份验证失败,请重新登陆");
         return;
-      }
-      const data = res.data;
-      if (res.status === 200 && data.code === 200) {
+    }
+    const data = res.data;
+    if (res.status === 200 && data.code === 200) {
         return Promise.resolve(data);
-      }
-      if (
+    }
+    if (
         res.status === 200 &&
         (res.data.code == 401 || res.data.code == 403)
-      ) {
+    ) {
         toast("身份验证失败,请重新登陆");
         return;
-      }
-      // 其他状态码
-      return showToast({ message: data.msg, icon: "cross" });
     }
-  },
-  (error) => {
+    // 其他状态码
+    return showToast({ message: data.msg, icon: "cross" });
+}
+
+function responseError(error) {
     // 全局loading
     useCommonStore.setLoading(false);
-    if (!isLoading) {
-      let msg = "";
-      if (error.response.status) {
+    let msg = "";
+    if (error.response.status) {
         switch (error.response.status) {
-          case 400:
-            msg = "400 Bad！";
-            break;
-          case 500:
-            if (error.response.data) {
-              msg = error.response.data.msg;
-              if (error.response.data.code == 401) {
-                toast("身份验证失败,请重新登陆");
-              }
-            } else {
-              msg = "服务器内部错误！";
-            }
-            break;
-          default:
-            msg = "未知错误！";
-            break;
+            case 400:
+                msg = "400 Bad！";
+                break;
+            case 500:
+                if (error.response.data) {
+                    msg = error.response.data.msg;
+                    if (error.response.data.code == 401) {
+                        toast("身份验证失败,请重新登陆");
+                    }
+                } else {
+                    msg = "服务器内部错误！";
+                }
+                break;
+            default:
+                msg = "未知错误！";
+                break;
         }
-      }
-      showToast({ message: msg, icon: "cross" });
-      return Promise.reject(error);
     }
-  }
-);
+    showToast({ message: msg, icon: "cross" });
+    return Promise.reject(error);
+}
 
-export default http;
+
+function createHttp(baseURL, isDwp) {
+    const http = axios.create({
+        baseURL,
+        timeout: 50000,
+    });
+
+    // 数据请求拦截
+    http.interceptors.request.use(
+        (config) => requestHook(config, isDwp),
+        (error) => {
+            return Promise.reject(error);
+        }
+    );
+
+    // 返回响应数据拦截
+    http.interceptors.response.use(
+        responseHook,
+        responseError
+    );
+    return http
+}
+
+
+export default createHttp(import.meta.env.VITE_API_BASEPATH);  // 仅仅用来授权
+
+export const http = createHttp(import.meta.env.VITE_DWP_URL, true); // 用来业务

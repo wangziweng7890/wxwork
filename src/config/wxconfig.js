@@ -7,7 +7,7 @@
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
  */
 
-import { getWorkWechatConfig } from '@/api/user'
+import { getWorkWechatConfig } from '@/api/common'
 import { getAgentid } from './app'
 import * as wx from '@wecom/jssdk'
 

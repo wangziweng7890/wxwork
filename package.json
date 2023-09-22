@@ -12,11 +12,13 @@
     },
     "dependencies": {
         "@wecom/jssdk": "^1.4.3",
+        "ali-oss": "^6.18.1",
         "axios": "^1.4.0",
         "pinia": "^2.0.36",
         "pinia-plugin-persist": "^1.0.0",
         "qs": "^6.11.2",
         "sass": "^1.66.1",
+        "spark-md5": "^3.0.2",
         "vant": "^4.3.2",
         "vue": "^3.3.2",
         "vue-i18n": "^9.4.0",

@@ -7,7 +7,7 @@
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
 -->
 <script setup>
-import { workWechatOauth } from '@/api/user'
+import { workWechatOauth, getDwptoken } from '@/api/common'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/modules/user'
 import { getAgentid } from '@/config/app'
@@ -39,11 +39,14 @@ const login = async () => {
         const { data } = await workWechatOauth({ code: route.query.code, agentid: getAgentid() })
         userStore.setToken(data.token)
         userStore.setUserInfo(data.corp_user_info || {})
+        const res = await getDwptoken({})
+        userStore.setDwpToken(res.data.token)
         router.replace(decodeURIComponent(route.query.redirect_uri))
     } catch (error) {
         console.error('login-error：', error)
     }
 }
+
 // 如果需要登录
 if (!userStore.getToken) {
     !route.query.hasCode ? getWorkCode() : login()

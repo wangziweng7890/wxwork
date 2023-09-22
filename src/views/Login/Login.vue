@@ -7,7 +7,7 @@
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
 -->
 <script setup>
-import { workWechatOauth } from '@/api/user'
+import { workWechatOauth, getDwptoken } from '@/api/common'
 import { useRoute, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/modules/user'
 import { getAgentid } from '@/config/app'
@@ -36,16 +36,17 @@ const getWorkCode = () => {
 // 登录
 const login = async () => {
     try {
-        // const { data } = await workWechatOauth({ code: route.query.code, agentid: getAgentid() })
-        // 目前开发环境加不了企微，所以先用建镕的token
-        let data = { token: "eyJpdiI6IjlNdVNzSjdNSkdhcFNEb1pQbVI0Q2c9PSIsInZhbHVlIjoiS25nN0VuR21FQzg0alJOWXliTFErQm8zRUVZOGpxZmlHSnVOTE0zS01qYnlWZ2U5cldvZXlNQks5WkNINlpIMzI0N3F4U3VEeTBBcXhva2VyUDlvQ3Ntc2xQU3NIcWJ2UjhFbUhhUWg0eGtYY0RoTzBndlBYN0RlY0h5a1wvNVd2QUJTaGRxM1hWRWlRdzFEUGhpWmwyekpuUzlBWURWcjFJME52Y0V2cmdXTWdBbE54WHJGcWFcL25zaWZMdk5ZaHlRWlJEMDRiR3kzdmhCNGZnOHNRXC9Vdz09IiwibWFjIjoiZDc0ZGRiZmI1NTRmMjdlMmM0NzMyNTZmZGNmYjU4MmQyMTEyNTlmMWZiZTI3NTYwYjMyYWI2YTE4ZjdiZDEyNiJ9"}
+        const { data } = await workWechatOauth({ code: route.query.code, agentid: getAgentid() })
         userStore.setToken(data.token)
         userStore.setUserInfo(data.corp_user_info || {})
+        const res = await getDwptoken({})
+        userStore.setDwpToken(res.data.token)
         router.replace(decodeURIComponent(route.query.redirect_uri))
     } catch (error) {
         console.error('login-error：', error)
     }
 }
+
 // 如果需要登录
 // if (!userStore.getToken) {
 //     !route.query.hasCode ? getWorkCode() : login()

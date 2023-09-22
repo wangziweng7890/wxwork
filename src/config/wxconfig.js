@@ -7,7 +7,7 @@
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
  */
 
-import { getWorkWechatConfig } from '@/api/user'
+import { getWorkWechatConfig } from '@/api/common'
 import { getAgentid } from './app'
 import * as wx from '@wecom/jssdk'
 
@@ -15,13 +15,12 @@ import * as wx from '@wecom/jssdk'
 export const agentConfig = (jsApiList) => {
     return new Promise(async (resolve, reject) => {
         const agentId = getAgentid()
-        const { data: { config } } = await getWorkWechatConfig({ url: location.href  })
         wx.register({
             corpId: import.meta.env.VITE_APPID, // 必填，企业微信的corpid，必须与当前登录的企业一致
             agentId, // 必填，企业微信的应用id （e.g. 1000247）
             jsApiList: jsApiList, //必填
             async getAgentConfigSignature() {
-                const { data: { config } } = await getWorkWechatConfig({ url: location.href  })
+                const { data: { config } } = await getWorkWechatConfig({ url: location.href, agentid: getAgentid() })
                 return {
                     timestamp: config.timestamp, // 必填，生成签名的时间戳
                     nonceStr: config.nonceStr, // 必填，生成签名的随机串

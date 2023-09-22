@@ -38,9 +38,11 @@ const activeTag = id => {
 .tagBox {
   display: grid;
   grid-template-columns: repeat(auto-fill, 142px);
-  grid-gap: 16px;
+  grid-row-gap:18px;
+  // grid-column-gap:24px;
   justify-content: space-between;
   .tag {
+    cursor: pointer;
     width: 142px;
     height: 65px;
     border-radius: 12px;

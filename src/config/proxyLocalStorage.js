@@ -5,7 +5,7 @@ import  { getAgentid } from './app'
 // 这里使用一个前缀来区分
 function proxyFn(prefix, fn) {
     return function (key, ...args) {
-        const prefixKey = key === agentid ? key : `${prefix}${key}`
+        const prefixKey = `${prefix}${key}`
         return fn.apply(this, [prefixKey, ...args])
     }
 }

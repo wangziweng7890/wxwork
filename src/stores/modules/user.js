@@ -14,6 +14,9 @@ export const useUserStore = defineStore('user', {
         getToken() {
             return this.token
         },
+        getDwpToken() {
+            return this.dwpToken
+        },
         getUserInfo() {
             return this.userInfo
         }
@@ -23,12 +26,16 @@ export const useUserStore = defineStore('user', {
         setToken(token) {
             this.token = token
         },
+        setDwpToken(token) {
+            this.dwpToken = token
+        },
         // set用户信息
         setUserInfo(data) {
             this.userInfo = data
         },
         clear() {
             this.token = ''
+            this.dwpToken = ''
             this.userInfo = {}
         }
     },

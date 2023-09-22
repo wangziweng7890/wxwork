@@ -32,7 +32,7 @@ export default [
         name: "daily_affairs",
         component: () => import("@/views/daily_affairs/daily_affairs.vue"),
         meta: {
-          jsApiList: ["shareAppMessage"],
+          jsApiList: ["shareAppMessage", "selectEnterpriseContact"],
         },
       },
       {

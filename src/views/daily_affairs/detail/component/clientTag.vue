@@ -11,7 +11,7 @@
     <div class="history">
       <HistoryDemand></HistoryDemand>
     </div>
-    <van-action-sheet v-model:show="show">
+    <van-action-sheet v-model:show="show" lock-scroll>
       <div class="header">
         <div class="headerTitle">添加需求</div>
         <img
@@ -38,6 +38,7 @@
 <script setup lang="ts" name="clientTag">
 import Tag from '@/components/tag/tag.vue'
 import HistoryDemand from '@/components/historyDemand/historyDemand.vue'
+import {judgeInput}from "@/utils/enter.js"
 const clientArray = [
   {
     name: '创业',
@@ -52,14 +53,16 @@ const show = ref(false)
 const plan = ref('')
 const addShow = () => {
   show.value = true
+  judgeInput()
 }
 const closeAddShow = () => {
   show.value = false
 }
 const submit=()=>{
     show.value = false
-
 }
+
+
 </script>
 
 <style lang="scss" scoped>
@@ -93,7 +96,7 @@ const submit=()=>{
       font-size: 26px;
     }
   }
-  .history{
+  .history {
     margin-top: 32px;
   }
   .header {
@@ -119,20 +122,20 @@ const submit=()=>{
     font-weight: 500;
     font-size: 26px;
   }
-  .van-cell{
+  .van-cell {
     padding: 0 42px;
   }
-  .van-cell:after{
-    border-bottom:none;
+  .van-cell:after {
+    border-bottom: none;
   }
   .btnBox {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-top: 60px;
-    padding:0 42px 42px;
+    padding: 0 42px 42px;
     div {
-        cursor: pointer;
+      cursor: pointer;
       width: 321px;
       height: 90px;
       display: flex;

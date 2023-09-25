@@ -13,32 +13,49 @@
 </template>
 
 <script setup lang="ts">
-import { withDefaults, ref } from 'vue'
-import type { tagArray } from '../../views/detail/modules'
+import {  ref } from 'vue'
+import { saveTag } from '@/api/daily_affairs/detail'
 
 interface Props {
-  tagArray: tagArray[]
+  clientArray: string[]
 }
-
-withDefaults(defineProps<Props>(), {
-  tagArray: () => []
+// 回显 选中的数组
+const props=withDefaults(defineProps<Props>(), {
+  clientArray: () => []
 })
+
+const tagArray = [
+  { id: '1', name: '创业' },
+  { id: '2', name: '就业' },
+  { id: '3', name: '教育' },
+  { id: '4', name: '港宝' },
+  { id: '5', name: '保险' },
+  { id: '6', name: '医疗' },
+  { id: '7', name: '驾照' }
+]
+// 选中的数组
 const isActive = ref([])
-const activeTag = id => {
+
+const activeTag = async(id )=> {
   if (isActive.value.includes(id)) {
     let index = isActive.value.findIndex(item => item === id)
     isActive.value.splice(index, 1)
   } else {
     isActive.value.push(id)
   }
+await saveTag({id:345,tags:isActive.value})
+
 }
+onMounted(()=>{
+  isActive.value=props.clientArray
+})
 </script>
 
 <style lang="scss" scoped>
 .tagBox {
   display: grid;
   grid-template-columns: repeat(auto-fill, 142px);
-  grid-row-gap:18px;
+  grid-row-gap: 18px;
   // grid-column-gap:24px;
   justify-content: space-between;
   .tag {

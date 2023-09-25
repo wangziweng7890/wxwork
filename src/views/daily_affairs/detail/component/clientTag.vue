@@ -1,7 +1,7 @@
 <template>
   <div class="clientTag">
     <div class="title">客户标签</div>
-    <Tag :tagArray="clientArray" class="Tag"></Tag>
+    <Tag :clientArray="tagArray" class="Tag"></Tag>
   </div>
   <div class="addPlan">
     <div class="title">
@@ -38,17 +38,14 @@
 <script setup lang="ts" name="clientTag">
 import Tag from '@/components/tag/tag.vue'
 import HistoryDemand from '@/components/historyDemand/historyDemand.vue'
-import {judgeInput}from "@/utils/enter.js"
-const clientArray = [
-  {
-    name: '创业',
-    id: 1
-  },
-  { name: '就业', id: 2 },
-  { name: '教育', id: 3 },
-  { name: '港宝', id: 4 },
-  { name: '创业', id: 5 }
-]
+import {judgeInput}from "@/utils/enter"
+const props = defineProps({
+  detailList: {
+    type: Object,
+    default: () => ({})
+  }
+})
+const tagArray = computed(()=>props.detailList.tag_info ? props.detailList.tag_info.tagArray : []) 
 const show = ref(false)
 const plan = ref('')
 const addShow = () => {

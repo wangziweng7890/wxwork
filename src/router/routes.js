@@ -2,7 +2,7 @@
  * @Author: Autumn.again
  * @Date: 2023-09-19 13:37:42
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-09-22 17:36:20
+ * @LastEditTime: 2023-09-25 15:27:23
  * @FilePath: \workwexin-h5-sidebar\src\router\routes.js
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
  */
@@ -51,14 +51,6 @@ export default [
                     jsApiList: ['shareAppMessage', 'selectEnterpriseContact'],
                 },
             },
-            {
-                path: 'detail',
-                name: 'serch_detail',
-                component:() => import("@/views/daily_affairs/serch_detail.vue"),
-                meta: {
-                    jsApiList: ['shareAppMessage'],
-                },
-            }
         ]
       },
       {
@@ -69,6 +61,15 @@ export default [
           title: "客户信息",
         },
       },
+      {
+        path: 'serch_list',
+        name: '/serch_list',
+        component:() => import("@/views/daily_affairs/serch_list.vue"),
+        title: "客户信息",
+        meta: {
+            jsApiList: ['shareAppMessage'],
+        },
+    }
     ],
   },
 ];

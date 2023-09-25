@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 const props = defineProps({
-    filterData: Object
+    filterData: Object,
+    role_key: String,
 });
 const emit = defineEmits(['update:filterData'])
 const formData = computed({
     get: () => props.filterData,
     set: value => {
-        console.log(value, 'formData-------------->');
         emit('update:filterData', value)
     },
 })
@@ -22,7 +22,7 @@ const customFieldName = {
 const picker_type =  ref('')
 // 打开弹出层
 const openPicker = (type?: string) => {
-    // type = ''/时间选择，fellow_name/同事选择，adress/地点选择，status/状态选择
+    // type = ''/时间选择，user_id/同事选择，address/地点选择，task_status/状态选择
     picker_type.value = type
     if (type === 'create_at') {
         showCalendar.value = true
@@ -34,7 +34,7 @@ const openPicker = (type?: string) => {
 // 过滤展示标题
 const picker_title = () => {
     switch (picker_type.value) {
-        case 'fellow_name':
+        case 'user_id':
         columns.value = [
                 {
                     label: '田博恩',
@@ -50,7 +50,7 @@ const picker_title = () => {
                 },
             ]
             return '请选择香港同事';
-        case 'adress':
+        case 'address':
         columns.value = [
                 {
                     label: '东九龙办事处',
@@ -82,7 +82,7 @@ const picker_title = () => {
                 },
             ]
             return '入境处地点';
-        case 'status':
+        case 'task_status':
         columns.value = [
                 {
                     label: '待办理',
@@ -113,7 +113,7 @@ const formatDate = (date) => `${date.getFullYear()}-${date.getMonth() + 1}-${dat
 const onConfirm = (values) => {
     if (picker_type.value === 'create_at') {
         const [start, end] = values;
-        formData.value.create_at = formatDate(start) + ' - ' + formatDate(end)
+        formData.value.create_at = formatDate(start) + ' — ' + formatDate(end)
         showCalendar.value = false
     } else {
         const { selectedOptions } = values
@@ -136,13 +136,14 @@ const onConfirm = (values) => {
                 placeholder="请输入"
             />
             <van-field
-                v-model="formData.fellow_name"
+                v-model="formData.user_id"
                 is-link
                 readonly
-                name="fellow_name"
+                name="user_id"
                 label="香港同事"
                 placeholder="请选择"
-                @click="openPicker('fellow_name')"
+                @click="openPicker('user_id')"
+                v-if="!!props.role_key"
             />
             <van-field
                 v-model="formData.create_at"
@@ -154,22 +155,22 @@ const onConfirm = (values) => {
                 @click="openPicker('create_at')"
             />
             <van-field
-                v-model="formData.adress"
+                v-model="formData.address"
                 is-link
                 readonly
-                name="adress"
+                name="address"
                 label="地点"
                 placeholder="请选择"
-                @click="openPicker('adress')"
+                @click="openPicker('address')"
             />
             <van-field
-                v-model="formData.status"
+                v-model="formData.task_status"
                 is-link
                 readonly
-                name="status"
+                name="task_status"
                 label="状态"
                 placeholder="请选择"
-                @click="openPicker('status')"
+                @click="openPicker('task_status')"
             />
         </van-cell-group>
         <div style="margin: 16px;" class="action_bottom flex-jusify-between d-flex">

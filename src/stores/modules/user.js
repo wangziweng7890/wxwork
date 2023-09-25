@@ -1,3 +1,11 @@
+/*
+ * @Author: Autumn.again
+ * @Date: 2023-09-12 17:15:47
+ * @LastEditors: Autumn.again
+ * @LastEditTime: 2023-09-25 18:43:50
+ * @FilePath: \workwexin-h5-sidebar\src\stores\modules\user.js
+ * Copyright: 2023 by Autumn.again, All Rights Reserved.
+ */
 import { defineStore } from 'pinia'
 import { store } from '../index'
 import { useCache } from '@/hooks/web/useCache'
@@ -7,7 +15,8 @@ export const useUserStore = defineStore('user', {
     state: () => {
         return {
             token: '',
-            userInfo: {}
+            userInfo: {},
+            dwpToken: ''
         }
     },
     getters: {

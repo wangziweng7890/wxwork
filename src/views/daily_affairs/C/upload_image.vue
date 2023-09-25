@@ -5,6 +5,7 @@ let ossService = null
 // 初始化oss
 const initOss = async () => {
     ossService = await AliyunOssService.createFromBackend()
+    console.log(ossService, 'ossService------------------------>');
 }
 onMounted(async () => {
     await initOss()

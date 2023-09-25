@@ -2,7 +2,7 @@
  * @Author: Autumn.again
  * @Date: 2023-09-19 13:53:38
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-09-22 15:08:24
+ * @LastEditTime: 2023-09-25 16:47:33
  * @FilePath: \workwexin-h5-sidebar\src\views\daily_affairs\C\week_calender.vue
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
 -->
@@ -10,7 +10,8 @@
 // const chooseDate = ref('')
 
 const props = defineProps({
-    date: String
+    date: String,
+    role_key: String // 是否是主管
 });
 const emit = defineEmits(['update:date', 'click_action'])
 // const emit = defineEmits<{
@@ -77,9 +78,12 @@ const show_back_today = () => {
 onMounted(() => {
     loading.value = true
 })
-const click_action = () => {
-    emit('click_action')
+const click_action = (type?: number) => {
+    emit('click_action', type)
 }
+watch(() => props.date, (val) => {
+    console.log(val, 'watch---------->');
+})
 </script>
 <template>
     <div class="calender" v-if="loading">
@@ -101,8 +105,8 @@ const click_action = () => {
             </template>
             <template v-slot:day="scope">
                 <div class="lunar-content">
-                <div class="lunar-content_day">{{ isFullDate(scope) ? filterDay(scope) : scope?.date.day }} </div>
-                <div class="lunar-content_people normal_text_color"> 7人</div>
+                    <div class="lunar-content_day">{{ isFullDate(scope) ? filterDay(scope) : scope?.date.day }} </div>
+                    <div class="lunar-content_people normal_text_color"> 7人</div>
                 </div>
             </template>
             <template #arrow="scope">
@@ -126,10 +130,13 @@ const click_action = () => {
                     回今天
                 </span>
             </div>
-            <!-- <div @click="click_action">
-                icon
-            </div> -->
-            <i class="iconfont icon-a-icon_Otherinformation" @click="click_action"></i>
+            <div class="actiones d-flex">
+                <div v-if="!props.role_key">
+                    <i class="iconfont icon-icon_sousuo" @click="click_action(0)"></i>
+                    <i class="iconfont icon-icon_luodou" @click="click_action(1)"></i>
+                </div>
+                <i class="iconfont icon-a-icon_Otherinformation" @click="click_action(2)"></i>
+            </div>
         </div>
     </div>
 </template>
@@ -189,6 +196,9 @@ const click_action = () => {
                     font-size: 32px;
                     color: #222222;
                     padding:0 16px 0 0;
+                    &::before {
+                        display: none;
+                    }
                 }
             }
             .back_today {
@@ -197,6 +207,7 @@ const click_action = () => {
         }
         .iconfont {
             font-size: 42px;
+            margin-left: 32px;
         }
     }
 }

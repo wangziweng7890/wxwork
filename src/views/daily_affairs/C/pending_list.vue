@@ -63,28 +63,56 @@ const showUploder = ref(false)
 const openUploader = () => {
     showUploder.value = true
 }
+// 过滤办证者展示
+const fliterUserList = (res: any) => {
+    if (!res.length) {
+        return '-'
+    } else {
+        const newArray = res.map((item) => {
+            return item.name
+        })
+        return newArray.join('、')
+    }
+}
+// 过滤时间
+const fliterGoTime = (res: any) => {
+    const new_date = new Date(res)
+    const date_time = new_date.getFullYear() + '年' + (new_date.getMonth() + 1) + '月' + new_date.getDay() + '日'
+    const hour_time = (new_date.getHours() < 10  ? '0' + new_date.getHours() : new_date.getHours()) + ':' + (new_date.getMinutes() < 10 ? '0' + new_date.getMinutes() : new_date.getMinutes())
+    return {
+        date_time,
+        hour_time
+    }
+}
+// 跳转详情
+const linkDetail = (res: any) => {
+    
+}
 </script>
 <template>
     <div class="pending_list">
         <van-collapse v-model="collArray" class="fold" ref="fold">
-            <van-collapse-item :name="collIndex + 1" v-for="(res, collIndex) in props.listData" :key="collIndex" class="fold_item">
+            <van-collapse-item :name="collIndex + 1" v-for="(res, collIndex) in props.listData" :key="res.id" class="fold_item">
                 <template #title>
                     <div class="title_box">
                         <div class="title_box_left">
                             <div class="time">
-                                {{ res.time }}
+                                {{ fliterGoTime(res.go_time).hour_time }}
                             </div>
                         </div>
-                        <div class="title_box_name">
-                            {{ res.user_name || '-' }}
+                        <div class="title_box_name" @click="linkDetail(res)">
+                            {{ res.order_information.username || '-' }}
+                        </div>
+                        <div>
+                            办身份证
                         </div>
                         <div class="title_box_type">
                             <!-- {{ res.visa_type || '-' }} -->
                             已领证
                         </div>
                     </div>
-                    <div class="title_manage">
-                        接待人：待分配
+                    <div class="title_manage" :class="{warning: !res.task_user_name}">
+                        接待人：{{ res.task_user_name || '待分配' }}
                     </div>
                 </template>
                 <div class="fold_item_content">
@@ -94,7 +122,7 @@ const openUploader = () => {
                                 主申人：
                             </span>
                             <div>
-                                
+                                {{ res.order_information.username }}
                             </div>
                         </div>
                         <div class="info">
@@ -102,7 +130,7 @@ const openUploader = () => {
                                 办证者：
                             </span>
                             <div>
-                                {{ res.userList.join('、') }}
+                                {{ fliterUserList(res.user_list) }}
                             </div>
                         </div>
                         <div class="info">
@@ -110,7 +138,7 @@ const openUploader = () => {
                                 地点：
                             </span>
                             <div>
-                                {{  }}
+                                {{ res.immigration_office }}
                             </div>
                         </div>
                         <div class="info">
@@ -118,7 +146,7 @@ const openUploader = () => {
                                 时间：
                             </span>
                             <div>
-                                {{  }}
+                                {{ fliterGoTime(res.go_time).date_time + ' ' + fliterGoTime(res.go_time).hour_time }}
                             </div>
                         </div>
                         <div class="info">
@@ -126,8 +154,11 @@ const openUploader = () => {
                                 客户经理：
                             </span>
                             <div>
-                                {{  }}
+                                {{ res.service_name }}
                             </div>
+                        </div>
+                        <div class="phone">
+                            {{ res.service_phone }}
                         </div>
                     </div>
                     <div class="fold_item_content_servise block">
@@ -198,19 +229,28 @@ const openUploader = () => {
                 &_left {
                     display: flex;
                     .time {
-                        padding-right: 16px;
+                        // padding-right: 16px;
                         margin-right: 0;
                         position: relative;
-                        &::after {
-                            content: '';
-                            position: absolute;
-                            right: 0;
-                            top: 50%;
-                            transform: translateY(-50%);
-                            width: 1px;
-                            height: 24px;
-                            background: #E1E1E1;
-                        }
+
+                    }
+                }
+                &_name {
+                    color: #198CFF;
+                    position: relative;
+                    padding: 0 16px;
+                    &::after, &::before {
+                        content: '';
+                        position: absolute;
+                        right: 0;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        width: 1px;
+                        height: 24px;
+                        background: #E1E1E1;
+                    }
+                    &::before {
+                        left: 0;
                     }
                 }
                 &_type {
@@ -225,6 +265,9 @@ const openUploader = () => {
             .title_manage {
                 font-size: 26px;
                 color: #888F98;
+            }
+            .warning {
+                color: #FF5C00;
             }
             &_content {
                 color: #222222;

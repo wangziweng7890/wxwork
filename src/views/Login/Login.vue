@@ -2,7 +2,7 @@
  * @Author: Autumn.again
  * @Date: 2023-09-12 17:15:47
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-09-22 17:53:50
+ * @LastEditTime: 2023-09-25 18:00:47
  * @FilePath: \workwexin-h5-sidebar\src\views\Login\Login.vue
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
 -->
@@ -40,6 +40,7 @@ const login = async () => {
         userStore.setToken(data.token)
         userStore.setUserInfo(data.corp_user_info || {})
         const res = await getDwptoken({})
+        console.log(res, res.data.token, 'getDwptoken-------------------------------------->');
         userStore.setDwpToken(res.data.token)
         router.replace(decodeURIComponent(route.query.redirect_uri))
     } catch (error) {

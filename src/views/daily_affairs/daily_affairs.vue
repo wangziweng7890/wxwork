@@ -4,29 +4,43 @@ import weekCalender from './C/week_calender.vue'
 import SearchForm from './C/searchForm.vue'
 import { useI18n } from 'vue-i18n'
 import * as wx from '@wecom/jssdk'
+import { useUserStore } from '@/stores/modules/user'
+import { getTransactionTaskList, getTransactionUserList } from '@/api/daily_affairs'
+
 
 const router = useRouter()
-
+const { userInfo } = useUserStore() as any
 // 定义搜索参数
-const search_params: search_params = reactive({
-  customer_name: ''
-})
 const filterData: filter_params = reactive({
     customer_name: '',
-    fellow_name: '', // 香港同事
-    adress: '',// 地点
-    status: '',// 状态
-    create_at: ''
+    user_id: '', // 香港同事
+    address: '',// 地点
+    task_status: '',// 状态:0待分配,1待办理,2已办理,3已领证
+    start_time: '', // 开始
+    end_time: '', // 结束
+    is_conver: 0 // 是否转换数据格式为按天统计：1转换,0不转换
 })
+// 展开
 const showBottom = ref(false)
 const showAction = ref(false)
 
+const workmateList = ref([])
+onMounted(async () => {
+    const res = await getTransactionUserList() as any
+    workmateList.value = [
+      {
+        id: '',
+        wework_name: '全部'
+      },
+      ...res.data
+    ]
+})
 // 点击搜索
-const searchClick = (value?: string) => {
+const searchClick = (value?: string | number) => {
   if (value) {
     showBottom.value = !showBottom.value
   } else {
-    router.push('/daily_affairs/detail')
+    router.push('/daily_affairs/serch_list')
   }
 }
 const active = ref('0')
@@ -34,63 +48,30 @@ const active = ref('0')
 // 简体中英文繁体字切换
 const { locale } = useI18n()
 const changeLang = () => {
-  console.log('changeLang------------------------>');
   locale.value = locale.value === 'HK' ? 'ZH' : 'HK'
 }
 
 const listData = ref([])
 const date = ref('')
 // 监听数值变化就调用接口
+const getTransactionList = async () => {
+  const res = await getTransactionTaskList(filterData)
+  listData.value = res.data
+}
 watch(() => date.value, (newVal, oldVal) => {
-  listData.value = [
-  {
-        time: '2022-01-01',
-        user_name: '张三',
-        processor: '',
-        visa_type: 1,
-        applicant_name: '张1',
-        userList: ['张1_父亲', '张1_母亲', '张1_儿子'],
-        address: '港湾入境处',
-        id: 1,
-        message: ''
-    },
-    {
-        time: '2022-01-01',
-        user_name: '张三',
-        processor: '香港同事A',
-        visa_type: 3,
-        applicant_name: '张1',
-        userList: ['张1_父亲', '张1_母亲', '张1_儿子'],
-        address: '港湾入境处',
-        id: 2,
-        message: ''
-    },
-    {
-        time: '2022-01-01',
-        user_name: '张三',
-        processor: '',
-        visa_type: 1,
-        applicant_name: '张1',
-        userList: ['张1_父亲', '张1_母亲', '张1_儿子'],
-        address: '港湾入境处',
-        id: 3,
-        message: ''
-    },
-    {
-        time: '2022-01-01',
-        user_name: '张三',
-        processor: '香港同事BBB',
-        visa_type: 1,
-        applicant_name: '张1',
-        userList: ['张1_父亲', '张1_母亲', '张1_儿子'],
-        address: '港湾入境处',
-        id: 4,
-        message: ''
-    },
-  ]
+  filterData.start_time = newVal
+  getTransactionList()
 })
-const click_action = () => {
-  showAction.value = true
+const click_action = (type?: number) => {
+  switch (type) {
+    case 0:
+    case 1:
+      searchClick(type)
+      break;
+    default:
+      showAction.value = true
+      break;
+  }
 }
 const action_content = ref(['批量分配', '简转繁', '导出Excel', '取消'])
 const handler_action = (index?: number) => {
@@ -114,17 +95,32 @@ const handler_action = (index?: number) => {
   }
   showAction.value = false
 }
+const new_date = () => {
+  const newDate = new Date()
+  return newDate.getFullYear() + '-' + (newDate.getMonth() + 1) + '-' + newDate.getDate()
+}
+// 切换table栏
+const onClickTab = (res: any) => {
+  const { name } = res
+  filterData.user_id = workmateList.value[name].id
+  date.value = new_date()
+}
 </script>
 
 <template>
   <div class="daily">
-    <div class="title_action">
+    <div class="title_action" v-if="!!userInfo.role_key">
       <i class="iconfont icon-icon_sousuo" @click="searchClick()"></i>
       <i class="iconfont icon-icon_luodou" @click="searchClick('search')"></i>
     </div>
-    <van-tabs v-model:active="active" class="tables">
-      <van-tab :title="`标签${item}`" v-for="(item, index) in 8" :key="index" class="table_items">
-        <weekCalender v-model:date="date" @click_action="click_action"/>
+    <van-tabs
+      v-model:active="active"
+      class="tables"
+      :class="{hiddenTab: !userInfo.role_key}"
+      @click-tab="onClickTab"
+    >
+      <van-tab :title="item.wework_name || '-'" v-for="(item, index) in workmateList" :key="index" class="table_items">
+        <weekCalender v-model:date="date" :role_key="userInfo.role_key" @click_action="click_action"/>
         <PendingList :listData="listData"/>
       </van-tab>
     </van-tabs>
@@ -136,7 +132,7 @@ const handler_action = (index?: number) => {
       close-icon="close"
       closeable
     >
-      <SearchForm v-model:filterData="filterData"/>
+      <SearchForm v-model:filterData="filterData" :role_key="userInfo.role_key"/>
     </van-popup>
     <van-popup
       v-model:show="showAction"
@@ -210,5 +206,9 @@ const handler_action = (index?: number) => {
     }
   }
 }
-
+.hiddenTab { // 通过class样式隐藏tab栏
+  :deep(.van-tabs__wrap) {
+    display: none;
+  }
+}
 </style>

@@ -1,4 +1,14 @@
 <script setup lang="ts">
+import AliyunOssService from '@/utils/ali-oss'
+import { previewOss } from '@/api/common/index'
+let ossService = null
+// 初始化oss
+const initOss = async () => {
+    ossService = await AliyunOssService.createFromBackend()
+}
+onMounted(async () => {
+    await initOss()
+})
 const fileList = ref('')
 // 移除图片
 const removeImage = () => {
@@ -10,8 +20,9 @@ const uploadImage = () => {
     console.log('uploadImage------------------------>')
 }
 // 上传之后的回调
-const afteruploader = (file) => {
-    console.log(file.objectUrl, 'afteruploader------------------------>');
+const afteruploader = async (file: any) => {
+    // const { url }: imageInfo = await ossService.uploadFile(file.file)
+    console.log(file, previewOss, 'afteruploader------------------------>');
     fileList.value = file.objectUrl
 }
 </script>

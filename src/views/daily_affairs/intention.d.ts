@@ -2,7 +2,7 @@
  * @Author: Autumn.again
  * @Date: 2023-09-14 14:56:23
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-09-20 16:01:47
+ * @LastEditTime: 2023-09-22 17:46:35
  * @FilePath: \workwexin-h5-sidebar\src\views\daily_affairs\intention.d.ts
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
  */
@@ -19,4 +19,18 @@ interface filter_params {
     create_at?: string // 创建时间
     adress?: string // 地点
     status?: string | number // 状态
+}
+interface imageInfo {
+    name: string
+    res: {
+        status: number
+        size: number
+        data: any
+        requestUrls: string[]
+        [key: string]: any
+    }
+    url: string
+    oriName: string
+    type: string
+    uid: number
 }

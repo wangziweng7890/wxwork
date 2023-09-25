@@ -2,7 +2,7 @@
  * @Author: Autumn.again
  * @Date: 2023-09-12 17:15:47
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-09-20 17:46:05
+ * @LastEditTime: 2023-09-22 17:53:50
  * @FilePath: \workwexin-h5-sidebar\src\views\Login\Login.vue
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
 -->
@@ -48,11 +48,11 @@ const login = async () => {
 }
 
 // 如果需要登录
-// if (!userStore.getToken) {
-//     !route.query.hasCode ? getWorkCode() : login()
-// } else {
-//     router.replace(decodeURIComponent(route.query.redirect_uri))
-// }
+if (!userStore.getToken) {
+    !route.query.hasCode ? getWorkCode() : login()
+} else {
+    router.replace(decodeURIComponent(route.query.redirect_uri))
+}
 
 </script>
 

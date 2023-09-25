@@ -1,3 +1,11 @@
+/*
+ * @Author: Autumn.again
+ * @Date: 2023-09-19 13:37:42
+ * @LastEditors: Autumn.again
+ * @LastEditTime: 2023-09-22 17:36:20
+ * @FilePath: \workwexin-h5-sidebar\src\router\routes.js
+ * Copyright: 2023 by Autumn.again, All Rights Reserved.
+ */
 export default [
   {
     path: "/",

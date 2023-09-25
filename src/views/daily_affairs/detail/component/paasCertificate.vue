@@ -1,6 +1,7 @@
 <template>
+   <div class="row">
   <div class="passCertificate">
-    <div class="row">
+   
       <div class="title">客户:肖建俊</div>
       <div class="content">
         <div class="item">
@@ -9,6 +10,7 @@
         </div>
         <van-image-preview v-model:show="show" :images="images">
         </van-image-preview>
+        
         <div class="item">
           <div class="label">曾用名:</div>
           <div class="value">查看</div>
@@ -26,14 +28,15 @@
           <div class="value">查看</div>
         </div>
       </div>
-    </div>
+   
   </div>
+ </div>
 </template>
 
 <script lang="ts" setup>
 const show = ref(false)
 const images = [
-  new URL(`@/assets/defaultimage.png`, import.meta.url),
+  'https://fastly.jsdelivr.net/npm/@vant/assets/apple-2.jpeg',
   'https://fastly.jsdelivr.net/npm/@vant/assets/apple-2.jpeg'
 ]
 
@@ -43,6 +46,8 @@ const showPreview = () => {
 </script>
 
 <style lang="scss" scoped>
+.row { margin-bottom: 32px; }
+
 .passCertificate {
   border-radius: 24px;
   background: #fff;

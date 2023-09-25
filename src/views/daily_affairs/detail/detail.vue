@@ -5,15 +5,18 @@
         <div><img src="@/assets/defaultimage.png" alt="" /></div>
         <div>
           <div class="nameTitle">
-            <span class="name">肖建军</span>
+            <span class="name">{{ detailList.username }}</span>
             <div class="tag">优才6万</div>
           </div>
           <div class="manDetail">
-            <div>XIAOJIANJUN</div>
-            <div>中国</div>
-            <div>现居住:</div>
-            <div>获批人数:</div>
-            <div>订单号:</div>
+            <div>
+              {{ detailList.username_pinyin?.family_name
+              }}{{ detailList.username_pinyin?.given_name }}
+            </div>
+            <div>{{ detailList.country?.split('-')[0] }}</div>
+            <div>现居住: {{ detailList.live_country?.area.join('') }}</div>
+            <div>获批人数: {{ detailList.all_count }}人</div>
+            <div>订单号: {{ detailList.order_number }}</div>
           </div>
         </div>
       </div>
@@ -21,22 +24,23 @@
         <div class="title">
           <div class="titleLeft">
             <span class="cardTitle">办证预约</span>
-            <span class="tag">待办理</span>
+            <span :class="['tag', taskStatusMap[detailList.task_status]?.class]">{{
+              taskStatusMap[detailList.task_status]?.value }}</span>
           </div>
-          <div class="proof">凭证</div>
+          <div class="proof" @click="proofImage">凭证</div>
         </div>
         <div>
           <div class="mb-32 item">
             <div class="label">预约办证:</div>
-            <div class="value">3ren</div>
+            <div class="value">{{ detailList.reserve_count }}人</div>
           </div>
           <div class="mb-32 item">
             <div class="label">入境事务处</div>
-            <div class="value">3ren</div>
+            <div class="value">{{ detailList.immigration_office }}</div>
           </div>
           <div class="item">
             <div class="label">预约时间:</div>
-            <div class="value">3ren</div>
+            <div class="value">{{ detailList.go_time }}</div>
           </div>
         </div>
       </div>
@@ -46,20 +50,24 @@
         <van-tab title="过关证件"></van-tab>
         <van-tab title="客户标签"> </van-tab>
       </van-tabs>
-      <div class="component">   <component :is="componentsName" ></component></div>
-   
+      <div class="component">
+        <component :is="componentsName" :detailList="detailList"></component>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup name="detail">
-import { ref } from 'vue'
 import Tag from '@/components/tag/tag.vue'
 import ClientTag from './component/clientTag.vue'
 import FamilyDetail from './component/familyDetail.vue'
 import OrderDetail from './component/orderDetail.vue'
 import PaasCertificate from './component/paasCertificate.vue'
+import { getOssConfig } from '@/api/daily_affairs/detail'
+import dayjs from 'dayjs'
+import {previewOss} from "@/api/common/index"
 const active = ref(0)
+const detailList = reactive({})
 const clientArray = [
   {
     name: '创业',
@@ -70,6 +78,24 @@ const clientArray = [
   { name: '港宝', id: 4 },
   { name: '创业', id: 5 }
 ]
+const taskStatusMap = {
+  0: {
+    class: 'tag-orange',
+    value: '待分配'
+  },
+  1: {
+    class: 'tag-yellow',
+    value: '待办理'
+  },
+  2: {
+    class: 'tag-primary',
+    value: '已办理'
+  },
+  3: {
+    class: 'tag-success',
+    value: '已领证'
+  }
+}
 const componentsName = computed(() => {
   if (active.value === 0) {
     return OrderDetail
@@ -81,14 +107,28 @@ const componentsName = computed(() => {
     return ClientTag
   }
 })
+const proofImage=()=>{
+  previewOss({ object: "https://galaxy-hkjoin.oss-cn-shenzhen.aliyuncs.com/document/test/2efa0891e96cade4c203265d1c978709.jpeg"})
+}
+onMounted(async () => {
+  const { data, code } = await getOssConfig({ id: 345 })
+  if (code === 200) {
+    Object.assign(detailList, data)
+    detailList.go_time = dayjs(detailList.go_time).format(
+      'YYYY年MM月DD日 HH:mm'
+    )
+  }
+})
 </script>
 
 <style lang="scss" scoped>
 .detailPage {
   font-size: 28px;
+
   .mb-32 {
     margin-bottom: 32px;
   }
+
   .content {
     padding: 42px;
   }
@@ -144,6 +184,11 @@ const componentsName = computed(() => {
     background: #f8f9fb;
     padding: 32px;
 
+    .titleLeft {
+      display: flex;
+      align-items: center;
+    }
+
     .title {
       display: flex;
       align-items: center;
@@ -159,31 +204,36 @@ const componentsName = computed(() => {
         border-radius: 8px;
         padding: 4px 8px;
       }
+
       .tag-yellow {
         color: #ffb321;
         background: rgba(255, 179, 33, 0.08);
       }
+
       .tag-orange {
         background-color: rgba(255, 92, 0, 0.08);
         color: #ff5c00;
       }
+
       .tag-primary {
         background-color: rgba(25, 140, 255, 0.08);
         color: #198cff;
       }
+
       .tag-success {
         background-color: rgba(62, 205, 195, 0.08);
         color: #3ecdc3;
       }
     }
+
     .item {
       display: flex;
       color: #222222;
       align-items: center;
       justify-content: space-between;
       font-size: 28px;
-
     }
+
     .proof {
       color: #198cff;
       cursor: pointer;
@@ -191,10 +241,10 @@ const componentsName = computed(() => {
       font-weight: 500;
     }
   }
-  .component{
-    background-color: #F8F8F8;
+
+  .component {
+    background-color: #f8f8f8;
     margin: 0 -42px -42px -42px;
     padding: 42px;
   }
-}
-</style>
+}</style>

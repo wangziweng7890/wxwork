@@ -18,10 +18,12 @@ import { saveTag } from '@/api/daily_affairs/detail'
 
 interface Props {
   clientArray: string[]
+  tableId:string|number
 }
 // 回显 选中的数组
 const props=withDefaults(defineProps<Props>(), {
-  clientArray: () => []
+  clientArray: () => [],
+  tableId:''
 })
 
 const tagArray = [
@@ -43,7 +45,7 @@ const activeTag = async(id )=> {
   } else {
     isActive.value.push(id)
   }
-await saveTag({id:345,tags:isActive.value})
+await saveTag({id:props.tableId,tags:isActive.value})
 
 }
 onMounted(()=>{

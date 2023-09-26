@@ -1,30 +1,32 @@
 <template>
   <div class="historyDemand">
-    <div class="row" v-for="(item, index) in arr" :key="index">
-      <div class="line">
+    <div class="row" v-for="(item, index) in demand" :key="index">
+      <div :class="['line', index === demand.length - 1 ? 'lastChild' : '']">
         <img class="Group" src="@/assets/Group.svg" alt="" />
-        <img
-          class="lineClass"
-          v-if="index !== arr.length - 1"
-          src="@/assets/line.svg"
-          alt=""
-        />
+        <div class="lineClass" v-if="index !== demand.length - 1"></div>
       </div>
       <div class="content">
         <div class="title">
-          <span class="time">2023.09.13</span><span>香港员工</span
-          ><span class="people">Daisy-菜婉碧</span>添加了:
+          <span class="time">{{ item.created_at }}</span
+          ><span>香港员工</span
+          ><span class="people">{{ item.user_name }} </span>添加了:
         </div>
         <div class="demand">
-          一家几口将要去香港居住，后期要给孩子申请学校上学，另外还稳了租房和菲佣的问题
+          {{ item.content }}
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 const arr = [0, 1, 222, 2, 2, 2, 2]
+defineProps({
+  demand: {
+    type: Array,
+    default: () => []
+  }
+})
 </script>
 
 <style lang="scss" scoped>
@@ -32,22 +34,28 @@ const arr = [0, 1, 222, 2, 2, 2, 2]
   .row {
     display: flex;
     .line {
-      //   display: flex;
-      //   flex-direction: column;
-      //   align-items: center;
-      //   justify-content: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding-top: 10px;
       .Group {
         width: 16px;
         height: 16px;
       }
       .lineClass {
-        position: relative;
-        left: 6px;
-        height: 200px;
+        width: 1px;
+        height: 100%;
+        border-left: 2px dashed rgba(25, 140, 255, 0.2);
       }
+    }
+    .lastChild {
+      display: inline-block;
+      margin-top: -15px;
     }
     .content {
       margin-left: 28px;
+      padding-bottom: 52px;
       .title {
         width: 100%;
         color: #222;

@@ -148,6 +148,7 @@ const getList = async () => {
 provide('getList', getList)
 onMounted(async () => {
   getList()
+  active.value = route.query.isActive === 'clientTag' ? 3 : 0
 })
 </script>
 

@@ -2,11 +2,11 @@
   <div class="detailPage">
     <div class="content">
       <div class="peopleDetail">
-        <div><img src="@/assets/defaultimage.png" alt="" /></div>
+        <div><img :src="headImage" alt="" /></div>
         <div>
           <div class="nameTitle">
             <span class="name">{{ detailList.username }}</span>
-            <div class="tag">优才6万</div>
+            <div class="tag" v-if="detailList.product_name">{{detailList.product_name}}</div>
           </div>
           <div class="manDetail">
             <div>
@@ -117,6 +117,7 @@ const componentsName = computed(() => {
     return ClientTag
   }
 })
+const headImage=ref('')
 const proofImage = async () => {
   const urlArray = []
   detailList.receipts.forEach(async item => {
@@ -133,6 +134,12 @@ const getList = async () => {
     detailList.go_time = dayjs(detailList.go_time).format(
       'YYYY年MM月DD日 HH:mm'
     )
+    if(detailList.head_pic){
+      const url = await previewOss({ object: detailList.head_pic })
+     headImage.value=url
+    }else{
+      headImage.value = new URL(`@/assets/defaultimage.png`, import.meta.url)
+    }
   }
 }
 

@@ -20,8 +20,10 @@
 
 <script setup>
 import { getArchivist } from '@/api/daily_affairs/index'
+const {t}=useI18n()
+
 const titleMap = {
-  1: '主申请人',
+  1: t('message.order'),
   2: '配偶',
   3: '子女'
 }

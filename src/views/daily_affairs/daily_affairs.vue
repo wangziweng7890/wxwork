@@ -10,6 +10,7 @@ import { getTransactionTaskList, getTransactionUserList } from '@/api/daily_affa
 
 const router = useRouter()
 const { userInfo } = useUserStore() as any
+const showWeek_Candeler = ref(true)
 // 定义搜索参数
 const filterData: filter_params = reactive({
     customer_name: '',
@@ -18,7 +19,7 @@ const filterData: filter_params = reactive({
     task_status: '',// 状态:0待分配,1待办理,2已办理,3已领证
     start_time: '', // 开始
     end_time: '', // 结束
-    is_conver: 0 // 是否转换数据格式为按天统计：1转换,0不转换
+    is_convert: 0 // 是否转换数据格式为按天统计：1转换,0不转换
 })
 // 展开
 const showBottom = ref(false)
@@ -53,8 +54,16 @@ const changeLang = () => {
 
 const listData = ref([])
 const date = ref('')
+const higLight = () => {
+  const { customer_name, user_id, address, task_status, end_time} = filterData
+  return !!customer_name || !!end_time|| !!user_id || !!address || !!task_status
+}
 // 监听数值变化就调用接口
-const getTransactionList = async () => {
+const getTransactionList = async (type?: Boolean) => {
+  if (!!type) {
+    showWeek_Candeler.value =  false
+    showWeek_Candeler.value = (!filterData.start_time || !filterData.end_time)
+  }
   if (showBottom.value) {
     showBottom.value = false
   }
@@ -98,23 +107,25 @@ const handler_action = (index?: number) => {
   }
   showAction.value = false
 }
-const new_date = () => {
-  const newDate = new Date()
-  return newDate.getFullYear() + '-' + (newDate.getMonth() + 1) + '-' + newDate.getDate()
-}
+// const new_date = () => {
+//   const newDate = new Date()
+//   return newDate.getFullYear() + '-' + (newDate.getMonth() + 1) + '-' + newDate.getDate()
+// }
 // 切换table栏
 const onClickTab = (res: any) => {
   const { name } = res
   filterData.user_id = workmateList.value[name].id
-  date.value = new_date()
+  // date.value = new_date()
 }
+
+
 </script>
 
 <template>
   <div class="daily">
     <div class="title_action" v-if="!!userInfo.role_key">
       <i class="iconfont icon-icon_sousuo" @click="searchClick()"></i>
-      <i class="iconfont icon-icon_luodou" @click="searchClick('search')"></i>
+      <i class="iconfont icon-icon_luodou" @click="searchClick('fliter')" :class="{highLight: higLight()}"></i>
     </div>
     <van-tabs
       v-model:active="active"
@@ -123,8 +134,25 @@ const onClickTab = (res: any) => {
       @click-tab="onClickTab"
     >
       <van-tab :title="item.wework_name || '-'" v-for="(item, index) in workmateList" :key="index" class="table_items">
-        <weekCalender v-model:date="date" :role_key="userInfo.role_key" @click_action="click_action"/>
-        <PendingList :listData="listData"/>
+        <weekCalender
+          v-model:date="date"
+          :role_key="userInfo.role_key"
+          :highLight="higLight()"
+          :language="locale"
+          @click_action="click_action"
+          v-if="showWeek_Candeler && !filterData.is_convert"
+        />
+        <template v-if="filterData.is_convert">
+          <div v-for="(item, index) in Object.keys(listData)" :key="index">
+            <div class="listData_title">
+              {{ item }}
+            </div>
+            <PendingList :listData="listData[item]"/>
+          </div>
+        </template>
+        <template v-else>
+          <PendingList :listData="listData"/>
+        </template>
       </van-tab>
     </van-tabs>
     <van-popup
@@ -135,7 +163,7 @@ const onClickTab = (res: any) => {
       close-icon="close"
       closeable
     >
-      <SearchForm v-model:filterData="filterData" :role_key="userInfo.role_key" @getTransactionList="getTransactionList" :workmateList="workmateList"/>
+      <SearchForm v-model:filterData="filterData" :role_key="userInfo.role_key" @getTransactionList="getTransactionList" :workmateList="workmateList" />
     </van-popup>
     <van-popup
       v-model:show="showAction"
@@ -179,6 +207,9 @@ const onClickTab = (res: any) => {
   .iconfont {
     font-size: 42px;
   }
+  .highLight {
+    color: #198CFF;
+  }
   background: linear-gradient(to right, transparent 0%, #fff 25%);
   // background: linear-gradient(270deg, #FFF 0%, #FFF 81.31%, rgba(255, 255, 255, 0.00) 100%);
 }
@@ -214,5 +245,9 @@ const onClickTab = (res: any) => {
   :deep(.van-tabs__wrap) {
     display: none;
   }
+}
+.listData_title {
+  color: #888F98;
+  padding-left: 40px;
 }
 </style>

@@ -2,7 +2,7 @@
  * @Author: Autumn.again
  * @Date: 2023-09-14 14:56:23
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-09-25 10:52:14
+ * @LastEditTime: 2023-09-26 18:40:30
  * @FilePath: \workwexin-h5-sidebar\src\views\daily_affairs\intention.d.ts
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
  */
@@ -16,7 +16,7 @@ interface filter_params {
     task_status?: string | number // 状态
     start_time?: string | number // 开始时间
     end_time?: string | number // 结束时间
-    is_conver?: number
+    is_convert?: number
 }
 interface imageInfo {
     name: string

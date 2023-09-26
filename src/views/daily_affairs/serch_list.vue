@@ -2,7 +2,7 @@
  * @Author: Autumn.again
  * @Date: 2023-09-20 13:44:22
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-09-25 15:40:47
+ * @LastEditTime: 2023-09-26 16:16:43
  * @FilePath: \workwexin-h5-sidebar\src\views\daily_affairs\serch_list.vue
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
 -->
@@ -18,7 +18,7 @@ const filterData: filter_params = reactive({
     task_status: '',// 状态:0待分配,1待办理,2已办理,3已领证
     start_time: '', // 开始
     end_time: '', // 结束
-    is_conver: 0 // 是否转换数据格式为按天统计：1转换,0不转换
+    is_convert: 0 // 是否转换数据格式为按天统计：1转换,0不转换
 })
 
 const listData = ref([])
@@ -30,6 +30,7 @@ const onClickButton = async () => {
         listData.value = res.data
     }
 }
+
 </script>
 <template>
     <div class="detail flex-direction-column">
@@ -46,10 +47,21 @@ const onClickButton = async () => {
                 <div @click="onClickButton" class="search_button">搜索</div>
             </template>
         </van-search>
-        <PendingList :listData="listData" v-if="listData.length"/>
-        <div class="not_data flex-center-center" v-else>
-            暂无搜索数据
-        </div>
+        <!-- 加上 @search 事件可能导致清除按钮失效 ？ -->
+        <!-- <van-search
+            v-model="filterData.customer_name"
+            shape="round"
+            label=""
+            :left-icon="''"
+            background="#fff"
+            placeholder="输入客户姓名"
+            show-action
+        >
+            <template #action>
+                <div @click="onClickButton" class="search_button">搜索</div>
+            </template>
+        </van-search> -->
+        <PendingList :listData="listData"/>
     </div>
 </template>
 <style lang="scss" scoped>

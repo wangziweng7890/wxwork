@@ -2,23 +2,20 @@
  * @Author: Autumn.again
  * @Date: 2023-09-19 13:53:38
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-09-26 14:51:05
+ * @LastEditTime: 2023-09-26 18:25:55
  * @FilePath: \workwexin-h5-sidebar\src\views\daily_affairs\C\week_calender.vue
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
 -->
 <script setup lang="ts">
-// const chooseDate = ref('')
+import { getMonthInfo } from '@/api/daily_affairs'
 
 const props = defineProps({
     date: String,
-    role_key: String // 是否是主管
+    role_key: String, // 是否是主管
+    highLight: Boolean,
+    language: String, //语言, 默认繁体
 });
 const emit = defineEmits(['update:date', 'click_action'])
-// const emit = defineEmits<{
-//     (e: 'update:date', value: String): void
-//     (e: 'update:date', value: String): void
-//  }>()
-
 const chooseDate = computed({
     get: () => props.date,
     set: value => {
@@ -27,17 +24,34 @@ const chooseDate = computed({
 })
 const loading = ref(false)
 const calendar = ref(null);
+const calendarInfo = ref([])
+
 // 选择日期变更
 const dateClickhandler = (val: any) => {
   chooseDate.value = val
 }
+
 // 过滤每天展示在日历当中的参数
 const filterDay = (scope: any) => {
+    const calendar_day = calendarInfo.value[scope?.date.day -1]
     let day_text = ''
-    day_text = scope?.date.day == 1 ? `${scope?.date.month + 1}月` : scope?.date.day
-    return scope?.extendAttr.isToday ? '今' : day_text
+    if (scope?.date.day == 1) {
+        day_text = `${scope?.date.month + 1}月`
+    } else {
+        day_text = scope?.date.day
+    }
+    if (calendar_day && calendar_day.holiday) {
+        day_text = props.language === 'ZH' ? calendar_day.holiday : calendar_day.traditional_holiday
+    }
+    const people = calendar_day ? calendar_day.people : ''
+    return {
+        day: scope?.extendAttr.isToday ? '今' : day_text,
+        // people: people ? `${people}人` : ''
+        people: `${people}人`
+    }
 }
 
+// 判断是否是这个年月份，减少数据过滤
 const isFullDate = (scope: any) => {
     const {year, month} = scope?.date
     const date_content = chooseDate.value.split('-')
@@ -47,6 +61,7 @@ const isFullDate = (scope: any) => {
 // 过滤展示天数
 const filter_text = ref('日一二三四五六')
 
+// 过滤底部日期展示
 const arrow_date = () => {
     const week_day = '星期' + filter_text.value[new Date(chooseDate.value).getDay()]
     const date = chooseDate.value.split('-')
@@ -55,12 +70,6 @@ const arrow_date = () => {
         date_content,
         week_day
     }
-    // const date_content = new_date.getFullYear() + '年' + (new_date.getMonth() + 1) + '月' + new_date.getDate() + '日'
-    // const week_day = '星期' + filter_text.value[new_date.getDay()]
-    // const params = {
-    //     date_content,
-    //     week_day
-    // }
     return  params
 }
 
@@ -81,8 +90,27 @@ onMounted(() => {
 const click_action = (type?: number) => {
     emit('click_action', type)
 }
-watch(() => props.date, (val) => {
-    console.log(val, 'watch---------->');
+// 监听年月份改变，则重新获取过滤信息
+watch(() => props.date, (newVal, oldVal) => {
+    const new_date = new Date(newVal)
+    const old_date = new Date(oldVal)
+    if (new_date.getFullYear() !== old_date.getFullYear() || new_date.getMonth() !== old_date.getMonth()){
+        getMonthDetail(newVal)
+    }
+})
+// 获取月份信息
+const getMonthDetail = (values: any) => {
+    getMonthInfo({
+            date_month: values
+        }).then((res: any) => {
+            calendarInfo.value = res.data
+        })
+}
+// 初始化日期
+onMounted(() => {
+    if (!calendarInfo.value.length && chooseDate.value) {
+        getMonthDetail(chooseDate.value)
+    }
 })
 </script>
 <template>
@@ -104,9 +132,12 @@ watch(() => props.date, (val) => {
                 <div class="normal_text_color">{{ `周${scope?.week}` }}</div>
             </template>
             <template v-slot:day="scope">
-                <div class="lunar-content">
-                    <div class="lunar-content_day">{{ isFullDate(scope) ? filterDay(scope) : scope?.date.day }} </div>
-                    <div class="lunar-content_people normal_text_color"> 7人</div>
+                <div class="lunar-content" v-if="isFullDate(scope)">
+                    <div class="lunar-content_day" :class="{small: filterDay(scope).day.length > 3}">{{ filterDay(scope).day }} </div>
+                    <div class="lunar-content_people normal_text_color">{{ filterDay(scope).people }}</div>
+                </div>
+                <div v-else>
+                    {{ scope?.date.day }}
                 </div>
             </template>
             <template #arrow="scope">
@@ -133,7 +164,7 @@ watch(() => props.date, (val) => {
             <div class="actiones d-flex">
                 <div v-if="!props.role_key">
                     <i class="iconfont icon-icon_sousuo" @click="click_action(0)"></i>
-                    <i class="iconfont icon-icon_luodou" @click="click_action(1)"></i>
+                    <i class="iconfont icon-icon_luodou" @click="click_action(1)" :class="{highLight: highLight}"></i>
                 </div>
                 <i class="iconfont icon-a-icon_Otherinformation" @click="click_action(2)"></i>
             </div>
@@ -164,6 +195,10 @@ watch(() => props.date, (val) => {
     &_people {
         font-size: 20px;
         text-align: center;
+        height: 28px;
+    }
+    .small {
+        font-size: 18px;
     }
 }
 .calendar_day_checked {
@@ -209,6 +244,9 @@ watch(() => props.date, (val) => {
         .iconfont {
             font-size: 42px;
             margin-left: 32px;
+        }
+        .highLight {
+            color: #198CFF;
         }
     }
 }

@@ -1,7 +1,9 @@
 <script setup name="pending_list" lang="tsx">
 import uploaderPopup from './uploader_popup.vue'
 import { useUserStore } from '@/stores/modules/user'
-
+import Tag from '@/components/tag/tag.vue'
+import { saveDemand } from '@/api/daily_affairs'
+// import HistoryDemand from '@/components/historyDemand/historyDemand.vue'
 const router = useRouter()
 const { userInfo } = useUserStore() as any
 // 获取DOM值
@@ -16,13 +18,19 @@ const uploaderId = ref(0)
 const props = defineProps<{
     listData: any
 }>()
+
+// 初始化展示历史数据
+// const showHistrory = ref(false)
+// const demand = ref([])
+
 // 列表参数
 const next_date = () => {
     console.log('进行到下一天');
     
 }
+const Demand_message = ref('')
 const onScroll = () => {
-    next_loading.value = true;
+    // next_loading.value = true;
     //正文总高度
     // let scrollHeight= document.getElementsByClassName("pending_list_loadingText")[0].scrollHeight;
     // //元素可见区域高度
@@ -54,15 +62,20 @@ onUnmounted(() => {
 })
 // 保存或者清除
 const submitMessage = (res?: any, index?: number) => {
-    if (!res.message) {
+    if (!Demand_message.value) {
         return false
     }
     if (index === undefined) {
         // 提交
-        console.log('submitMessage--------------->');
+        saveDemand({
+            content: Demand_message.value,
+            id: res.id
+        }).then((res: any) => {
+            console.log(res)
+        })
     } else {
         // 取消则清空
-        props.listData[index].message = ''
+        Demand_message.value = ''
     }
 }
 const showUploder = ref(false)
@@ -93,10 +106,13 @@ const fliterGoTime = (res: any) => {
     }
 }
 // 跳转详情
-const linkDetail = (res: any) => {
+const linkDetail = (res: any, type?: string) => {
     router.push({
         path: '/daily_affairs/detail',
-        query: {orderId: res.order_id}
+        query: {
+            orderId: res.order_id,
+            isActive: type || ''  
+        }
     })
 }
 // 转让任务
@@ -104,12 +120,29 @@ const transmit = (res: any) => {
     console.log(res, 'transmit转让任务----------------------------->')
 }
 // 查看历史记录
-const viewHistory = () => {
-    console.log('查看历史记录----------------------------->')
+const viewHistory = (values: any) => {
+    linkDetail(values, 'clientTag')
+    /*
+    // 暂时注释，无需弹窗，需要跳转路由
+    getOssConfig({
+        // id: values.id
+    }).then((res: any) => {
+        if (res.code === 200) {
+            const {tag_info} = res.data
+            if (tag_info && tag_info.demand && tag_info.demand.length) { 
+                showHistrory.value = true
+                demand.value = tag_info.demand
+            } else {
+                showToast('还未填写'); 
+            }
+        }
+    }).catch((error: any) => {
+    })
+    */
 }
 </script>
 <template>
-    <div class="pending_list">
+    <div class="pending_list" v-if="props.listData && props.listData.length">
         <van-collapse v-model="collArray" class="fold" ref="fold">
             <van-collapse-item :name="collIndex + 1" v-for="(res, collIndex) in props.listData" :key="res.id" class="fold_item">
                 <template #title>
@@ -120,7 +153,8 @@ const viewHistory = () => {
                             </div>
                         </div>
                         <div class="title_box_name" @click="linkDetail(res)">
-                            {{ res.order_information.username || '-' }}
+                            <!-- res.order_information用三元，可能会返回null -->
+                            {{ res.order_information ? res.order_information.username : '-' }}
                         </div>
                         <div>
                             办身份证
@@ -141,7 +175,7 @@ const viewHistory = () => {
                                 主申人：
                             </span>
                             <div>
-                                {{ res.order_information.username }}
+                                {{ res.order_information ? res.order_information.username : '-' }}
                             </div>
                         </div>
                         <div class="info">
@@ -189,8 +223,8 @@ const viewHistory = () => {
                     </div>
                     <div class="fold_item_content_servise block">
                         期望银河提供服务：
-                        <div>
-                            dsadsa
+                        <div class="tages">
+                            <Tag :tableId="res.id" :clientArray="res.journey_service.split(',')" class="Tag"></Tag>
                         </div>
                     </div>
                     <div class="fold_item_content_text block">
@@ -198,20 +232,20 @@ const viewHistory = () => {
                             <span>
                                 意向需求：
                             </span>
-                            <span @click="viewHistory">
+                            <span @click="viewHistory(res)">
                                 查看历史需求
                             </span>
                         </div>
                         <div class="content">
                             <van-field
-                                v-model="res.message"
+                                v-model="Demand_message"
                                 rows="3"
                                 autosize
                                 label=""
                                 type="textarea"
                                 placeholder="请输入备注内容"
                             />
-                            <div class="buttones" :class="{default: !res.message}">
+                            <div class="buttones" :class="{default: !Demand_message}">
                                 <span class="cencel" @click="submitMessage(res, collIndex)">
                                     取消
                                 </span>
@@ -235,11 +269,25 @@ const viewHistory = () => {
             已经到底，继续上拉可翻到下一日
         </div>
         <uploaderPopup v-model:show-uploder="showUploder" :id="uploaderId" v-if="showUploder"/>
+        <!-- <van-popup
+            v-model:show="showHistrory"
+            round
+            position="bottom"
+            :style="{ minHeight: '30%', maxHeight: '80%'}"
+            closeable
+        >
+            <div class="history_demand">
+                <HistoryDemand :demand="demand"/>
+            </div>
+        </van-popup> -->
+    </div>
+    <div v-else class="not_data flex-center-center">
+        暂无搜索数据
     </div>
 </template>
 <style lang="scss" scoped>
 .pending_list {
-    background: #f6f6f6;
+    background: #F8F8F8;
     flex: 1;
     overflow-y: auto;
     .fold {
@@ -351,6 +399,11 @@ const viewHistory = () => {
                         }
                     }
                 }
+                &_servise {
+                    .tages {
+                        padding-top: 24px;
+                    }
+                }
                 &_action {
                     .upload {
                         margin-top: 24px;
@@ -423,5 +476,13 @@ const viewHistory = () => {
         text-align: center;
         padding-top: 20px;
     }
+}
+.not_data {
+    font-size: 28px;
+    padding-top: 50px;
+    color: #999;
+}
+.history_demand {
+    padding: 120px 28px;
 }
 </style>

@@ -25,7 +25,6 @@ const previewImage = async (url: string, save?: Boolean) => {
             user_name,
             cert_type,
             url,
-            is_agent: 1
         }
         props.fn(params).then((rel: any) => {
             console.log(rel, 'fn----------------->');
@@ -68,7 +67,7 @@ onMounted(() => {
         background: #f8f9fb;
         height: 128px;
         border: 1px dashed #eff0f2;
-        border-radius: 24px;
+        border-radius: 12px;
         margin-right: 24px;
         width: 204px;
         position: relative;
@@ -85,7 +84,7 @@ onMounted(() => {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 24px;
+            border-radius: 12px;
         }
     }
     .not_bacth {

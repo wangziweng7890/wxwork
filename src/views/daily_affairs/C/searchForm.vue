@@ -2,7 +2,8 @@
 const props = defineProps({
     filterData: Object,
     role_key: String,
-    workmateList: Array
+    workmateList: Array,
+    // loaclDate: String
 });
 const emit = defineEmits(['update:filterData', 'getTransactionList'])
 const formData = computed({
@@ -37,10 +38,6 @@ const picker_title = () => {
     switch (picker_type.value) {
         case 'user_id':
             columns.value = props.workmateList
-            // customFieldName.value = {
-            //     text: 'wework_name',
-            //     value: 'id',
-            // }
             return '请选择香港同事';
         case 'address':
         columns.value = [
@@ -107,15 +104,19 @@ const formatDate = (date) => `${date.getFullYear()}-${date.getMonth() + 1}-${dat
 const onConfirm = (values) => {
     if (picker_type.value === 'create_at') {
         const [start, end] = values;
-        formData.value.start_time = start
-        formData.value.end_time = end
-        create_at.value = formatDate(start) + ' — ' + formatDate(end)
+        formData.value.start_time = formatDate(start)
+        formData.value.end_time = start === end ? '' : formatDate(end)
+        create_at.value = formatDate(start) + ' - ' + formatDate(end)
         showCalendar.value = false
     } else {
         const { selectedOptions } = values
         formData.value[picker_type.value] = selectedOptions[0]?.value
         showPicker.value = false
     }
+}
+const new_date = () => {
+  const newDate = new Date()
+  return newDate.getFullYear() + '-' + (newDate.getMonth() + 1) + '-' + newDate.getDate()
 }
 // 确定搜索或重置
 const search = (type?: string) => {
@@ -124,9 +125,11 @@ const search = (type?: string) => {
         Object.keys(formData.value).map((item: string) => {
             formData.value[item] = ''
         })
+        formData.value.start_time = new_date()
+        create_at.value = ''
     } else {
-        formData.value.is_conver = create_at.value ? 1 : 0
-        emit('getTransactionList')
+        formData.value.is_convert = !!create_at.value ? 1 : 0
+        emit('getTransactionList', true)
     }
 }
 </script>

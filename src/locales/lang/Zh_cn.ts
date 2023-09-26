@@ -9,7 +9,25 @@
 const Zh_message = {
     ZH: {
         message: {
-            hello: '简体中文模式'
+            hello: '简体中文模式',
+            liveCountry: '现居住',
+            allCount: '获批人数',
+            orderNumber: '订单号',
+            certificateAppointment: '办证预约',
+            proof: '凭证',
+            reserve: '预约办证',
+            immigrationOffice: '入境事务处',
+            goTime: '预约时间',
+            orderDetail: '主申人信息',
+            familyDeatil: '家庭信息',
+            customsClearanceDocument: '过关证件',
+            clientTag: '客户标签',
+            waitDistributed: '待分配',
+            waitProcessed: '待办理',
+            processed: '已办理',
+            licensed: '已领证',
+            // liveCountry: '现居住',
+            // liveCountry: '现居住',
         }
     }
 }

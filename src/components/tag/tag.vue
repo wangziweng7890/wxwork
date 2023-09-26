@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import {  ref } from 'vue'
-import { saveTag } from '@/api/daily_affairs/detail'
+import { saveTag } from '@/api/daily_affairs/index'
 
 interface Props {
   clientArray: string[]

@@ -41,7 +41,7 @@
 import Tag from '@/components/tag/tag.vue'
 import HistoryDemand from '@/components/historyDemand/historyDemand.vue'
 import { judgeInput } from '@/utils/enter'
-import { saveDemand } from '@/api/daily_affairs/detail'
+import { saveDemand } from '@/api/daily_affairs/index'
 import { showSuccessToast } from 'vant'
 const {t}=useI18n()
 const route=useRoute()

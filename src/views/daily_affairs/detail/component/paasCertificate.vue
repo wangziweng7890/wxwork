@@ -1,52 +1,55 @@
 <template>
-   <div class="row">
-  <div class="passCertificate">
-   
-      <div class="title">客户:肖建俊</div>
-      <div class="content">
-        <div class="item">
-          <div class="label">姓名:</div>
-          <div class="value" @click="showPreview">查看</div>
+  <div>
+    <div class="row" v-for="(item, index) in detailList" :key="index">
+      <div class="passCertificate">
+        <div class="title">
+          {{ titleMap[item.relation] }}：{{ item.applicant_name }}
         </div>
-        <van-image-preview v-model:show="show" :images="images">
-        </van-image-preview>
-        
-        <div class="item">
-          <div class="label">曾用名:</div>
-          <div class="value">查看</div>
-        </div>
-        <div class="item">
-          <div class="label">手机号:</div>
-          <div class="value">查看</div>
-        </div>
-        <div class="item">
-          <div class="label">性别:</div>
-          <div class="value">查看</div>
-        </div>
-        <div class="item">
-          <div class="label">年龄:</div>
-          <div class="value">查看</div>
+        <div class="content">
+          <div class="item" v-for="(it, idx) in item.file_list" :key="idx">
+            <div class="label">{{ it.file_name }}:</div>
+            <div class="value" @click="showPreview(it.file_source)">查看</div>
+          </div>
         </div>
       </div>
-   
+    </div>
+    <van-image-preview v-model:show="show" :images="images">
+    </van-image-preview>
   </div>
- </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
+import { getArchivist } from '@/api/daily_affairs/index'
+const titleMap = {
+  1: '主申请人',
+  2: '配偶',
+  3: '子女'
+}
 const show = ref(false)
-const images = [
-  'https://fastly.jsdelivr.net/npm/@vant/assets/apple-2.jpeg',
-  'https://fastly.jsdelivr.net/npm/@vant/assets/apple-2.jpeg'
-]
+const images = ref([])
 
-const showPreview = () => {
+const showPreview = file_list => {
+  let imageArr = []
+  imageArr = file_list.map(item => item.url)
+  images.value = imageArr
   show.value = true
 }
+const detailList = ref([])
+const getList = async () => {
+  const { code, data } = await getArchivist({ order_id: 10010 })
+  if (code === 200) {
+    detailList.value = data
+  }
+}
+onMounted(async () => {
+  getList()
+})
 </script>
 
 <style lang="scss" scoped>
-.row { margin-bottom: 32px; }
+.row {
+  margin-bottom: 32px;
+}
 
 .passCertificate {
   border-radius: 24px;

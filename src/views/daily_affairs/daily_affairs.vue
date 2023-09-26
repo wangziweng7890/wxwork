@@ -26,6 +26,7 @@ const showAction = ref(false)
 
 const workmateList = ref([])
 onMounted(async () => {
+  router.push({ path:'/daily_affairs/detail', query:{ tableId:345 } })
     const res = await getTransactionUserList() as any
     workmateList.value = [
       {

@@ -6,7 +6,9 @@
         <div>
           <div class="nameTitle">
             <span class="name">{{ detailList.username }}</span>
-            <div class="tag" v-if="detailList.product_name">{{detailList.product_name}}</div>
+            <div class="tag" v-if="detailList.product_name">
+              {{ detailList.product_name }}
+            </div>
           </div>
           <div class="manDetail">
             <div>
@@ -14,16 +16,25 @@
               }}{{ detailList.username_pinyin?.given_name }}
             </div>
             <div>{{ detailList.country?.split('-')[0] }}</div>
-            <div>{{$t('message.liveCountry')}}: {{ detailList.live_country?.area.join('') }}</div>
-            <div>{{ $t('message.allCount')}}: {{ detailList.all_count }}人</div>
-            <div>{{ $t('message.orderNumber') }}: {{ detailList.order_number }}</div>
+            <div>
+              {{ $t('message.liveCountry') }}:
+              {{ detailList.live_country?.area.join('') }}
+            </div>
+            <div>
+              {{ $t('message.allCount') }}: {{ detailList.all_count }}人
+            </div>
+            <div>
+              {{ $t('message.orderNumber') }}: {{ detailList.order_number }}
+            </div>
           </div>
         </div>
       </div>
       <div class="appointmentDetail">
         <div class="title">
           <div class="titleLeft">
-            <span class="cardTitle">{{ $t('message.certificateAppointment') }}</span>
+            <span class="cardTitle">{{
+              $t('message.certificateAppointment')
+            }}</span>
             <span
               :class="['tag', taskStatusMap[detailList.task_status]?.class]"
               >{{ taskStatusMap[detailList.task_status]?.value }}</span
@@ -71,14 +82,14 @@ import ClientTag from './component/clientTag.vue'
 import FamilyDetail from './component/familyDetail.vue'
 import OrderDetail from './component/orderDetail.vue'
 import PaasCertificate from './component/paasCertificate.vue'
-import { getOssConfig } from '@/api/daily_affairs/detail'
+import { getOssConfig } from '@/api/daily_affairs/index'
 import dayjs from 'dayjs'
 import { previewOss } from '@/api/common/index'
-import { showImagePreview } from 'vant';
+import { showImagePreview } from 'vant'
 const active = ref(0)
 const detailList = reactive({})
-const route=useRoute()
-const {t}=useI18n()
+const route = useRoute()
+const { t } = useI18n()
 const taskStatusMap = {
   0: {
     class: 'tag-orange',
@@ -86,15 +97,15 @@ const taskStatusMap = {
   },
   1: {
     class: 'tag-yellow',
-    value:  t('message.waitProcessed')
+    value: t('message.waitProcessed')
   },
   2: {
     class: 'tag-primary',
-    value:  t('message.processed')
+    value: t('message.processed')
   },
   3: {
     class: 'tag-success',
-    value:  t('message.licensed')
+    value: t('message.licensed')
   }
 }
 const componentsName = computed(() => {
@@ -108,7 +119,7 @@ const componentsName = computed(() => {
     return ClientTag
   }
 })
-const headImage=ref('')
+const headImage = ref('')
 const proofImage = async () => {
   const urlArray = []
   detailList.receipts.forEach(async item => {
@@ -125,10 +136,10 @@ const getList = async () => {
     detailList.go_time = dayjs(detailList.go_time).format(
       'YYYY年MM月DD日 HH:mm'
     )
-    if(detailList.head_pic){
+    if (detailList.head_pic) {
       const url = await previewOss({ object: detailList.head_pic })
-     headImage.value=url
-    }else{
+      headImage.value = url
+    } else {
       headImage.value = new URL(`@/assets/defaultimage.png`, import.meta.url)
     }
   }

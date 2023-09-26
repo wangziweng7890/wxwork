@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { getTransactionInfo, updateCertificate } from '@/api/daily_affairs'
+import { getTransactionInfo, updateCertificate, updateSaveAgent } from '@/api/daily_affairs'
 
 import AliyunOssService from '@/utils/ali-oss'
 import uploadImage from './upload_image.vue'
@@ -15,6 +15,9 @@ const props = defineProps({
     showUploder: Boolean,
     id: Number,
 });
+// 是否领取
+const checked_value = ref(1)
+
 const emit = defineEmits(['update:showUploder'])
 const _visible = computed({
     get: () => props.showUploder,
@@ -41,11 +44,26 @@ const getInfo = () =>{
         id: props.id
     }).then((res: any) => {
         if (res.code === 200) {
-            imageList.value = res.data
+            imageList.value = res.data.data
+            checked_value.value = res.data.is_agent
         }
     })
 }
 getInfo()
+
+// 切换是否待领
+const clickType = (value?: number) => {
+    if (value === checked_value.value) {
+        return false
+    } else {
+        updateSaveAgent({
+            is_agent: value,
+            id: props.id
+        }).then((res: any) => {
+            res.code=== 200 && (checked_value.value = value)
+        })
+    }
+}
 </script>
 <template>
     <div class="visa">
@@ -69,11 +87,12 @@ getInfo()
                         <div class="replace_title">
                             是否代领
                         </div>
-                        <div class="buttones">
-
+                        <div class="buttones d-flex">
+                            <div class="flex-center-center" :class="checked_value === 1 ? 'checked' : ''" @click="clickType(1)"> 是 </div>
+                            <div class="flex-center-center" :class="checked_value === 2 ? 'checked' : ''" @click="clickType(2)"> 否 </div>
                         </div>
                     </div>
-                    <div class="listes" v-for="(item, index) in imageList" :key="index">
+                    <div class="listes" v-for="(item, index) in (checked_value === 1 ? imageList : imageList.slice(0, 1))" :key="index">
                         <div class="title d-flex">
                             <div class="type">{{ filterType(item.type) }}</div>
                             <div class="tips">{{ `(${item.type === 1 ? '办证者' : '获批者'}每人一张)` }}</div>
@@ -111,6 +130,23 @@ getInfo()
         &_title {
             font-size: 30px;
         }
+        .buttones {
+            div {
+                width: 138px;
+                height: 64px;
+                flex-shrink: 0;
+                border-radius: 41px;
+                font-size: 26px;
+                background: #F8F9FB;
+                margin-left: 16px;
+            }
+            .checked {
+                color: #4487F9;
+                border-radius: 54px;
+                border: 2px solid #4487F9;
+                background: rgba(68, 135, 249, 0.08);
+            }
+        }
     }
     .listes {
         border-bottom: 1px solid #F0F0F0;
@@ -138,7 +174,9 @@ getInfo()
                 }
             }
         }
-
+        &:last-of-type {
+            border-bottom: none;
+        }
     }
 }
 .uploader_content {

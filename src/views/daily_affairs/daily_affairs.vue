@@ -55,6 +55,9 @@ const listData = ref([])
 const date = ref('')
 // 监听数值变化就调用接口
 const getTransactionList = async () => {
+  if (showBottom.value) {
+    showBottom.value = false
+  }
   const res = await getTransactionTaskList(filterData)
   listData.value = res.data
 }
@@ -132,7 +135,7 @@ const onClickTab = (res: any) => {
       close-icon="close"
       closeable
     >
-      <SearchForm v-model:filterData="filterData" :role_key="userInfo.role_key"/>
+      <SearchForm v-model:filterData="filterData" :role_key="userInfo.role_key" @getTransactionList="getTransactionList" :workmateList="workmateList"/>
     </van-popup>
     <van-popup
       v-model:show="showAction"
@@ -159,6 +162,7 @@ const onClickTab = (res: any) => {
   position: relative;
   font-size: 28px;
   height: 100%;
+  background: #F8F8F8;
 }
 .title_action {
   position: absolute;

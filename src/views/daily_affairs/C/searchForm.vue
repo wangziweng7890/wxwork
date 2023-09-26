@@ -2,8 +2,9 @@
 const props = defineProps({
     filterData: Object,
     role_key: String,
+    workmateList: Array
 });
-const emit = defineEmits(['update:filterData'])
+const emit = defineEmits(['update:filterData', 'getTransactionList'])
 const formData = computed({
     get: () => props.filterData,
     set: value => {
@@ -14,10 +15,10 @@ const showPicker = ref(false);
 const columns = ref([])
 
 const showCalendar = ref(false)
-const customFieldName = {
+const customFieldName = ref({
       text: 'label',
       value: 'value',
-    };
+    })
 // 打开弹出层的类型
 const picker_type =  ref('')
 // 打开弹出层
@@ -35,20 +36,11 @@ const openPicker = (type?: string) => {
 const picker_title = () => {
     switch (picker_type.value) {
         case 'user_id':
-        columns.value = [
-                {
-                    label: '田博恩',
-                    value: 1
-                },
-                {
-                    label: '林夕戏',
-                    value: 2
-                },
-                {
-                    label: '林大咩',
-                    value: 3
-                },
-            ]
+            columns.value = props.workmateList
+            // customFieldName.value = {
+            //     text: 'wework_name',
+            //     value: 'id',
+            // }
             return '请选择香港同事';
         case 'address':
         columns.value = [
@@ -106,6 +98,8 @@ const picker_title = () => {
             break;
     }
 }
+const create_at = ref('')
+
 // 过滤时间
 const formatDate = (date) => `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 
@@ -113,12 +107,26 @@ const formatDate = (date) => `${date.getFullYear()}-${date.getMonth() + 1}-${dat
 const onConfirm = (values) => {
     if (picker_type.value === 'create_at') {
         const [start, end] = values;
-        formData.value.create_at = formatDate(start) + ' — ' + formatDate(end)
+        formData.value.start_time = start
+        formData.value.end_time = end
+        create_at.value = formatDate(start) + ' — ' + formatDate(end)
         showCalendar.value = false
     } else {
         const { selectedOptions } = values
-        formData.value[picker_type.value] = selectedOptions[0]?.label
+        formData.value[picker_type.value] = selectedOptions[0]?.value
         showPicker.value = false
+    }
+}
+// 确定搜索或重置
+const search = (type?: string) => {
+    if (type) {
+        // 重置表单
+        Object.keys(formData.value).map((item: string) => {
+            formData.value[item] = ''
+        })
+    } else {
+        formData.value.is_conver = create_at.value ? 1 : 0
+        emit('getTransactionList')
     }
 }
 </script>
@@ -146,7 +154,7 @@ const onConfirm = (values) => {
                 v-if="!!props.role_key"
             />
             <van-field
-                v-model="formData.create_at"
+                v-model="create_at"
                 is-link
                 readonly
                 name="create_at"
@@ -174,10 +182,10 @@ const onConfirm = (values) => {
             />
         </van-cell-group>
         <div style="margin: 16px;" class="action_bottom flex-jusify-between d-flex">
-            <div class="reset flex-center-center">
+            <div class="reset flex-center-center" @click="search('reset')">
                 重置
             </div>
-            <div class="confirm flex-center-center">
+            <div class="confirm flex-center-center" @click="search()">
                 确定
             </div>
         </div>

@@ -2,7 +2,7 @@
  * @Author: Autumn.again
  * @Date: 2023-09-19 13:53:38
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-09-25 16:47:33
+ * @LastEditTime: 2023-09-26 14:51:05
  * @FilePath: \workwexin-h5-sidebar\src\views\daily_affairs\C\week_calender.vue
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
 -->
@@ -144,6 +144,7 @@ watch(() => props.date, (val) => {
 <style lang="scss" scoped>
 .calender {
     padding-top: 12px;
+    background-color: #fff;
 }
 :deep(.calendar_day) {
   border-radius: 24px;

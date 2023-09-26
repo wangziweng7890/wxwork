@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 dependencies:
   '@wecom/jssdk':
     specifier: ^1.4.3
@@ -2034,7 +2030,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001535
-      electron-to-chromium: 1.4.523
+      electron-to-chromium: 1.4.528
       node-releases: 2.0.13
       update-browserslist-db: 1.0.11(browserslist@4.21.10)
     dev: true
@@ -2534,11 +2530,14 @@ packages:
     resolution: {integrity: sha512-AswqHsYyEbfSn0x87n31Na/xttUqEAg7NUjpiyxC20MaWKLyadOYHMzyLdF78N1iw+FK8/2KHLpZxRdyRILgtA==}
     dev: true
 
+  /electron-to-chromium@1.4.528:
+    resolution: {integrity: sha512-UdREXMXzLkREF4jA8t89FQjA8WHI6ssP38PMY4/4KhXFQbtImnghh4GkCgrtiZwLKUKVD2iTVXvDVQjfomEQuA==}
+    dev: true
+
   /end-of-stream@1.4.4:
     resolution: {integrity: sha512-+uw1inIHVPQoaVuHzRyXd21icM+cnt4CzD5rW+NC1wjOUSTOs+Te7FOv7AhN7vS9x/oIyhLP5PR1H+phQAHu5Q==}
     dependencies:
       once: 1.4.0
-    dev: false
 
   /end-or-error@1.0.1:
     resolution: {integrity: sha512-OclLMSug+k2A0JKuf494im25ANRBVW8qsjmwbgX7lQ8P82H21PQ1PWkoYwb9y5yMBS69BPlwtzdIFClo3+7kOQ==}
@@ -3268,6 +3267,19 @@ packages:
       pause-stream: 0.0.11
     dev: false
 
+  /fs-constants@1.0.0:
+    resolution: {integrity: sha512-y6OAwoSIf7FyjMIv94u+b5rdheZEjzR63GTyZJm5qh4Bi+2YgwLCcI/fPFZkL5PSixOt6ZNKm+w+Hfp/Bciwow==}
+    dev: true
+
+  /fs-extra@11.1.1:
+    resolution: {integrity: sha512-MGIE4HOvQCeUCzmlHs0vXpih4ysz4wg9qiSAu6cd42lVwPbTM1TjV7RusoyQqMmk/95gdQZX72u+YW+c3eEpFQ==}
+    engines: {node: '>=14.14'}
+    dependencies:
+      graceful-fs: 4.2.11
+      jsonfile: 6.1.0
+      universalify: 2.0.0
+    dev: true
+
   /fs.realpath@1.0.0:
     resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==}
     dev: true
@@ -3315,7 +3327,6 @@ packages:
 
   /get-ready@1.0.0:
     resolution: {integrity: sha512-mFXCZPJIlcYcth+N8267+mghfYN9h3EhsDa6JSnbA3Wrhh/XFpuowviFcsDeYZtKspQyWyJqfs4O6P8CHeTwzw==}
-    dev: false
 
   /get-stream@6.0.1:
     resolution: {integrity: sha512-ts6Wi+2j3jQjqi70w5AlN8DFnkSwC+MqmxEzdEALB2qXZYV3X/b1CTfgPLGJNMeAWxdPfU8FO1ms3NUfaHCPYg==}
@@ -3530,6 +3541,13 @@ packages:
     dependencies:
       safer-buffer: 2.1.2
     dev: false
+
+  /iconv-lite@0.5.2:
+    resolution: {integrity: sha512-kERHXvpSaB4aU3eANwidg79K8FlrN77m8G9V+0vOR3HYaRifrlwMEpT7ZBJqLSEIHnEgJTHcWK82wwLwwKwtag==}
+    engines: {node: '>=0.10.0'}
+    dependencies:
+      safer-buffer: 2.1.2
+    dev: true
 
   /iconv-lite@0.6.3:
     resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
@@ -3979,6 +3997,14 @@ packages:
     resolution: {integrity: sha512-gfFQZrcTc8CnKXp6Y4/CBT3fTc0OVuDofpre4aEeEpSBPV5X5v4+Vmx+8snU7RLPrNHPKSgLxGo9YuQzz20o+w==}
     dev: true
 
+  /jsonfile@6.1.0:
+    resolution: {integrity: sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==}
+    dependencies:
+      universalify: 2.0.0
+    optionalDependencies:
+      graceful-fs: 4.2.11
+    dev: true
+
   /jstoxml@2.2.9:
     resolution: {integrity: sha512-OYWlK0j+roh+eyaMROlNbS5cd5R25Y+IUpdl7cNdB8HNrkgwQzIS7L9MegxOiWNBj9dQhA/yAxiMwCC5mwNoBw==}
     dev: false
@@ -4265,7 +4291,6 @@ packages:
     hasBin: true
     dependencies:
       minimist: 1.2.8
-    dev: false
 
   /mlly@1.2.1:
     resolution: {integrity: sha512-1aMEByaWgBPEbWV2BOPEMySRrzl7rIHXmQxam4DM8jVjalTQDjpN2ZKOLUrwyhfZQO7IXHml2StcHMhooDeEEQ==}
@@ -4626,6 +4651,10 @@ packages:
       through: 2.3.8
     dev: false
 
+  /pend@1.2.0:
+    resolution: {integrity: sha1-elfrVQpng/kRUzH89GY9XI4AelA=}
+    dev: true
+
   /perfect-debounce@1.0.0:
     resolution: {integrity: sha512-xCy9V055GLEqoFaHoC1SoLIaLmWctgCUaBaWxDZ7/Zx4CTyX7cJQLJOok/orfjZAh9kEYpjJa4d0KcJmCbctZA==}
     dev: true
@@ -4786,7 +4815,6 @@ packages:
     dependencies:
       end-of-stream: 1.4.4
       once: 1.4.0
-    dev: false
 
   /punycode@2.3.0:
     resolution: {integrity: sha512-rRV+zQD8tVFys26lAGR9WUuS4iUAngJScM+ZRSKtvl5tKeZ2t5bvdNFdNHBW9FWR4guGHlgmsZ1G7BSm2wTbuA==}
@@ -5190,6 +5218,11 @@ packages:
     engines: {node: '>=4.0.0'}
     dev: false
 
+  /streamifier@0.1.1:
+    resolution: {integrity: sha1-l+mNj6TRBdYqJpHR3AfoINuN/E8=}
+    engines: {node: '>=0.10'}
+    dev: true
+
   /string.prototype.matchall@4.0.10:
     resolution: {integrity: sha512-rGXbGmOEosIQi6Qva94HUjgPs9vKW+dkG7Y8Q5O2OYkWL6wFaTRZO8zM4mhP94uX55wgyrXzfS2aGtGzUL7EJQ==}
     dependencies:
@@ -5405,6 +5438,10 @@ packages:
   /to-arraybuffer@1.0.1:
     resolution: {integrity: sha512-okFlQcoGTi4LQBG/PgSYblw9VOyptsz2KJZqc6qtgGdes8VktzUQkj4BI2blit072iS8VODNcMA+tvnS9dnuMA==}
     dev: false
+
+  /to-buffer@1.1.1:
+    resolution: {integrity: sha512-lx9B5iv7msuFYE3dytT+KE5tap+rNYw+K4jVkb9R/asAb+pbBSM17jtunHplhBe6RRJdZx3Pn2Jph24O32mOVg==}
+    dev: true
 
   /to-fast-properties@2.0.0:
     resolution: {integrity: sha512-/OaKK0xYrs3DmxRYqL/yDc+FxFUVYhDlXMhRmv3z915w2HF1tnN1omB354j8VUGO/hbRzyD6Y3sA7v7GS/ceog==}
@@ -6292,7 +6329,6 @@ packages:
   /xtend@4.0.2:
     resolution: {integrity: sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==}
     engines: {node: '>=0.4'}
-    dev: false
 
   /yallist@2.1.2:
     resolution: {integrity: sha512-ncTzHV7NvsQZkYe1DW7cbDLm0YpzHmZF5r/iyP3ZnQtMiJ+pjzisCiMNI+Sj+xQF5pXhSHxSB3uDbsBTzY/c2A==}
@@ -6335,3 +6371,7 @@ packages:
     resolution: {integrity: sha512-9bnSc/HEW2uRy67wc+T8UwauLuPJVn28jb+GtJY16iiKWyvmYJRXVT4UamsAEGQfPohgr2q4Tq0sQbQlxTfi1g==}
     engines: {node: '>=12.20'}
     dev: true
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false

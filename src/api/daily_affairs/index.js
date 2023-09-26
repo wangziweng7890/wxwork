@@ -2,8 +2,8 @@
  * @Author: Autumn.again
  * @Date: 2023-09-25 13:42:11
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-09-25 13:45:54
- * @FilePath: \workwexin-h5-sidebar\src\api\taskList\index.js
+ * @LastEditTime: 2023-09-26 11:33:36
+ * @FilePath: \workwexin-h5-sidebar\src\api\daily_affairs\index.js
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
  */
 import api from '@/utils/request'
@@ -16,3 +16,11 @@ export const getTransactionTaskList = params => api.get(`/api/customer-service/t
 
 // 筛选赴港人数
 export const getTransactionMonthInfo = params => api.get(`/api/customer-service/transaction/month-info`, { params })
+
+// 获取证件详情
+export const getTransactionInfo = params => api.get(`/api/customer-service/transaction/certificate`, { params })
+
+// 保存证件详情
+export const updateCertificate = params => api.post(`/api/customer-service/transaction/save-certificate`, { ...params })
+
+// 

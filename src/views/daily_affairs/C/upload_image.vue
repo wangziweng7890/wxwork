@@ -1,39 +1,64 @@
 <script setup lang="ts">
-import AliyunOssService from '@/utils/ali-oss'
 import { previewOss } from '@/api/common/index'
-let ossService = null
-// 初始化oss
-const initOss = async () => {
-    ossService = await AliyunOssService.createFromBackend()
-    console.log(ossService, 'ossService------------------------>');
-}
-onMounted(async () => {
-    await initOss()
-})
+const props = defineProps({
+    ossService: Object,
+    resData: Object,
+    fn: Function,
+    id: Number,
+});
 const fileList = ref('')
 // 移除图片
 const removeImage = () => {
-    console.log(fileList.value, 'removeImage------------------------>')
     fileList.value = ''
 }
-
-const uploadImage = () => {
-    console.log('uploadImage------------------------>')
+// 预览图片
+const previewImage = async (url: string, save?: Boolean) => {
+    await previewOss({ object: url }).then((res: any) => {
+        fileList.value = res
+        if (save) {
+            return false
+        }
+        const { cert_type, user_name, user_id } = JSON.parse(JSON.stringify(props.resData))
+        const params = {
+            id: props.id,
+            user_id,
+            user_name,
+            cert_type,
+            url,
+            is_agent: 1
+        }
+        props.fn(params).then((rel: any) => {
+            console.log(rel, 'fn----------------->');
+        })
+    })
 }
 // 上传之后的回调
 const afteruploader = async (file: any) => {
-    // const { url }: imageInfo = await ossService.uploadFile(file.file)
-    console.log(file, previewOss, 'afteruploader------------------------>');
-    fileList.value = file.objectUrl
+    const { url }: imageInfo = await props.ossService.uploadFile(file)
+    // const res = await previewOss({ object: url })
+    previewImage(url)
 }
+
+onMounted(() => {
+    if (props.resData.cert_url) {
+        previewImage(props.resData.cert_url, true)
+    }
+})
 </script>
 <template>
-    <van-uploader :after-read="afteruploader" :show-upload="false">
+    <van-uploader :after-read="afteruploader" :show-upload="false" :disabled="!props.resData.is_current_batch"> 
     <!-- <van-button icon="plus" type="primary">上传文件</van-button> -->
         <div class="upload_image flex-center-center">
-            <i class="iconfont icon-Subtract1" @click="removeImage" v-if="fileList"></i>
-            <img :src="fileList" alt="" srcset="" v-if="fileList" class="image">
-            <i class="iconfont icon-icon_tianjia" v-else></i>
+            <template v-if="props.resData.is_current_batch">
+                <i class="iconfont icon-Subtract1" @click="removeImage" v-if="fileList"></i>
+                <img :src="fileList" alt="" srcset="" v-if="fileList" class="image">
+                <i class="iconfont icon-icon_tianjia" v-else></i>
+            </template>
+            <template v-else>
+                <div class="not_bacth">
+                    该获批者不在本批次当中
+                </div>
+            </template>
         </div>
     </van-uploader>
 </template>
@@ -62,5 +87,11 @@ const afteruploader = async (file: any) => {
             object-fit: cover;
             border-radius: 24px;
         }
+    }
+    .not_bacth {
+        color: rgba(136, 143, 152, 0.50);
+        font-size: 22px;
+        font-weight: 400;
+        padding: 0 18px;
     }
 </style>

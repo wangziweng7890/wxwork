@@ -1,11 +1,18 @@
 <script setup name="pending_list" lang="tsx">
 import uploaderPopup from './uploader_popup.vue'
+import { useUserStore } from '@/stores/modules/user'
+
+const router = useRouter()
+const { userInfo } = useUserStore() as any
 // 获取DOM值
 const fold = ref(null)
 // 下一天的loading
 const next_loading = ref(false)
 // 折叠面板
 const collArray = ref(['1'])
+// 上传详情id
+const uploaderId = ref(0)
+
 const props = defineProps<{
     listData: any
 }>()
@@ -60,7 +67,8 @@ const submitMessage = (res?: any, index?: number) => {
 }
 const showUploder = ref(false)
 // 打开上传组件
-const openUploader = () => {
+const openUploader = (res: any) => {
+    uploaderId.value = res.id
     showUploder.value = true
 }
 // 过滤办证者展示
@@ -86,7 +94,18 @@ const fliterGoTime = (res: any) => {
 }
 // 跳转详情
 const linkDetail = (res: any) => {
-    
+    router.push({
+        path: '/daily_affairs/detail',
+        query: {orderId: res.order_id}
+    })
+}
+// 转让任务
+const transmit = (res: any) => {
+    console.log(res, 'transmit转让任务----------------------------->')
+}
+// 查看历史记录
+const viewHistory = () => {
+    console.log('查看历史记录----------------------------->')
 }
 </script>
 <template>
@@ -154,22 +173,32 @@ const linkDetail = (res: any) => {
                                 客户经理：
                             </span>
                             <div>
-                                {{ res.service_name }}
+                                <div class="phone">
+                                    {{ res.service_name || '-' }}
+                                </div>
+                                <div class="service_phone">
+                                    <a :href="`tel:${res.service_phone}`" v-if="res.service_phone"> {{ res.service_phone }} <i class="iconfont icon-icon_dianhua"></i></a>
+                                </div>
                             </div>
                         </div>
-                        <div class="phone">
-                            {{ res.service_phone }}
+                        <div class="transmit" v-if="userInfo.role_key">
+                            <div class="transmit_button flex-center-center" @click="transmit(res)">
+                                转任务
+                            </div>
                         </div>
                     </div>
                     <div class="fold_item_content_servise block">
                         期望银河提供服务：
+                        <div>
+                            dsadsa
+                        </div>
                     </div>
                     <div class="fold_item_content_text block">
                         <div class="histroy flex-jusify-between d-flex">
                             <span>
                                 意向需求：
                             </span>
-                            <span>
+                            <span @click="viewHistory">
                                 查看历史需求
                             </span>
                         </div>
@@ -194,7 +223,7 @@ const linkDetail = (res: any) => {
                     </div>
                     <div class="fold_item_content_action block">
                         上传证件：
-                        <div class="upload flex-center-center" @click="openUploader">
+                        <div class="upload flex-center-center" @click="openUploader(res)">
                             <i class="iconfont icon-btn_upload"></i>
                             去上传
                         </div>
@@ -205,7 +234,7 @@ const linkDetail = (res: any) => {
         <div class="pending_list_loadingText" v-if="next_loading">
             已经到底，继续上拉可翻到下一日
         </div>
-        <uploaderPopup v-model:show-uploder="showUploder"/>
+        <uploaderPopup v-model:show-uploder="showUploder" :id="uploaderId" v-if="showUploder"/>
     </div>
 </template>
 <style lang="scss" scoped>
@@ -282,7 +311,45 @@ const linkDetail = (res: any) => {
                     background: #F8F9FB;
                     border-radius: 12px;
                     max-height: 570px;
-                    padding: 32px 28px;
+                    padding: 32px 0;
+                    font-size: 26px;
+                    .info {
+                        padding: 0 28px;
+                        display: flex;
+                        justify-content: space-between;
+                        margin-bottom: 32px;
+                        span {
+                            color: #888F98;
+                        }
+                        .service_phone {
+                            color: #198CFF;
+                            a {
+                                color: #198CFF;
+                                display: flex;
+                                height: 36px;
+                                align-items: center;
+                            }
+                            .iconfont {
+                                margin-left: 16px;
+                                font-size: 36px
+                            }
+                        }
+                    }
+                    .transmit {
+                        border-top: 1px solid #F0F0F0;
+                        font-size: 26px;
+                        display: flex;
+                        justify-content: flex-end;
+                        padding: 24px 28px 0 0;
+                        &_button {
+                            width: 142px;
+                            height: 60px;
+                            flex-shrink: 0;
+                            border-radius: 12px;
+                            border: 2px solid #198CFF;
+                            color: #198CFF;
+                        }
+                    }
                 }
                 &_action {
                     .upload {
@@ -302,6 +369,12 @@ const linkDetail = (res: any) => {
                 }
                 &_text {
                     .histroy {
+                        span {
+                            &:last-of-type {
+                                font-size: 26px;
+                                color: #198CFF;
+                            }
+                        }
                     }
                     .content {
                         margin-top: 24px;

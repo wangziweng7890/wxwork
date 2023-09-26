@@ -1,7 +1,19 @@
 <script lang="ts" setup>
+import { getTransactionInfo, updateCertificate } from '@/api/daily_affairs'
+
+import AliyunOssService from '@/utils/ali-oss'
 import uploadImage from './upload_image.vue'
+let ossService = null
+// 初始化oss
+const initOss = async () => {
+    ossService = await AliyunOssService.createFromBackend()
+}
+onMounted(async () => {
+    await initOss()
+})
 const props = defineProps({
-    showUploder: Boolean
+    showUploder: Boolean,
+    id: Number,
 });
 const emit = defineEmits(['update:showUploder'])
 const _visible = computed({
@@ -10,106 +22,30 @@ const _visible = computed({
         emit('update:showUploder', value)
     },
 })
-const imageList = ref([
-    {
-        userList: [
-            {
-                user_name: '张 1 - 1',
-                image_url: '',
-                is_batch: true
-            },
-            {
-                user_name: '张 1 - 2',
-                image_url: '',
-                is_batch: true
-            },
-            {
-                user_name: '张 1 - 3',
-                image_url: '',
-                is_batch: true
-            }
-        ]
-    },
-    {
-        userList: [
-            {
-                user_name: '张 2 - 1',
-                image_url: '',
-                is_batch: true
-            },
-            {
-                user_name: '张 2 - 2',
-                image_url: '',
-                is_batch: true
-            },
-            {
-                user_name: '张 2 - 3',
-                image_url: '',
-                is_batch: false
-            },
-        ]
-    },
-    {
-        userList: [
-            {
-                user_name: '张 3 - 1',
-                image_url: '',
-                is_batch: true
-            },
-            {
-                user_name: '张 3 - 2',
-                image_url: '',
-                is_batch: true
-            },
-            {
-                user_name: '张 3 - 3',
-                image_url: '',
-                is_batch: false
-            },
-        ]
-    },
-    {
-        userList: [
-            {
-                user_name: '张 4 -1',
-                image_url: '',
-                is_batch: true
-            },
-            {
-                user_name: '张 4 -2',
-                image_url: '',
-                is_batch: true
-            },
-            {
-                user_name: '张 4 -3',
-                image_url: '',
-                is_batch: true
-            },
-            {
-                user_name: '张 4 -5',
-                image_url: '',
-                is_batch: true
-            },
-            {
-                user_name: '张 4 -5',
-                image_url: '',
-                is_batch: true
-            },
-        ]
-    },
-])
+const imageList = ref([])
 const filterType = (type?: number) => {
     switch(type) {
         case 1:
-            return '授权书'
-        case 2:
-            return '收据'
-        case 3:
-            return '香港身份证'
-        default:
             return '小白条'
+        case 2:
+            return '授权书'
+        case 3:
+            return '收据'
+        default:
+            return '香港身份证'
     }
 }
+
+const getInfo = () =>{
+    getTransactionInfo({
+        id: props.id
+    }).then((res: any) => {
+        if (res.code === 200) {
+            imageList.value = res.data
+        }
+    })
+}
+getInfo()
 </script>
 <template>
     <div class="visa">
@@ -123,10 +59,12 @@ const filterType = (type?: number) => {
             close-icon="close"
         >
             <div class="uploader flex-direction-column">
-                <div class="tiile flex-align-items-center d-flex">
-                    上传证件
+                <div class="titles">
+                    <div class="tiile flex-align-items-center d-flex">
+                        上传证件
+                    </div>
                 </div>
-                <div class="content">
+                <div class="uploader_content">
                     <div class="replace flex-jusify-between d-flex">
                         <div class="replace_title">
                             是否代领
@@ -137,15 +75,15 @@ const filterType = (type?: number) => {
                     </div>
                     <div class="listes" v-for="(item, index) in imageList" :key="index">
                         <div class="title d-flex">
-                            <div class="type">{{ filterType(index) }}</div>
-                            <div class="tips">{{ `(${index ? '办证者' : '获批者'}每人一张)` }}</div>
+                            <div class="type">{{ filterType(item.type) }}</div>
+                            <div class="tips">{{ `(${item.type === 1 ? '办证者' : '获批者'}每人一张)` }}</div>
                         </div>
                         <div class="list">
-                            <div class="list_item" v-for="(res, resIndex) in item.userList" :key="resIndex">
+                            <div class="list_item" v-for="(res, resIndex) in item.data" :key="resIndex">
                                 <div class="user_name">
                                     {{ res.user_name }}
                                 </div>
-                                <uploadImage />
+                                <uploadImage :ossService="ossService" :resData="res" :fn="updateCertificate" :id="props.id"/>
                             </div>
                         </div>
                     </div>
@@ -156,8 +94,10 @@ const filterType = (type?: number) => {
 </template>
 <style lang="scss">
 .uploader {
-    padding: 0 42px;
     color: #888F98;
+    .titles {
+        padding: 0 42px;
+    }
     .tiile {
         font-size: 34px;
         height: 110px;
@@ -201,7 +141,8 @@ const filterType = (type?: number) => {
 
     }
 }
-.content {
+.uploader_content {
+    padding: 0 42px;
     flex: 1;
     overflow-y: auto;
 }

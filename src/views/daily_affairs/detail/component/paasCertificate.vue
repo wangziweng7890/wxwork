@@ -21,7 +21,7 @@
 <script setup>
 import { getArchivist } from '@/api/daily_affairs/index'
 const {t}=useI18n()
-
+const route=useRoute()
 const titleMap = {
   1: t('message.order'),
   2: '配偶',
@@ -38,7 +38,7 @@ const showPreview = file_list => {
 }
 const detailList = ref([])
 const getList = async () => {
-  const { code, data } = await getArchivist({ order_id: 10010 })
+  const { code, data } = await getArchivist({ order_id: route.query.orderId })
   if (code === 200) {
     detailList.value = data
   }

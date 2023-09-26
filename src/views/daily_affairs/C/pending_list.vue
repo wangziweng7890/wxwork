@@ -2,8 +2,8 @@
 import uploaderPopup from './uploader_popup.vue'
 import { useUserStore } from '@/stores/modules/user'
 import Tag from '@/components/tag/tag.vue'
-import { saveDemand } from '@/api/daily_affairs/detail'
-
+import { saveDemand, } from '@/api/daily_affairs/detail'
+import HistoryDemand from '@/components/historyDemand/historyDemand.vue'
 const router = useRouter()
 const { userInfo } = useUserStore() as any
 // 获取DOM值
@@ -18,6 +18,11 @@ const uploaderId = ref(0)
 const props = defineProps<{
     listData: any
 }>()
+
+// 初始化展示历史数据
+const showHistrory = ref(false)
+const demand = ref([])
+
 // 列表参数
 const next_date = () => {
     console.log('进行到下一天');
@@ -112,8 +117,13 @@ const transmit = (res: any) => {
     console.log(res, 'transmit转让任务----------------------------->')
 }
 // 查看历史记录
-const viewHistory = () => {
-    console.log('查看历史记录----------------------------->')
+const viewHistory = (values: any) => {
+    showHistrory.value = true
+    getClientInfo({
+        user_id: values.id
+    }).then((res: any) => {
+        console.log(res, '查看历史记录----------------------------->')
+    })
 }
 </script>
 <template>
@@ -207,7 +217,7 @@ const viewHistory = () => {
                             <span>
                                 意向需求：
                             </span>
-                            <span @click="viewHistory">
+                            <span @click="viewHistory(res)">
                                 查看历史需求
                             </span>
                         </div>
@@ -244,6 +254,14 @@ const viewHistory = () => {
             已经到底，继续上拉可翻到下一日
         </div>
         <uploaderPopup v-model:show-uploder="showUploder" :id="uploaderId" v-if="showUploder"/>
+        <van-popup
+            v-model:show="showHistrory"
+            round
+            position="bottom"
+            :style="{ minHeight: '30%', maxHeight: '80%'}"
+        >
+        <HistoryDemand :demand="demand"/>
+        </van-popup>
     </div>
     <div v-else class="not_data flex-center-center">
         暂无搜索数据

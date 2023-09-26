@@ -2,11 +2,11 @@
   <div class="detailPage">
     <div class="content">
       <div class="peopleDetail">
-        <div><img src="@/assets/defaultimage.png" alt="" /></div>
+        <div><img :src="headImage" alt="" /></div>
         <div>
           <div class="nameTitle">
             <span class="name">{{ detailList.username }}</span>
-            <div class="tag">优才6万</div>
+            <div class="tag" v-if="detailList.product_name">{{detailList.product_name}}</div>
           </div>
           <div class="manDetail">
             <div>
@@ -24,10 +24,18 @@
         <div class="title">
           <div class="titleLeft">
             <span class="cardTitle">办证预约</span>
-            <span :class="['tag', taskStatusMap[detailList.task_status]?.class]">{{
-              taskStatusMap[detailList.task_status]?.value }}</span>
+            <span
+              :class="['tag', taskStatusMap[detailList.task_status]?.class]"
+              >{{ taskStatusMap[detailList.task_status]?.value }}</span
+            >
           </div>
-          <div class="proof" @click="proofImage">凭证</div>
+          <div
+            class="proof"
+            :class="['proof', detailList.receipts?.length < 1 ? 'disable' : '']"
+            @click="proofImage"
+          >
+            凭证
+          </div>
         </div>
         <div>
           <div class="mb-32 item">
@@ -65,9 +73,11 @@ import OrderDetail from './component/orderDetail.vue'
 import PaasCertificate from './component/paasCertificate.vue'
 import { getOssConfig } from '@/api/daily_affairs/detail'
 import dayjs from 'dayjs'
-import {previewOss} from "@/api/common/index"
+import { previewOss } from '@/api/common/index'
+import { showImagePreview } from 'vant';
 const active = ref(0)
 const detailList = reactive({})
+const route=useRoute()
 const clientArray = [
   {
     name: '创业',
@@ -107,17 +117,35 @@ const componentsName = computed(() => {
     return ClientTag
   }
 })
-const proofImage=()=>{
-  previewOss({ object: "https://galaxy-hkjoin.oss-cn-shenzhen.aliyuncs.com/document/test/2efa0891e96cade4c203265d1c978709.jpeg"})
+const headImage=ref('')
+const proofImage = async () => {
+  const urlArray = []
+  detailList.receipts.forEach(async item => {
+    const url = await previewOss({ object: item })
+    urlArray.push(url)
+  })
+  if (urlArray.length < 1) return
+  showImagePreview({ images: urlArray })
 }
-onMounted(async () => {
-  const { data, code } = await getOssConfig({ id: 345 })
+const getList = async () => {
+  const { data, code } = await getOssConfig({ id: route.query.tableId })
   if (code === 200) {
     Object.assign(detailList, data)
     detailList.go_time = dayjs(detailList.go_time).format(
       'YYYY年MM月DD日 HH:mm'
     )
+    if(detailList.head_pic){
+      const url = await previewOss({ object: detailList.head_pic })
+     headImage.value=url
+    }else{
+      headImage.value = new URL(`@/assets/defaultimage.png`, import.meta.url)
+    }
   }
+}
+
+provide('getList', getList)
+onMounted(async () => {
+  getList()
 })
 </script>
 
@@ -247,4 +275,9 @@ onMounted(async () => {
     margin: 0 -42px -42px -42px;
     padding: 42px;
   }
-}</style>
+  .disable {
+    color: #888f98 !important;
+    cursor: no-drop !important;
+  }
+}
+</style>

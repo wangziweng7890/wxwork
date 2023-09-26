@@ -11,5 +11,13 @@ export const getOssConfig = (params) =>
 
 // 保存期望标签
 export const saveTag = (params) =>
-  http.post(`/customer-service/transaction/save-tag`, params);
+  http.post(`/customer-service/transaction/save-tag`, params, {
+    headers: { Token: userStore.getToken },
+  });
+
+// 保存意向需求
+export const saveDemand = (params) =>
+  http.post(`/customer-service/transaction/save-demand`, params, {
+    headers: { Token: userStore.getToken },
+  });
 

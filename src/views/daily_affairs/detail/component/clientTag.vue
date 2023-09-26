@@ -1,7 +1,7 @@
 <template>
   <div class="clientTag">
     <div class="title">客户标签</div>
-    <Tag :clientArray="tagArray" class="Tag"></Tag>
+    <Tag :tableId="route.query.tableId" :clientArray="tagArray" class="Tag"></Tag>
   </div>
   <div class="addPlan">
     <div class="title">
@@ -9,7 +9,7 @@
       <span class="addBtn" @click="addShow">添加需求</span>
     </div>
     <div class="history">
-      <HistoryDemand></HistoryDemand>
+      <HistoryDemand :demand="demand"></HistoryDemand>
     </div>
     <van-action-sheet v-model:show="show" lock-scroll>
       <div class="header">
@@ -22,6 +22,8 @@
         />
       </div>
       <van-field
+        required
+        :error-message="errorMessage"
         v-model="plan"
         rows="5"
         type="textarea"
@@ -35,31 +37,48 @@
   </div>
 </template>
 
-<script setup lang="ts" name="clientTag">
+<script setup name="clientTag">
 import Tag from '@/components/tag/tag.vue'
 import HistoryDemand from '@/components/historyDemand/historyDemand.vue'
-import {judgeInput}from "@/utils/enter"
+import { judgeInput } from '@/utils/enter'
+import { saveDemand } from '@/api/daily_affairs/detail'
+import { showSuccessToast } from 'vant'
+const route=useRoute()
 const props = defineProps({
   detailList: {
     type: Object,
     default: () => ({})
   }
 })
-const tagArray = computed(()=>props.detailList.tag_info ? props.detailList.tag_info.tagArray : []) 
+const tagArray = computed(() =>
+  props.detailList.tag_info ? props.detailList.tag_info.tagArray : []
+)
+const demand = computed(() =>
+  props.detailList.tag_info ? props.detailList.tag_info.demand : []
+)
+const errorMessage = ref('')
 const show = ref(false)
 const plan = ref('')
 const addShow = () => {
+  plan.value = ''
+  errorMessage.value = ''
   show.value = true
   judgeInput()
 }
 const closeAddShow = () => {
   show.value = false
 }
-const submit=()=>{
-    show.value = false
+const getList = inject('getList')
+const submit = async () => {
+  errorMessage.value = !plan.value ? '请输入备注内容' : ''
+  if (!plan.value) return
+  const { code } = await saveDemand({ id: route.query.tableId, content: plan.value })
+  if (code === 200) {
+    showSuccessToast('添加成功')
+    getList()
+  }
+  show.value = false
 }
-
-
 </script>
 
 <style lang="scss" scoped>
@@ -74,7 +93,7 @@ const submit=()=>{
   background-color: #fff;
   border-radius: 24px;
   padding: 32px;
-
+margin-bottom: 32px;
   .Tag {
     margin-top: 32px;
   }

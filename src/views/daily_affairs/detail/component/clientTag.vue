@@ -1,19 +1,23 @@
 <template>
   <div class="clientTag">
-    <div class="title">{{$t('message.clientTag')}}</div>
-    <Tag :tableId="route.query.tableId" :clientArray="tagArray" class="Tag"></Tag>
+    <div class="title">{{ $t('message.clientTag') }}</div>
+    <Tag
+      :tableId="route.query.tableId"
+      :clientArray="tagArray"
+      class="Tag"
+    ></Tag>
   </div>
   <div class="addPlan">
     <div class="title">
-      <span>{{$t('message.addIntentionPlan')}}</span>
-      <span class="addBtn" @click="addShow">{{$t('message.addPlan')}}</span>
+      <span>{{ $t('message.addIntentionPlan') }}</span>
+      <span class="addBtn" @click="addShow">{{ $t('message.addPlan') }}</span>
     </div>
     <div class="history">
       <HistoryDemand :demand="demand"></HistoryDemand>
     </div>
     <van-action-sheet v-model:show="show" lock-scroll>
       <div class="header">
-        <div class="headerTitle">{{$t('message.addPlan')}}</div>
+        <div class="headerTitle">{{ $t('message.addPlan') }}</div>
         <img
           src="@/assets/close.svg"
           class="close"
@@ -30,8 +34,10 @@
         :placeholder="$t('message.pleaseRemark')"
       />
       <div class="btnBox">
-        <div class="cancel" @click="closeAddShow">{{$t('message.cancel')}}</div>
-        <div class="submit" @click="submit">{{$t('message.submit')}}</div>
+        <div class="cancel" @click="closeAddShow">
+          {{ $t('message.cancel') }}
+        </div>
+        <div class="submit" @click="submit">{{ $t('message.submit') }}</div>
       </div>
     </van-action-sheet>
   </div>
@@ -41,10 +47,10 @@
 import Tag from '@/components/tag/tag.vue'
 import HistoryDemand from '@/components/historyDemand/historyDemand.vue'
 import { judgeInput } from '@/utils/enter'
-import { saveDemand } from '@/api/daily_affairs/detail'
+import { saveDemand } from '@/api/daily_affairs/index'
 import { showSuccessToast } from 'vant'
-const {t}=useI18n()
-const route=useRoute()
+const { t } = useI18n()
+const route = useRoute()
 const props = defineProps({
   detailList: {
     type: Object,
@@ -60,7 +66,11 @@ const demand = computed(() =>
 const errorMessage = ref('')
 const show = ref(false)
 const plan = ref('')
+const scrollX = ref()
+const scrollY = ref()
 const addShow = () => {
+  scrollX.value = window.scrollX
+  scrollY.value = window.scrollY
   plan.value = ''
   errorMessage.value = ''
   show.value = true
@@ -68,12 +78,16 @@ const addShow = () => {
 }
 const closeAddShow = () => {
   show.value = false
+  window.scrollTo(scrollX.value, scrollY.value)
 }
 const getList = inject('getList')
 const submit = async () => {
   errorMessage.value = !plan.value ? t('message.pleaseRemark') : ''
   if (!plan.value) return
-  const { code } = await saveDemand({ id: route.query.tableId, content: plan.value })
+  const { code } = await saveDemand({
+    id: route.query.tableId,
+    content: plan.value
+  })
   if (code === 200) {
     showSuccessToast(t('message.addSucess'))
     getList()
@@ -94,7 +108,7 @@ const submit = async () => {
   background-color: #fff;
   border-radius: 24px;
   padding: 32px;
-margin-bottom: 32px;
+  margin-bottom: 32px;
   .Tag {
     margin-top: 32px;
   }

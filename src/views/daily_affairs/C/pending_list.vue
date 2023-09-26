@@ -2,8 +2,8 @@
 import uploaderPopup from './uploader_popup.vue'
 import { useUserStore } from '@/stores/modules/user'
 import Tag from '@/components/tag/tag.vue'
-import { saveDemand, } from '@/api/daily_affairs/detail'
-import HistoryDemand from '@/components/historyDemand/historyDemand.vue'
+import { saveDemand } from '@/api/daily_affairs'
+// import HistoryDemand from '@/components/historyDemand/historyDemand.vue'
 const router = useRouter()
 const { userInfo } = useUserStore() as any
 // 获取DOM值
@@ -20,8 +20,8 @@ const props = defineProps<{
 }>()
 
 // 初始化展示历史数据
-const showHistrory = ref(false)
-const demand = ref([])
+// const showHistrory = ref(false)
+// const demand = ref([])
 
 // 列表参数
 const next_date = () => {
@@ -106,10 +106,13 @@ const fliterGoTime = (res: any) => {
     }
 }
 // 跳转详情
-const linkDetail = (res: any) => {
+const linkDetail = (res: any, type?: string) => {
     router.push({
         path: '/daily_affairs/detail',
-        query: {orderId: res.order_id}
+        query: {
+            orderId: res.order_id,
+            isActive: type || ''  
+        }
     })
 }
 // 转让任务
@@ -118,12 +121,24 @@ const transmit = (res: any) => {
 }
 // 查看历史记录
 const viewHistory = (values: any) => {
-    showHistrory.value = true
-    getClientInfo({
-        user_id: values.id
+    linkDetail(values, 'clientTag')
+    /*
+    // 暂时注释，无需弹窗，需要跳转路由
+    getOssConfig({
+        // id: values.id
     }).then((res: any) => {
-        console.log(res, '查看历史记录----------------------------->')
+        if (res.code === 200) {
+            const {tag_info} = res.data
+            if (tag_info && tag_info.demand && tag_info.demand.length) { 
+                showHistrory.value = true
+                demand.value = tag_info.demand
+            } else {
+                showToast('还未填写'); 
+            }
+        }
+    }).catch((error: any) => {
     })
+    */
 }
 </script>
 <template>
@@ -254,14 +269,17 @@ const viewHistory = (values: any) => {
             已经到底，继续上拉可翻到下一日
         </div>
         <uploaderPopup v-model:show-uploder="showUploder" :id="uploaderId" v-if="showUploder"/>
-        <van-popup
+        <!-- <van-popup
             v-model:show="showHistrory"
             round
             position="bottom"
             :style="{ minHeight: '30%', maxHeight: '80%'}"
+            closeable
         >
-        <HistoryDemand :demand="demand"/>
-        </van-popup>
+            <div class="history_demand">
+                <HistoryDemand :demand="demand"/>
+            </div>
+        </van-popup> -->
     </div>
     <div v-else class="not_data flex-center-center">
         暂无搜索数据
@@ -463,5 +481,8 @@ const viewHistory = (values: any) => {
     font-size: 28px;
     padding-top: 50px;
     color: #999;
+}
+.history_demand {
+    padding: 120px 28px;
 }
 </style>

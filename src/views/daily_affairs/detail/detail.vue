@@ -14,16 +14,16 @@
               }}{{ detailList.username_pinyin?.given_name }}
             </div>
             <div>{{ detailList.country?.split('-')[0] }}</div>
-            <div>现居住: {{ detailList.live_country?.area.join('') }}</div>
-            <div>获批人数: {{ detailList.all_count }}人</div>
-            <div>订单号: {{ detailList.order_number }}</div>
+            <div>{{$t('message.liveCountry')}}: {{ detailList.live_country?.area.join('') }}</div>
+            <div>{{ $t('message.allCount')}}: {{ detailList.all_count }}人</div>
+            <div>{{ $t('message.orderNumber') }}: {{ detailList.order_number }}</div>
           </div>
         </div>
       </div>
       <div class="appointmentDetail">
         <div class="title">
           <div class="titleLeft">
-            <span class="cardTitle">办证预约</span>
+            <span class="cardTitle">{{ $t('message.certificateAppointment') }}</span>
             <span
               :class="['tag', taskStatusMap[detailList.task_status]?.class]"
               >{{ taskStatusMap[detailList.task_status]?.value }}</span
@@ -34,29 +34,29 @@
             :class="['proof', detailList.receipts?.length < 1 ? 'disable' : '']"
             @click="proofImage"
           >
-            凭证
+            {{ $t('message.proof') }}
           </div>
         </div>
         <div>
           <div class="mb-32 item">
-            <div class="label">预约办证:</div>
+            <div class="label">{{ $t('message.reserve') }}:</div>
             <div class="value">{{ detailList.reserve_count }}人</div>
           </div>
           <div class="mb-32 item">
-            <div class="label">入境事务处</div>
+            <div class="label">{{ $t('message.immigrationOffice') }}:</div>
             <div class="value">{{ detailList.immigration_office }}</div>
           </div>
           <div class="item">
-            <div class="label">预约时间:</div>
+            <div class="label">{{ $t('message.goTime') }}:</div>
             <div class="value">{{ detailList.go_time }}</div>
           </div>
         </div>
       </div>
       <van-tabs v-model:active="active">
-        <van-tab title="主审人信息"></van-tab>
-        <van-tab title="家庭信息"></van-tab>
-        <van-tab title="过关证件"></van-tab>
-        <van-tab title="客户标签"> </van-tab>
+        <van-tab :title="$t('message.orderDetail')"></van-tab>
+        <van-tab :title="$t('message.familyDeatil')"></van-tab>
+        <van-tab :title="$t('message.customsClearanceDocument')"></van-tab>
+        <van-tab :title="$t('message.clientTag')"> </van-tab>
       </van-tabs>
       <div class="component">
         <component :is="componentsName" :detailList="detailList"></component>
@@ -78,32 +78,23 @@ import { showImagePreview } from 'vant';
 const active = ref(0)
 const detailList = reactive({})
 const route=useRoute()
-const clientArray = [
-  {
-    name: '创业',
-    id: 1
-  },
-  { name: '就业', id: 2 },
-  { name: '教育', id: 3 },
-  { name: '港宝', id: 4 },
-  { name: '创业', id: 5 }
-]
+const {t}=useI18n()
 const taskStatusMap = {
   0: {
     class: 'tag-orange',
-    value: '待分配'
+    value: t('message.waitDistributed')
   },
   1: {
     class: 'tag-yellow',
-    value: '待办理'
+    value:  t('message.waitProcessed')
   },
   2: {
     class: 'tag-primary',
-    value: '已办理'
+    value:  t('message.processed')
   },
   3: {
     class: 'tag-success',
-    value: '已领证'
+    value:  t('message.licensed')
   }
 }
 const componentsName = computed(() => {

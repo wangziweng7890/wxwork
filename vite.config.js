@@ -67,6 +67,7 @@ export default ({ mode }) => {
         imports: [
             'vue',
             'vue-router',
+            'vue-i18n',
             {
                 vue: [
                     'defineProps',

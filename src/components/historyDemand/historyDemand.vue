@@ -8,7 +8,7 @@
       <div class="content">
         <div class="title">
           <span class="time">{{ item.created_at }}</span
-          ><span>香港员工</span
+          ><span>{{$t('message.hkPeople')}}</span
           ><span class="people">{{ item.user_name }} </span>添加了:
         </div>
         <div class="demand">
@@ -20,7 +20,6 @@
 </template>
 
 <script setup>
-const arr = [0, 1, 222, 2, 2, 2, 2]
 defineProps({
   demand: {
     type: Array,

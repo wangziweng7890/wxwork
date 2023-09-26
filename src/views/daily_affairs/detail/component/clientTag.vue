@@ -1,19 +1,19 @@
 <template>
   <div class="clientTag">
-    <div class="title">客户标签</div>
+    <div class="title">{{$t('message.clientTag')}}</div>
     <Tag :tableId="route.query.tableId" :clientArray="tagArray" class="Tag"></Tag>
   </div>
   <div class="addPlan">
     <div class="title">
-      <span>添加意向需求</span>
-      <span class="addBtn" @click="addShow">添加需求</span>
+      <span>{{$t('message.addIntentionPlan')}}</span>
+      <span class="addBtn" @click="addShow">{{$t('message.addPlan')}}</span>
     </div>
     <div class="history">
       <HistoryDemand :demand="demand"></HistoryDemand>
     </div>
     <van-action-sheet v-model:show="show" lock-scroll>
       <div class="header">
-        <div class="headerTitle">添加需求</div>
+        <div class="headerTitle">{{$t('message.addPlan')}}</div>
         <img
           src="@/assets/close.svg"
           class="close"
@@ -27,11 +27,11 @@
         v-model="plan"
         rows="5"
         type="textarea"
-        placeholder="请输入备注内容"
+        :placeholder="$t('message.pleaseRemark')"
       />
       <div class="btnBox">
-        <div class="cancel" @click="closeAddShow">取消</div>
-        <div class="submit" @click="submit">确定</div>
+        <div class="cancel" @click="closeAddShow">{{$t('message.cancel')}}</div>
+        <div class="submit" @click="submit">{{$t('message.submit')}}</div>
       </div>
     </van-action-sheet>
   </div>
@@ -43,6 +43,7 @@ import HistoryDemand from '@/components/historyDemand/historyDemand.vue'
 import { judgeInput } from '@/utils/enter'
 import { saveDemand } from '@/api/daily_affairs/detail'
 import { showSuccessToast } from 'vant'
+const {t}=useI18n()
 const route=useRoute()
 const props = defineProps({
   detailList: {
@@ -70,11 +71,11 @@ const closeAddShow = () => {
 }
 const getList = inject('getList')
 const submit = async () => {
-  errorMessage.value = !plan.value ? '请输入备注内容' : ''
+  errorMessage.value = !plan.value ? t('message.pleaseRemark') : ''
   if (!plan.value) return
   const { code } = await saveDemand({ id: route.query.tableId, content: plan.value })
   if (code === 200) {
-    showSuccessToast('添加成功')
+    showSuccessToast(t('message.addSucess'))
     getList()
   }
   show.value = false

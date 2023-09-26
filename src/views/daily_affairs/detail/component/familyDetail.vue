@@ -1,37 +1,37 @@
 <template>
   <div class="row" v-for="item in data" :key="item.id">
     <div class="familyDetail">
-      <div class="title">{{ titleMap[item.relation] }}信息</div>
+      <div class="title">{{ titleMap[item.relation] }}{{$t('message.detail')}}</div>
       <div class="content">
         <div class="item">
-          <div class="label">姓名:</div>
+          <div class="label">{{$t('message.name')}}:</div>
           <div class="value">
             <div class="text">
               {{ item.subset_name }} {{ item.subset_name_pinyin.family_name
               }}{{ item.subset_name_pinyin.given_name }}
             </div>
-            <div class="tag" v-if="item.follow === 1">随迁者</div>
+            <div class="tag" v-if="item.follow === 1">{{$t('message.follower')}}</div>
           </div>
         </div>
         <div class="item">
-          <div class="label">曾用名:</div>
+          <div class="label">{{$t('message.usedName')}}:</div>
           <div class="value">{{ item.used_name || '- -' }}</div>
         </div>
         <div class="item">
-          <div class="label">手机号:</div>
+          <div class="label">{{$t('message.phoneNumber')}}:</div>
           <div class="value copyValue">
             <a :href="item.phone">{{ item.phone || '- -' }}</a>
-            <div class="copyBtn" @click="CopyText(data.mobile)">复制</div>
+            <div class="copyBtn" @click="CopyText(data.mobile)">{{$t('message.copy')}}</div>
           </div>
         </div>
         <div class="item">
-          <div class="label">性别:</div>
+          <div class="label">{{$t('message.sex')}}:</div>
           <div class="value">
-            {{ item.sex === 1 ? '男' : item.sex === 2 ? '女' : '未知' }}
+            {{ item.sex === 1 ? $t('message.man') : item.sex === 2 ?$t('message.woman') : $t('message.unknown') }}
           </div>
         </div>
         <div class="item">
-          <div class="label">年龄:</div>
+          <div class="label">{{$t('message.age')}}:</div>
           <div class="value">{{ item.age }}</div>
         </div>
       </div>
@@ -42,6 +42,7 @@
 <script lang="ts" setup>
 import { copy } from '@/utils/copy'
 import { showToast } from 'vant'
+const {t}=useI18n()
 const props = defineProps({
   detailList: {
     type: Object,
@@ -52,15 +53,15 @@ const data = computed(() =>
   props.detailList.subset ? props.detailList.subset : {}
 )
 const titleMap = {
-  1: '主申人父亲',
-  2: '主申人',
-  3: '配偶',
-  4: '子女',
-  5: '兄弟姐妹'
+  1: t('message.orderFather'),
+  2: t('message.order'),
+  3: t('message.mate'),
+  4: t('message.child'),
+  5: t('message.brothersAndSisters')
 }
 const CopyText = text => {
   const res = copy(text)
-  res && showToast('复制成功')
+  res && showToast(t('message.copySuccess'))
 }
 </script>
 

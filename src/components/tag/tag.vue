@@ -25,15 +25,16 @@ const props=withDefaults(defineProps<Props>(), {
   clientArray: () => [],
   tableId:''
 })
+const {t}=useI18n()
 
 const tagArray = [
-  { id: '1', name: '创业' },
-  { id: '2', name: '就业' },
-  { id: '3', name: '教育' },
-  { id: '4', name: '港宝' },
-  { id: '5', name: '保险' },
-  { id: '6', name: '医疗' },
-  { id: '7', name: '驾照' }
+  { id: '1', name: t('message.business') },
+  { id: '2', name: t('message.job') },
+  { id: '3', name: t('message.education') },
+  { id: '4', name: t('message.Kangbao')},
+  { id: '5', name: t('message.insurance')},
+  { id: '6', name: t('message.treatment') },
+  { id: '7', name: t('message.drivingLicense') }
 ]
 // 选中的数组
 const isActive = ref([])

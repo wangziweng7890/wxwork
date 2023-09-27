@@ -49,7 +49,7 @@ const HK_message = {
             divorce: '離婚',
             separate: '分居',
             widowed: '喪偶',
-            hkPeople: '香港员工',
+            hkPeople: '香港員工',
             business: '創業',
             job: '就業',
             education: '教育',

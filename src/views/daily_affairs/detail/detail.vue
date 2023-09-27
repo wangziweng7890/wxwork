@@ -2,7 +2,9 @@
   <div class="detailPage">
     <div class="content">
       <div class="peopleDetail">
-        <div><img :src="headImage" alt="" /></div>
+        <div>
+          <img :src="headImage" alt="" @error="setDefaultImage" />
+        </div>
         <div>
           <div class="nameTitle">
             <span class="name">{{ detailList.username }}</span>
@@ -136,15 +138,21 @@ const getList = async () => {
     detailList.go_time = dayjs(detailList.go_time).format(
       'YYYY年MM月DD日 HH:mm'
     )
+    // 有头像
     if (detailList.head_pic) {
       const url = await previewOss({ object: detailList.head_pic })
       headImage.value = url
     } else {
+      // 没头像展示默认图
       headImage.value = new URL(`@/assets/defaultimage.png`, import.meta.url)
     }
   }
 }
 
+// 加载失败展示默认图
+const setDefaultImage = () => {
+  headImage.value = new URL(`@/assets/defaultimage.png`, import.meta.url)
+}
 provide('getList', getList)
 onMounted(async () => {
   getList()
@@ -173,7 +181,6 @@ onMounted(async () => {
   .peopleDetail {
     display: flex;
     align-items: center;
-
     img {
       width: 171px;
       height: 239px;

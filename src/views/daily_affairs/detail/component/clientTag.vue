@@ -13,7 +13,10 @@
       <span class="addBtn" @click="addShow">{{ $t('message.addPlan') }}</span>
     </div>
     <div class="history">
-      <HistoryDemand :demand="demand"></HistoryDemand>
+      <HistoryDemand v-if="demand.length>0" :demand="demand"></HistoryDemand>
+      <div v-else style="display: flex;align-items: center;justify-content: center; color: #888f98;height: 130px;">
+        - 暂无添加 -
+      </div>
     </div>
     <van-action-sheet v-model:show="show" lock-scroll>
       <div class="header">

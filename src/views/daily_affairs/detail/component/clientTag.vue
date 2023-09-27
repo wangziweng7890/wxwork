@@ -14,7 +14,7 @@
     </div>
     <div class="history">
       <HistoryDemand v-if="demand.length>0" :demand="demand"></HistoryDemand>
-      <div v-else style="display: flex;align-items: center;justify-content: center; color: #888f98;height: 130px;">
+      <div v-else style="display: flex;align-items: center;justify-content: center; color: #888f98;height: 208px;">
         - 暂无添加 -
       </div>
     </div>

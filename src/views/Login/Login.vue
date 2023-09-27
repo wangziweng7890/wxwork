@@ -40,7 +40,6 @@ const login = async () => {
         userStore.setToken(data.token)
         userStore.setUserInfo(data.corp_user_info || {})
         const res = await getDwptoken({})
-        console.log(res, res.data.token, 'getDwptoken-------------------------------------->');
         userStore.setDwpToken(res.data.token)
         router.replace(decodeURIComponent(route.query.redirect_uri))
     } catch (error) {

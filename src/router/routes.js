@@ -2,7 +2,7 @@
  * @Author: Autumn.again
  * @Date: 2023-09-19 13:37:42
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-09-25 15:27:23
+ * @LastEditTime: 2023-09-27 19:08:54
  * @FilePath: \workwexin-h5-sidebar\src\router\routes.js
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
  */
@@ -33,12 +33,13 @@ export default [
     component: () => import("@/views/daily_affairs/index.vue"),
     meta: {
       title: "香港事务日常协同",
+      jsApiList: ["shareAppMessage", "selectEnterpriseContact"],
     },
     children: [
       {
         path: "list",
         name: "daily_affairs",
-        component: () => import("@/views/daily_affairs/daily_affairs.vue"),
+        component: () => import("@/views/daily_affairs/list/daily_affairs.vue"),
         meta: {
           jsApiList: ["shareAppMessage", "selectEnterpriseContact"],
         },
@@ -46,7 +47,7 @@ export default [
             {
                 path: 'list',
                 name: 'daily_affairs',
-                component:() => import("@/views/daily_affairs/daily_affairs.vue"),
+                component:() => import("@/views/daily_affairs/list/daily_affairs.vue"),
                 meta: {
                     jsApiList: ['shareAppMessage', 'selectEnterpriseContact'],
                 },
@@ -64,7 +65,7 @@ export default [
       {
         path: 'serch_list',
         name: '/serch_list',
-        component:() => import("@/views/daily_affairs/serch_list.vue"),
+        component:() => import("@/views/daily_affairs/list/serch_list.vue"),
         title: "客户信息",
         meta: {
             jsApiList: ['shareAppMessage'],

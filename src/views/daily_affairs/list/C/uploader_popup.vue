@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import { getTransactionInfo, updateCertificate, updateSaveAgent } from '@/api/daily_affairs'
-
 import AliyunOssService from '@/utils/ali-oss'
 import uploadImage from './upload_image.vue'
+const {t}=useI18n()
+
 let ossService = null
 // 初始化oss
 const initOss = async () => {
@@ -79,7 +80,7 @@ const clickType = (value?: number) => {
             <div class="uploader flex-direction-column">
                 <div class="titles">
                     <div class="tiile flex-align-items-center d-flex">
-                        上传证件
+                        {{ t('message.upload_visa_text') }}
                     </div>
                 </div>
                 <div class="uploader_content">

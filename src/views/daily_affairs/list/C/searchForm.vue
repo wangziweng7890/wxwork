@@ -1,8 +1,11 @@
 <script lang="ts" setup>
+import WorkerPopup from './worker_popup.vue'
+import { useUserStore } from '@/stores/modules/user'
+const { workmateList } = useUserStore() as any
+const {t}=useI18n()
 const props = defineProps({
     filterData: Object,
     role_key: String,
-    workmateList: Array,
     // loaclDate: String
 });
 const emit = defineEmits(['update:filterData', 'getTransactionList'])
@@ -13,6 +16,8 @@ const formData = computed({
     },
 })
 const showPicker = ref(false);
+// 展示同事弹窗
+const showWorker = ref(false);
 const columns = ref([])
 
 const showCalendar = ref(false)
@@ -29,6 +34,8 @@ const openPicker = (type?: string) => {
     if (type === 'create_at') {
         showCalendar.value = true
         return 
+    } else if (type === 'user_id') {
+        showWorker.value = true
     } else {
         showPicker.value = true
     }
@@ -37,60 +44,59 @@ const openPicker = (type?: string) => {
 const picker_title = () => {
     switch (picker_type.value) {
         case 'user_id':
-            columns.value = props.workmateList
-            return '请选择香港同事';
+            return t('message.choose_worker');
         case 'address':
         columns.value = [
                 {
-                    label: '东九龙办事处',
+                    label: '入境无要求',
                     value: 1
                 },
                 {
-                    label: '西九龙办事处',
+                    label: '港岛办事处(湾仔)',
                     value: 2
                 },
                 {
-                    label: '沙田办事处',
+                    label: '火炭办事处(火炭)',
                     value: 3
                 },
                 {
-                    label: '香港湾仔告士打道7号入境事务大楼',
+                    label: '屯门办事处(屯门)',
                     value: 4
                 },
                 {
-                    label: '火炭办事处',
+                    label: '元朗办事处(元朗)',
                     value: 5
                 },
                 {
-                    label: '屯门办事处',
+                    label: '九龙办事处(长沙湾)',
                     value: 6
                 },
                 {
-                    label: '元朗办事处',
+                    label: '观塘办事处(观塘)',
                     value: 7
                 },
             ]
-            return '入境处地点';
+            return t('message.address');
         case 'task_status':
         columns.value = [
                 {
-                    label: '待办理',
+                    label: t('message.waitDistributed'),
+                    value: 0
+                },
+                {
+                    label: t('message.waitProcessed'),
                     value: 1
                 },
                 {
-                    label: '待分配',
+                    label: t('message.processed'),
                     value: 2
                 },
                 {
-                    label: '已办理',
+                    label: t('message.licensed'),
                     value: 3
                 },
-                {
-                    label: '已领证',
-                    value: 4
-                },
             ]
-            return '请选择状态';
+            return t('message.choose_status');
         default:
             break;
     }
@@ -100,6 +106,14 @@ const create_at = ref('')
 // 过滤时间
 const formatDate = (date) => `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 
+const fliterValue = () => {
+    const user = workmateList.find((item: any) => item.id === formData.value.user_id) as any
+    const status = columns.value.find((item: any) => item.value === formData.value.task_status) as any
+    return {
+        user_name: user ? user.wework_name : '',
+        status_name: status ? status.label : ''
+    }
+}
 // popup弹出层确认
 const onConfirm = (values) => {
     if (picker_type.value === 'create_at') {
@@ -110,8 +124,11 @@ const onConfirm = (values) => {
         showCalendar.value = false
     } else {
         const { selectedOptions } = values
-        formData.value[picker_type.value] = selectedOptions[0]?.value
+        formData.value[picker_type.value] = picker_type.value === 'address' ? selectedOptions[0]?.label : selectedOptions[0]?.value
         showPicker.value = false
+        if (!!formData.value.user_id || !!formData.value.task_status) {
+            fliterValue()
+        }
     }
 }
 const new_date = () => {
@@ -132,27 +149,28 @@ const search = (type?: string) => {
         emit('getTransactionList', true)
     }
 }
+
 </script>
 <template>
     <div class="search">
         <div class="search_title">
-            筛选
+            {{ t('message.flter_text') }}
         </div>
         <!-- <van-form @submit="onSubmit"> -->
         <van-cell-group inset>
             <van-field
                 v-model="formData.customer_name"
-                name="客户姓名"
-                label="客户姓名"
-                placeholder="请输入"
+                name="customer_name"
+                :label="t('message.custer_name')"
+                :placeholder="t('message.not_input')"
             />
             <van-field
-                v-model="formData.user_id"
+                v-model="fliterValue().user_name"
                 is-link
                 readonly
                 name="user_id"
-                label="香港同事"
-                placeholder="请选择"
+                :label="t('message.worker_name')"
+                :placeholder="t('message.not_checked')"
                 @click="openPicker('user_id')"
                 v-if="!!props.role_key"
             />
@@ -161,8 +179,8 @@ const search = (type?: string) => {
                 is-link
                 readonly
                 name="create_at"
-                label="时间"
-                placeholder="请选择"
+                :label="t('message.timer')"
+                :placeholder="t('message.not_checked')"
                 @click="openPicker('create_at')"
             />
             <van-field
@@ -170,17 +188,17 @@ const search = (type?: string) => {
                 is-link
                 readonly
                 name="address"
-                label="地点"
-                placeholder="请选择"
+                :label="t('message.address')"
+                :placeholder="t('message.not_checked')"
                 @click="openPicker('address')"
             />
             <van-field
-                v-model="formData.task_status"
+                v-model="fliterValue().status_name"
                 is-link
                 readonly
                 name="task_status"
-                label="状态"
-                placeholder="请选择"
+                :label="t('message.status_text')"
+                :placeholder="t('message.not_checked')"
                 @click="openPicker('task_status')"
             />
         </van-cell-group>
@@ -197,12 +215,14 @@ const search = (type?: string) => {
             v-model:show="showPicker"
             position="bottom"
             round
+            :confirmButtonext="t('message.confirm_text')"
         >
             <van-picker
                 :columns="columns"
                 @confirm="onConfirm"
                 @cancel="showPicker = false"
                 :columns-field-names="customFieldName"
+                :class="{address: picker_type == 'address'}"
             >
             <template #title>
                 <div class="popup_title">
@@ -213,6 +233,7 @@ const search = (type?: string) => {
         </van-popup>
         <van-calendar v-model:show="showCalendar" type="range" @confirm="onConfirm" :allow-same-day="true">
         </van-calendar>
+        <WorkerPopup v-model:showWorker="showWorker" v-model:formData="formData"/>
     </div>
 </template>
 <style lang="scss" scoped>
@@ -280,6 +301,12 @@ const search = (type?: string) => {
         color: #fff;
         background: #198CFF;
         flex: 1;
+    }
+}
+.address {
+    :deep(.van-ellipsis) {
+        width: 100%;
+        padding-left: 64px;
     }
 }
 </style>

@@ -2,7 +2,7 @@
  * @Author: Autumn.again
  * @Date: 2023-09-12 17:15:47
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-09-25 18:43:50
+ * @LastEditTime: 2023-09-27 14:37:45
  * @FilePath: \workwexin-h5-sidebar\src\stores\modules\user.js
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
  */
@@ -16,7 +16,8 @@ export const useUserStore = defineStore('user', {
         return {
             token: '',
             userInfo: {},
-            dwpToken: ''
+            dwpToken: '',
+            workmateList: [],
         }
     },
     getters: {
@@ -28,6 +29,9 @@ export const useUserStore = defineStore('user', {
         },
         getUserInfo() {
             return this.userInfo
+        },
+        getWorkmateList() {
+            return this.workmateList
         }
     },
     actions: {
@@ -42,10 +46,14 @@ export const useUserStore = defineStore('user', {
         setUserInfo(data) {
             this.userInfo = data
         },
+        setWorkmateList(data) {
+            this.workmateList = data
+        },
         clear() {
             this.token = ''
             this.dwpToken = ''
             this.userInfo = {}
+            this.workmateList = []
         }
     },
     persist: {

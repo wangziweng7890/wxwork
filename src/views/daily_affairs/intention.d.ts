@@ -39,3 +39,9 @@ interface userInfo {
     name: string
     role_key: string
 }
+interface exportForm {
+    task_status: string[]
+    go_time: string[]
+    immigration_office: string[]
+    convert_rule: string
+}

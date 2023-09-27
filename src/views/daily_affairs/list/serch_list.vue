@@ -2,8 +2,8 @@
  * @Author: Autumn.again
  * @Date: 2023-09-20 13:44:22
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-09-26 16:16:43
- * @FilePath: \workwexin-h5-sidebar\src\views\daily_affairs\serch_list.vue
+ * @LastEditTime: 2023-09-27 10:42:45
+ * @FilePath: \workwexin-h5-sidebar\src\views\daily_affairs\list\serch_list.vue
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
 -->
 <script lang="ts" setup name="serch_detail">
@@ -61,7 +61,7 @@ const onClickButton = async () => {
                 <div @click="onClickButton" class="search_button">搜索</div>
             </template>
         </van-search> -->
-        <PendingList :listData="listData"/>
+        <PendingList :listData="listData" :canBatchAction="false"/>
     </div>
 </template>
 <style lang="scss" scoped>

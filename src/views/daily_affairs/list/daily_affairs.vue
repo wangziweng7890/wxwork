@@ -1,15 +1,23 @@
+<!--
+ * @Author: Autumn.again
+ * @Date: 2023-09-27 09:25:43
+ * @LastEditors: Autumn.again
+ * @LastEditTime: 2023-09-27 19:34:53
+ * @FilePath: \workwexin-h5-sidebar\src\views\daily_affairs\list\daily_affairs.vue
+ * Copyright: 2023 by Autumn.again, All Rights Reserved.
+-->
 <script setup name="daily_affairs" lang="tsx">
 import PendingList from './C/pending_list.vue'
+import WorkerPopup from './C/worker_popup.vue'
+import ExportPopup from './C/export_popup.vue'
 import weekCalender from './C/week_calender.vue'
 import SearchForm from './C/searchForm.vue'
-import { useI18n } from 'vue-i18n'
-import * as wx from '@wecom/jssdk'
 import { useUserStore } from '@/stores/modules/user'
 import { getTransactionTaskList, getTransactionUserList } from '@/api/daily_affairs'
 
-
+const {t, locale} = useI18n()
 const router = useRouter()
-const { userInfo } = useUserStore() as any
+const { userInfo, setWorkmateList } = useUserStore() as any
 const showWeek_Candeler = ref(true)
 // 定义搜索参数
 const filterData: filter_params = reactive({
@@ -24,6 +32,8 @@ const filterData: filter_params = reactive({
 // 展开
 const showBottom = ref(false)
 const showAction = ref(false)
+// 展示导出选择框
+const showExprot = ref(false)
 
 const workmateList = ref([])
 onMounted(async () => {
@@ -35,6 +45,7 @@ onMounted(async () => {
       },
       ...res.data
     ]
+    setWorkmateList(workmateList.value.slice(1))
 })
 // 点击搜索
 const searchClick = (value?: string | number) => {
@@ -47,7 +58,6 @@ const searchClick = (value?: string | number) => {
 const active = ref('0')
 
 // 简体中英文繁体字切换
-const { locale } = useI18n()
 const changeLang = () => {
   locale.value = locale.value === 'HK' ? 'ZH' : 'HK'
 }
@@ -55,8 +65,8 @@ const changeLang = () => {
 const listData = ref([])
 const date = ref('')
 const higLight = () => {
-  const { customer_name, user_id, address, task_status, end_time} = filterData
-  return !!customer_name || !!end_time|| !!user_id || !!address || !!task_status
+  const { customer_name, user_id, address, task_status, end_time, is_convert} = filterData
+  return !!customer_name || !!end_time|| !!user_id || !!address || task_status !== '' || !!is_convert
 }
 // 监听数值变化就调用接口
 const getTransactionList = async (type?: Boolean) => {
@@ -68,7 +78,7 @@ const getTransactionList = async (type?: Boolean) => {
     showBottom.value = false
   }
   const res = await getTransactionTaskList(filterData)
-  listData.value = res.data
+  listData.value = res.data || []
 }
 watch(() => date.value, (newVal, oldVal) => {
   filterData.start_time = newVal
@@ -85,48 +95,62 @@ const click_action = (type?: number) => {
       break;
   }
 }
-const action_content = ref(['批量分配', '简转繁', '导出Excel', '取消'])
+// 批量操作控制
+const canBatchAction = ref(false)
+const action_content = ref([t('message.batch_set'), t('message.batch_check'), t('message.batch_export'), '取消'])
 const handler_action = (index?: number) => {
   switch (index) {
     case 0:
-    wx.selectEnterpriseContact({
-      fromDepartmentId: -1,
-      mode: 'multi',
-      type: ['department', 'user'],
-      selectedDepartmentIds: ['2', '3'],
-      selectedUserIds: ['lisi', 'lisi2']
-    })
+    canBatchAction.value = true
       break;
     case 1:
       changeLang()
       break;
     case 2:
+      showExprot.value = true
       break;
     default:
       break;
   }
   showAction.value = false
 }
+
 // const new_date = () => {
 //   const newDate = new Date()
 //   return newDate.getFullYear() + '-' + (newDate.getMonth() + 1) + '-' + newDate.getDate()
 // }
 // 切换table栏
+
 const onClickTab = (res: any) => {
   const { name } = res
   filterData.user_id = workmateList.value[name].id
   // date.value = new_date()
 }
 
+provide('getTransactionList', getTransactionList);
 
+const showWorker = ref(false)
+
+const AllotIds = ref([])
+// 确认分配
+const batchAllotClick = () => {
+  AllotIds.value = []
+  const arr = JSON.parse(JSON.stringify(listData.value))
+  arr.map(item => {
+    if (item.checked) {
+      AllotIds.value.push(item.id)
+    }
+  })
+  showWorker.value = true
+}
 </script>
 
 <template>
-  <div class="daily">
-    <div class="title_action" v-if="!!userInfo.role_key">
-      <i class="iconfont icon-icon_sousuo" @click="searchClick()"></i>
-      <i class="iconfont icon-icon_luodou" @click="searchClick('fliter')" :class="{highLight: higLight()}"></i>
-    </div>
+  <div class="daily" :class="{ suspend: canBatchAction}">
+      <div class="title_action"  v-if="!!userInfo.role_key">
+        <i class="iconfont icon-icon_sousuo" @click="searchClick()"></i>
+        <i class="iconfont icon-icon_luodou" @click="searchClick('fliter')" :class="{highLight: higLight()}"></i>
+      </div>
     <van-tabs
       v-model:active="active"
       class="tables"
@@ -147,11 +171,14 @@ const onClickTab = (res: any) => {
             <div class="listData_title">
               {{ item }}
             </div>
-            <PendingList :listData="listData[item]"/>
+            <PendingList :listData="listData[item]" :canBatchAction="canBatchAction"/>
+          </div>
+          <div v-if="!listData.length" class="not_data flex-center-center">
+            暂无搜索数据
           </div>
         </template>
         <template v-else>
-          <PendingList :listData="listData"/>
+          <PendingList :listData="listData" :canBatchAction="canBatchAction"/>
         </template>
       </van-tab>
     </van-tabs>
@@ -163,7 +190,7 @@ const onClickTab = (res: any) => {
       close-icon="close"
       closeable
     >
-      <SearchForm v-model:filterData="filterData" :role_key="userInfo.role_key" @getTransactionList="getTransactionList" :workmateList="workmateList" />
+      <SearchForm v-model:filterData="filterData" :role_key="userInfo.role_key" @getTransactionList="getTransactionList" />
     </van-popup>
     <van-popup
       v-model:show="showAction"
@@ -182,6 +209,16 @@ const onClickTab = (res: any) => {
       </div>
     </div>
     </van-popup>
+    <div class="batch_buttones flex-jusify-between d-flex" v-if="canBatchAction">
+      <div class="flex-center-center" @click="canBatchAction = false">
+        取消
+      </div>
+      <div class="flex-center-center" @click="batchAllotClick">
+        分配
+      </div>
+    </div>
+    <WorkerPopup v-model:showWorker="showWorker" :formData="null" :ids="AllotIds"/>
+    <ExportPopup v-model:showExprot="showExprot"/>
   </div>
 </template>
 
@@ -250,4 +287,46 @@ const onClickTab = (res: any) => {
   color: #888F98;
   padding-left: 40px;
 }
+
+.not_data {
+    font-size: 28px;
+    padding-top: 50px;
+    color: #999;
+}
+// 批量操作的之后中止其他操作
+.suspend {
+  :deep(.van-tabs__wrap)::before, :deep(.calender)::before {
+    position: absolute;
+      content: '';
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.2);
+      z-index: 999;
+    }
+  }
+  :deep(.van-tabs__wrap), :deep(.calender) {
+    position: relative;
+  }
+  .batch_buttones {
+    height: 128px;
+    color: #222;
+    font-size: 32px;
+    font-weight: 500;
+    background: #fff;
+    border-top: 1px solid #f0f0f0;
+    position: fixed;
+    padding: 0 32px;
+    bottom: 0;
+    width: 100%;
+    div {
+      height: 96px;
+      width: 330px;
+      border-radius: 16px;
+      background: #F8F9FC;
+      &:last-of-type {
+        background-color: #198CFF;
+        color: #fff;
+      }
+    }
+  }
 </style>

@@ -27,7 +27,7 @@ const previewImage = async (url: string, save?: Boolean) => {
             url,
         }
         props.fn(params).then((rel: any) => {
-            console.log(rel, 'fn----------------->');
+            // 图片上传成功
         })
     })
 }

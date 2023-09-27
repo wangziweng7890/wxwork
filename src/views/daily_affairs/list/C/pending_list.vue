@@ -1,8 +1,12 @@
 <script setup name="pending_list" lang="tsx">
+import { showToast } from 'vant';
 import uploaderPopup from './uploader_popup.vue'
 import { useUserStore } from '@/stores/modules/user'
 import Tag from '@/components/tag/tag.vue'
 import { saveDemand } from '@/api/daily_affairs'
+import WorkerPopup from './worker_popup.vue'
+
+const {t}=useI18n()
 // import HistoryDemand from '@/components/historyDemand/historyDemand.vue'
 const router = useRouter()
 const { userInfo } = useUserStore() as any
@@ -17,7 +21,19 @@ const uploaderId = ref(0)
 
 const props = defineProps<{
     listData: any
+    canBatchAction: boolean
 }>()
+
+const emit = defineEmits(['update:listData'])
+const list = computed({
+    get: () => props.listData,
+    set: value => {
+        emit('update:listData', value)
+    },
+})
+// 初始化选中框
+const checkboxRefs = ref([]);
+const showWorker = ref(false)
 
 // 初始化展示历史数据
 // const showHistrory = ref(false)
@@ -26,9 +42,9 @@ const props = defineProps<{
 // 列表参数
 const next_date = () => {
     console.log('进行到下一天');
-    
 }
-const Demand_message = ref('')
+
+// 对话框
 const onScroll = () => {
     // next_loading.value = true;
     //正文总高度
@@ -52,30 +68,36 @@ const onScroll = () => {
     //     }
     // }
 }
-    //页面加载
+
+//页面加载
 onMounted(() => {
+    // formData.value.is_convert
     window.addEventListener("scroll", onScroll);
 })
 //页面卸载
 onUnmounted(() => {
     window.removeEventListener("scroll", onScroll);
 })
+
 // 保存或者清除
 const submitMessage = (res?: any, index?: number) => {
-    if (!Demand_message.value) {
+    if (!res.message) {
         return false
     }
     if (index === undefined) {
         // 提交
         saveDemand({
-            content: Demand_message.value,
+            content: res.message,
             id: res.id
         }).then((res: any) => {
-            console.log(res)
+            if (res.code === 200) {
+                res.message = ''
+                showToast('保存意向需求成功')
+            }
         })
     } else {
         // 取消则清空
-        Demand_message.value = ''
+        res.message = ''
     }
 }
 const showUploder = ref(false)
@@ -107,17 +129,22 @@ const fliterGoTime = (res: any) => {
 }
 // 跳转详情
 const linkDetail = (res: any, type?: string) => {
+    if (props.canBatchAction)
+        return false
     router.push({
         path: '/daily_affairs/detail',
         query: {
             orderId: res.order_id,
+            tableId: res.id,
             isActive: type || ''  
         }
     })
 }
+const transmitUserId = ref(null)
 // 转让任务
 const transmit = (res: any) => {
-    console.log(res, 'transmit转让任务----------------------------->')
+    transmitUserId.value = res.id
+    showWorker.value = true
 }
 // 查看历史记录
 const viewHistory = (values: any) => {
@@ -140,39 +167,101 @@ const viewHistory = (values: any) => {
     })
     */
 }
+onBeforeUpdate(() => {
+    // checkboxRefs.value = JSON.parse(JSON.stringify(props.listData));
+    checkboxRefs.value = [];
+})
+// const check_box_list = computed(() =>{
+//     const arr = JSON.parse(JSON.stringify(props.listData))
+//     return arr.map(res =>{
+//         return false
+//     })
+// })
+// 确认选中复选框
+const toggle = (index: number) => {
+    if (props.canBatchAction) {
+        fold.value.toggleAll(false)
+        // check_box_list[index] = !check_box_list[index]
+    }
+}
+
+watch(() => props.canBatchAction, (value) => {
+    if (value) {
+        fold.value.toggleAll(false)
+    }
+})
+const type_list = ref([
+        {
+            label: t('message.waitDistributed'),
+            value: 0,
+            color: '#FF5C00',
+            background: 'rgba(255, 92, 0, 0.08)'
+        },
+        {
+            label: t('message.waitProcessed'),
+            value: 1,
+            color: '#FFB321',
+            background: 'rgba(255, 179, 33, 0.08)'
+        },
+        {
+            label: t('message.processed'),
+            value: 2,
+            color: '#198CFF',
+            background: 'rgba(25, 140, 255, 0.08)'
+        },
+        {
+            label: t('message.licensed'),
+            value: 3,
+            color: '#3ECDC3',
+            background: 'rgba(62, 205, 195, 0.08)'
+        },
+])
 </script>
 <template>
     <div class="pending_list" v-if="props.listData && props.listData.length">
         <van-collapse v-model="collArray" class="fold" ref="fold">
-            <van-collapse-item :name="collIndex + 1" v-for="(res, collIndex) in props.listData" :key="res.id" class="fold_item">
+            <van-collapse-item
+                :name="collIndex + 1" v-for="(res, collIndex) in list"
+                :key="res.id"
+                class="fold_item"
+                @click="toggle(collIndex)"
+                :class="{hiddenIcon: canBatchAction}"
+            >
                 <template #title>
-                    <div class="title_box">
-                        <div class="title_box_left">
-                            <div class="time">
-                                {{ fliterGoTime(res.go_time).hour_time }}
+                    <div class="title">
+                        <div class="title_box">
+                            <div class="title_box_left">
+                                <div class="time">
+                                    {{ fliterGoTime(res.go_time).hour_time }}
+                                </div>
+                            </div>
+                            <div class="title_box_name" @click="linkDetail(res)">
+                                <!-- res.order_information用三元，可能会返回null -->
+                                {{ res.order_information ? res.order_information.username : '-' }}
+                            </div>
+                            <div>
+                                {{ t('message.getVisa') }}
+                            </div>
+                            <div class="title_box_type flex-center-center" :style="{ background: type_list[res.task_status].background, color: type_list[res.task_status].color }">
+                                <!-- {{ res.visa_type || '-' }} -->
+                                {{type_list[res.task_status].label}}
                             </div>
                         </div>
-                        <div class="title_box_name" @click="linkDetail(res)">
-                            <!-- res.order_information用三元，可能会返回null -->
-                            {{ res.order_information ? res.order_information.username : '-' }}
+                        <div class="title_manage" :class="{warning: !res.task_user_name}">
+                            接待人：{{ res.task_user_name || t('message.waitDistributed') }}
                         </div>
-                        <div>
-                            办身份证
-                        </div>
-                        <div class="title_box_type">
-                            <!-- {{ res.visa_type || '-' }} -->
-                            已领证
-                        </div>
-                    </div>
-                    <div class="title_manage" :class="{warning: !res.task_user_name}">
-                        接待人：{{ res.task_user_name || '待分配' }}
+                        <van-checkbox
+                            :name="res.id"
+                            v-model="res.checked"
+                            v-if="canBatchAction"
+                        />
                     </div>
                 </template>
                 <div class="fold_item_content">
                     <div class="fold_item_content_message block">
                         <div class="info">
                             <span>
-                                主申人：
+                                {{ t('message.order') }}：
                             </span>
                             <div>
                                 {{ res.order_information ? res.order_information.username : '-' }}
@@ -180,7 +269,7 @@ const viewHistory = (values: any) => {
                         </div>
                         <div class="info">
                             <span>
-                                办证者：
+                                {{ t('message.getVisaer') }}：
                             </span>
                             <div>
                                 {{ fliterUserList(res.user_list) }}
@@ -188,7 +277,7 @@ const viewHistory = (values: any) => {
                         </div>
                         <div class="info">
                             <span>
-                                地点：
+                                {{ t('message.address') }}：
                             </span>
                             <div>
                                 {{ res.immigration_office }}
@@ -196,7 +285,7 @@ const viewHistory = (values: any) => {
                         </div>
                         <div class="info">
                             <span>
-                                时间：
+                                {{ t('message.timer') }}：
                             </span>
                             <div>
                                 {{ fliterGoTime(res.go_time).date_time + ' ' + fliterGoTime(res.go_time).hour_time }}
@@ -204,7 +293,7 @@ const viewHistory = (values: any) => {
                         </div>
                         <div class="info">
                             <span>
-                                客户经理：
+                                {{ t('message.manager') }}：
                             </span>
                             <div>
                                 <div class="phone">
@@ -217,12 +306,12 @@ const viewHistory = (values: any) => {
                         </div>
                         <div class="transmit" v-if="userInfo.role_key">
                             <div class="transmit_button flex-center-center" @click="transmit(res)">
-                                转任务
+                                {{ t('message.setOther') }}
                             </div>
                         </div>
                     </div>
                     <div class="fold_item_content_servise block">
-                        期望银河提供服务：
+                        {{ t('message.hoper_text') }}：
                         <div class="tages">
                             <Tag :tableId="res.id" :clientArray="res.journey_service.split(',')" class="Tag"></Tag>
                         </div>
@@ -233,19 +322,19 @@ const viewHistory = (values: any) => {
                                 意向需求：
                             </span>
                             <span @click="viewHistory(res)">
-                                查看历史需求
+                                {{ t('message.history_text') }}
                             </span>
                         </div>
                         <div class="content">
                             <van-field
-                                v-model="Demand_message"
+                                v-model="res.message"
                                 rows="3"
                                 autosize
                                 label=""
                                 type="textarea"
-                                placeholder="请输入备注内容"
+                                :placeholder="t('message.pleaseRemark')"
                             />
-                            <div class="buttones" :class="{default: !Demand_message}">
+                            <div class="buttones" :class="{default: !res.message}">
                                 <span class="cencel" @click="submitMessage(res, collIndex)">
                                     取消
                                 </span>
@@ -256,17 +345,17 @@ const viewHistory = (values: any) => {
                         </div>
                     </div>
                     <div class="fold_item_content_action block">
-                        上传证件：
+                        {{ t('message.upload_visa_text') }}：
                         <div class="upload flex-center-center" @click="openUploader(res)">
                             <i class="iconfont icon-btn_upload"></i>
-                            去上传
+                            {{ t('message.goto_upload') }}
                         </div>
                     </div>
                 </div>
             </van-collapse-item>
         </van-collapse>
         <div class="pending_list_loadingText" v-if="next_loading">
-            已经到底，继续上拉可翻到下一日
+            {{ t('message.refresh_text') }}
         </div>
         <uploaderPopup v-model:show-uploder="showUploder" :id="uploaderId" v-if="showUploder"/>
         <!-- <van-popup
@@ -280,6 +369,7 @@ const viewHistory = (values: any) => {
                 <HistoryDemand :demand="demand"/>
             </div>
         </van-popup> -->
+        <WorkerPopup v-model:showWorker="showWorker" :formData="null" :ids="[transmitUserId]"/>
     </div>
     <div v-else class="not_data flex-center-center">
         暂无搜索数据
@@ -333,10 +423,10 @@ const viewHistory = (values: any) => {
                 &_type {
                     font-size: 22px;
                     padding: 0 8px;
-                    color: #3ECDC3;
                     border-radius: 8px;
                     height: 38px;
-                    background: rgba(62, 205, 195, 0.08);
+                    // color: #3ECDC3;
+                    // background: rgba(62, 205, 195, 0.08);
                 }
             }
             .title_manage {
@@ -467,6 +557,23 @@ const viewHistory = (values: any) => {
                                 cursor: not-allowed;
                             }
                         }
+                    }
+                }
+            }
+        }
+        .hiddenIcon {
+            :deep(.van-cell__right-icon) {
+                display: none;
+            }
+            .title {
+                position: relative;
+                .van-checkbox {
+                    position: absolute;
+                    right: 0;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    :deep(.van-icon) {
+                        font-size: 28px;
                     }
                 }
             }

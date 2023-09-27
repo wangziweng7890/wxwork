@@ -2,7 +2,7 @@
  * @Author: Autumn.again
  * @Date: 2023-09-25 13:42:11
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-09-26 19:15:07
+ * @LastEditTime: 2023-09-27 15:16:37
  * @FilePath: \workwexin-h5-sidebar\src\api\daily_affairs\index.js
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
  */
@@ -31,8 +31,14 @@ export const updateSaveAgent = params => api.post(`/api/customer-service/transac
 // 保存是否代领
 export const getMonthInfo = params => api.get(`/api/customer-service/transaction/month-info`, { params })
 
+// 转让任务
+export const PostalloTtask = params => api.post(`/api/customer-service/transaction/allot-task`, { ...params })
+
 // 保存意向需求
-export const updateDemandInfo = params => api.post(`/customer-service/transaction/save-demand`, { ...params })
+export const updateDemandInfo = params => api.post(`/api/customer-service/transaction/save-demand`, { ...params })
+
+// 导出接口
+export const exportData = params => api.post(`/api/customer-service/transaction/export-url`, { ...params })
 
 const userStore = useUserStore();
 // 获取详情

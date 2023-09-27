@@ -2,7 +2,7 @@
  * @Author: Autumn.again
  * @Date: 2023-09-12 17:15:47
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-09-13 17:41:32
+ * @LastEditTime: 2023-09-27 19:27:33
  * @FilePath: \workwexin-h5-sidebar\src\config\wxconfig.js
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
  */
@@ -20,6 +20,7 @@ export const agentConfig = (jsApiList) => {
             agentId, // 必填，企业微信的应用id （e.g. 1000247）
             jsApiList: jsApiList, //必填
             async getAgentConfigSignature() {
+                // console.log(jsApiList, agentId, corpId, import.meta.env.VITE_APPID);
                 const { data: { config } } = await getWorkWechatConfig({ url: location.href, agentid: getAgentid() })
                 return {
                     timestamp: config.timestamp, // 必填，生成签名的时间戳

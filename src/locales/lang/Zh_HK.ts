@@ -1,3 +1,11 @@
+/*
+ * @Author: Autumn.again
+ * @Date: 2023-09-14 17:44:19
+ * @LastEditors: Autumn.again
+ * @LastEditTime: 2023-09-27 16:46:20
+ * @FilePath: \workwexin-h5-sidebar\src\locales\lang\Zh_HK.ts
+ * Copyright: 2023 by Autumn.again, All Rights Reserved.
+ */
 const HK_message = {
     HK: {
         message: {
@@ -57,6 +65,31 @@ const HK_message = {
             insurance: '保險',
             treatment: '醫療',
             drivingLicense: '駕照',
+            getVisa: '辦身份證',
+            getVisaer: '辦證者',
+            address: '地點',
+            timer: '時間',
+            manager: '客戶經理',
+            hoper_text: '期望銀河提供服務',
+            setOther: '轉任務',
+            history_text: '查看歷史需求',
+            upload_visa_text: '上傳證件',
+            goto_upload: '去上傳',
+            refresh_text: '已經到底，繼續上拉可翻到下一日',
+            batch_set: '批量分配',
+            batch_check: '簡轉繁',
+            batch_export: '匯出Excel',
+            flter_text: '篩選',
+            custer_name: '客戶姓名',
+            worker_name: '香港同事',
+            not_input: '請輸入',
+            not_checked: '請選擇',
+            status_text: '狀態',
+            choose_worker: '請選擇香港同事',
+            choose_address: '入境處地點',
+            choose_status: '請選擇狀態',
+            confirm_text: '確認',
+            set_warning_text: '確定是否要將任務轉給',
         }
     }
 }

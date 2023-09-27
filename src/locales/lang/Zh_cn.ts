@@ -2,7 +2,7 @@
  * @Author: Autumn.again
  * @Date: 2023-09-14 17:43:52
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-09-14 17:47:44
+ * @LastEditTime: 2023-09-27 16:37:10
  * @FilePath: \workwexin-h5-sidebar\src\locales\lang\Zh_cn.ts
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
  */
@@ -65,6 +65,31 @@ const Zh_message = {
             insurance: '保险',
             treatment: '医疗',
             drivingLicense: '驾照',
+            getVisa: '办身份证',
+            getVisaer: '办证者',
+            address: '地点',
+            timer: '时间',
+            manager: '客户经理',
+            hoper_text: '期望银河提供服务',
+            setOther: '转任务',
+            history_text: '查看历史需求',
+            upload_visa_text: '上传证件',
+            goto_upload: '去上传',
+            refresh_text: '已经到底，继续上拉可翻到下一日',
+            batch_set: '批量分配',
+            batch_check: '简转繁',
+            batch_export: '导出Excel',
+            flter_text: '筛选',
+            custer_name: '客户姓名',
+            worker_name: '香港同事',
+            not_input: '请输入',
+            not_checked: '请选择',
+            status_text: '状态',
+            choose_worker: '请选择香港同事',
+            choose_address: '入境处地点',
+            choose_status: '请选择状态',
+            confirm_text: '确认',
+            set_warning_text: ' 确定是否要将任务转给',
         }
     }
 }

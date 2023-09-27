@@ -20,7 +20,7 @@
             <div>{{ detailList.country?.split('-')[0] }}</div>
             <div>
               {{ $t('message.liveCountry') }}:
-              {{ detailList.live_country?.area.join('') }}
+              {{ `${detailList.live_country?.area.join('')}${detailList.live_country?.details}` }}
             </div>
             <div>
               {{ $t('message.allCount') }}: {{ detailList.all_count }}人
@@ -91,7 +91,7 @@ import { showImagePreview } from 'vant'
 const active = ref(0)
 const detailList = reactive({})
 const route = useRoute()
-const { t } = useI18n()
+const { t , locale} = useI18n()
 const taskStatusMap = {
   0: {
     class: 'tag-orange',
@@ -132,7 +132,7 @@ const proofImage = async () => {
   showImagePreview({ images: urlArray })
 }
 const getList = async () => {
-  const { data, code } = await getOssConfig({ id: route.query.tableId })
+  const { data, code } = await getOssConfig({ id: route.query.tableId,chinese_convert:locale.value==='HK'?1:0 })
   if (code === 200) {
     Object.assign(detailList, data)
     detailList.go_time = dayjs(detailList.go_time).format(

@@ -54,7 +54,7 @@
       </div>
       <div class="item">
         <div class="label">{{$t('message.liveCountry')}}:</div>
-        <div class="value">{{ data.live_country?.area?.join('') }}</div>
+        <div class="value">{{ `${data.live_country?.area?.join('')}${data.live_country?.details}` }}</div>
       </div>
     </div>
   </div>

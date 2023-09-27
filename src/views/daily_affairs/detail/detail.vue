@@ -2,7 +2,9 @@
   <div class="detailPage">
     <div class="content">
       <div class="peopleDetail">
-        <div><img :src="headImage" alt="" /></div>
+        <div>
+          <img :src="headImage" alt="" @error="setDefaultImage" />
+        </div>
         <div>
           <div class="nameTitle">
             <span class="name">{{ detailList.username }}</span>
@@ -18,7 +20,7 @@
             <div>{{ detailList.country?.split('-')[0] }}</div>
             <div>
               {{ $t('message.liveCountry') }}:
-              {{ detailList.live_country?.area.join('') }}
+              {{ `${detailList.live_country?.area.join('')}${detailList.live_country?.details}` }}
             </div>
             <div>
               {{ $t('message.allCount') }}: {{ detailList.all_count }}人
@@ -89,7 +91,7 @@ import { showImagePreview } from 'vant'
 const active = ref(0)
 const detailList = reactive({})
 const route = useRoute()
-const { t } = useI18n()
+const { t , locale} = useI18n()
 const taskStatusMap = {
   0: {
     class: 'tag-orange',
@@ -130,24 +132,30 @@ const proofImage = async () => {
   showImagePreview({ images: urlArray })
 }
 const getList = async () => {
-  const { data, code } = await getOssConfig({ id: route.query.tableId })
+  const { data, code } = await getOssConfig({ id: route.query.tableId,chinese_convert:locale.value==='HK'?1:0 })
   if (code === 200) {
     Object.assign(detailList, data)
     detailList.go_time = dayjs(detailList.go_time).format(
       'YYYY年MM月DD日 HH:mm'
     )
+    // 有头像
     if (detailList.head_pic) {
       const url = await previewOss({ object: detailList.head_pic })
       headImage.value = url
     } else {
+      // 没头像展示默认图
       headImage.value = new URL(`@/assets/defaultimage.png`, import.meta.url)
     }
   }
 }
 
+// 加载失败展示默认图
+const setDefaultImage = () => {
+  headImage.value = new URL(`@/assets/defaultimage.png`, import.meta.url)
+}
 provide('getList', getList)
 onMounted(async () => {
-  getList()
+ await getList()
   active.value = route.query.isActive === 'clientTag' ? 3 : 0
 })
 </script>
@@ -173,7 +181,6 @@ onMounted(async () => {
   .peopleDetail {
     display: flex;
     align-items: center;
-
     img {
       width: 171px;
       height: 239px;

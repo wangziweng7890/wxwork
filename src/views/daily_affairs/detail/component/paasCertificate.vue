@@ -20,8 +20,8 @@
 
 <script setup>
 import { getArchivist } from '@/api/daily_affairs/index'
-const {t}=useI18n()
-const route=useRoute()
+const { t, locale } = useI18n()
+const route = useRoute()
 const titleMap = {
   1: t('message.order'),
   2: '配偶',
@@ -38,7 +38,10 @@ const showPreview = file_list => {
 }
 const detailList = ref([])
 const getList = async () => {
-  const { code, data } = await getArchivist({ order_id: route.query.orderId })
+  const { code, data } = await getArchivist({
+    order_id: route.query.orderId,
+    chinese_convert: locale.value === 'HK' ? 1 : 0
+  })
   if (code === 200) {
     detailList.value = data
   }

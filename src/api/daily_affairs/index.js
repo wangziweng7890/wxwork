@@ -2,13 +2,11 @@
  * @Author: Autumn.again
  * @Date: 2023-09-25 13:42:11
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-09-27 15:16:37
+ * @LastEditTime: 2023-09-27 19:36:01
  * @FilePath: \workwexin-h5-sidebar\src\api\daily_affairs\index.js
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
  */
 import api from '@/utils/request'
-import { useUserStore } from "@/stores/modules/user";
-import {http} from "@/utils/request";
 
 // 获取香港同事列表
 export const getTransactionUserList = params => api.get(`/api/customer-service/transaction/user-list`, { params })
@@ -40,14 +38,14 @@ export const updateDemandInfo = params => api.post(`/api/customer-service/transa
 // 导出接口
 export const exportData = params => api.post(`/api/customer-service/transaction/export-url`, { ...params })
 
-const userStore = useUserStore();
 // 获取详情
-export const getOssConfig = (params) =>http.get(`/customer-service/transaction/customer-info`, { params,headers: { Token: userStore.getToken } });
+export const getOssConfig = (params) =>api.get(`/api/customer-service/transaction/customer-info`, { params});
+
 // 保存期望标签
-export const saveTag = (params) =>http.post(`/customer-service/transaction/save-tag`, params, {headers: { Token: userStore.getToken },});
+export const saveTag = (params) =>api.post(`/api/customer-service/transaction/save-tag`, { ...params });
 
 // 保存意向需求
-export const saveDemand = (params) => http.post(`/customer-service/transaction/save-demand`, params, {headers: { Token: userStore.getToken },});
+export const saveDemand = (params) => api.post(`/api/customer-service/transaction/save-demand`,{ ...params });
+
 // 获取过关证件
-export const getArchivist = (params) =>http.get(`/customer-service/doc-manage/archivist`, {params, headers: { Token: userStore.getToken },
-});
+export const getArchivist = (params) =>api.get(`/api/customer-service/transaction/archivist`, {params});

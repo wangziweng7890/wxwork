@@ -13,44 +13,43 @@
 </template>
 
 <script setup lang="ts">
-import {  ref } from 'vue'
+import { ref } from 'vue'
 import { saveTag } from '@/api/daily_affairs/index'
 
 interface Props {
   clientArray: string[]
-  tableId:string|number
+  tableId: string | number
 }
 // 回显 选中的数组
-const props=withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   clientArray: () => [],
-  tableId:''
+  tableId: ''
 })
-const {t}=useI18n()
+const { t } = useI18n()
 
 const tagArray = [
   { id: '1', name: t('message.business') },
   { id: '2', name: t('message.job') },
   { id: '3', name: t('message.education') },
-  { id: '4', name: t('message.Kangbao')},
-  { id: '5', name: t('message.insurance')},
+  { id: '4', name: t('message.Kangbao') },
+  { id: '5', name: t('message.insurance') },
   { id: '6', name: t('message.treatment') },
   { id: '7', name: t('message.drivingLicense') }
 ]
 // 选中的数组
 const isActive = ref([])
 
-const activeTag = async(id )=> {
+const activeTag = async id => {
   if (isActive.value.includes(id)) {
     let index = isActive.value.findIndex(item => item === id)
     isActive.value.splice(index, 1)
   } else {
     isActive.value.push(id)
   }
-await saveTag({id:props.tableId,tags:isActive.value})
-
+  await saveTag({ id: props.tableId, tags: isActive.value })
 }
-onMounted(()=>{
-  isActive.value=props.clientArray
+onMounted(() => {
+  isActive.value = props.clientArray
 })
 </script>
 

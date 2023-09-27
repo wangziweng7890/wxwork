@@ -30,7 +30,7 @@
       <div class="item">
         <div class="label">{{$t('message.phoneNumber')}}:</div>
         <div class="value copyValue">
-         <a :href="data.mobile">{{ data.mobile || '- -' }}</a> 
+         <a  :href="`tel:${data.mobile}`">{{ data.mobile || '- -' }}</a> 
           <div class="copyBtn" @click="CopyText(data.mobile)">{{$t('message.copy')}}</div>
         </div>
       </div>

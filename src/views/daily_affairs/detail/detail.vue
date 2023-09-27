@@ -155,7 +155,7 @@ const setDefaultImage = () => {
 }
 provide('getList', getList)
 onMounted(async () => {
-  getList()
+ await getList()
   active.value = route.query.isActive === 'clientTag' ? 3 : 0
 })
 </script>

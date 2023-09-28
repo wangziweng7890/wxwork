@@ -2,7 +2,7 @@
  * @Author: Autumn.again
  * @Date: 2023-09-27 09:25:43
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-09-27 19:34:53
+ * @LastEditTime: 2023-09-28 08:59:06
  * @FilePath: \workwexin-h5-sidebar\src\views\daily_affairs\list\daily_affairs.vue
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
 -->
@@ -97,7 +97,24 @@ const click_action = (type?: number) => {
 }
 // 批量操作控制
 const canBatchAction = ref(false)
-const action_content = ref([t('message.batch_set'), t('message.batch_check'), t('message.batch_export'), '取消'])
+const action_content = ref([
+  {
+    label: t('message.batch_set'),
+    value: 0
+  },
+  {
+    label: t('message.batch_check'),
+    value: 1
+  },
+  {
+    label: t('message.batch_export'),
+    value: 2
+  },
+  {
+    label: '取消',
+    value: 3
+  }]
+  )
 const handler_action = (index?: number) => {
   switch (index) {
     case 0:
@@ -204,8 +221,8 @@ const batchAllotClick = () => {
       <div class="actiones_title">
         更多操作
       </div>
-      <div v-for="(item, index) in action_content" :key="index" class="actiones_button" @click="handler_action(index)">
-        {{ item }}
+      <div v-for="(item, index) in (!!userInfo.role_key ? action_content : action_content.slice(1))" :key="index" class="actiones_button" @click="handler_action(item.value)">
+        {{ item.label }}
       </div>
     </div>
     </van-popup>

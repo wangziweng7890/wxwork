@@ -95,6 +95,7 @@ const CopyText = text => {
   .label {
     color: #888f98;
     font-size: 30px;
+    width: 120px;
   }
   .value {
     display: flex;
@@ -102,6 +103,7 @@ const CopyText = text => {
     font-size: 30px;
     color: #222;
     .tag {
+      flex-shrink: 0;
       padding: 4px 8px;
       border-radius: 8px;
       background: rgba(25, 140, 255, 0.08);

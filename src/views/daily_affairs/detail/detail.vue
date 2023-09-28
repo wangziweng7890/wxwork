@@ -18,7 +18,7 @@
               }}{{ detailList.username_pinyin?.given_name }}
             </div>
             <div>{{ detailList.country?.split('-')[0] }}</div>
-            <div>
+            <div style="word-break: break-all">
               {{ $t('message.liveCountry') }}:
               {{ `${detailList.live_country?.area.join('')}${detailList.live_country?.details}` }}
             </div>
@@ -190,7 +190,7 @@ onMounted(async () => {
     .nameTitle {
       display: flex;
       align-items: center;
-
+      word-break: break-all;
       .name {
         font-size: 38px;
         font-weight: 500;
@@ -199,6 +199,7 @@ onMounted(async () => {
       }
 
       .tag {
+        flex-shrink: 0;
         // width: 88px;
         padding: 4px 8px;
         color: #198cff;

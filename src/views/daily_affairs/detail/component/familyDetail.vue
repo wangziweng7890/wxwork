@@ -7,8 +7,8 @@
           <div class="label">{{$t('message.name')}}:</div>
           <div class="value">
             <div class="text">
-              {{ item.subset_name }} {{ item.subset_name_pinyin.family_name
-              }}{{ item.subset_name_pinyin.given_name }}
+              {{ item.subset_name }} {{ item.subset_name_pinyin?.family_name
+              }}{{ item.subset_name_pinyin?.given_name }}
             </div>
             <div class="tag" v-if="item.follow === 1">{{$t('message.follower')}}</div>
           </div>
@@ -17,13 +17,7 @@
           <div class="label">{{$t('message.usedName')}}:</div>
           <div class="value">{{ item.used_name || '- -' }}</div>
         </div>
-        <div class="item">
-          <div class="label">{{$t('message.phoneNumber')}}:</div>
-          <div class="value copyValue">
-            <a  :href="`tel:${item.phone}`">{{ item.phone || '- -' }}</a>
-            <div class="copyBtn" @click="CopyText(data.mobile)">{{$t('message.copy')}}</div>
-          </div>
-        </div>
+     
         <div class="item">
           <div class="label">{{$t('message.sex')}}:</div>
           <div class="value">

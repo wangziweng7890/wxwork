@@ -92,6 +92,13 @@ const HK_message = {
             set_warning_text: '確定是否要將任務轉給',
             not_batch_set_data: '未選取分配數據',
             not_batch_check_data: '沒有可以批量分配的數據哦',
+            address_1: '入境無要求',
+            address_2: '港島辦事處(灣仔)',
+            address_3: '火炭辦事處(火炭)',
+            address_4: '屯門辦事處(屯門)',
+            address_5: '元朗辦事處(元朗)',
+            address_6: '九龍辦事處(長沙灣)',
+            address_7: '觀塘辦事處(觀塘)',
         }
     }
 }

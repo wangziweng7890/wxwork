@@ -119,9 +119,19 @@ const fliterUserList = (res: any) => {
 }
 // 过滤时间
 const fliterGoTime = (res: any) => {
-    const new_date = new Date(res)
-    const date_time = new_date.getFullYear() + '年' + (new_date.getMonth() + 1) + '月' + new_date.getDay() + '日'
-    const hour_time = (new_date.getHours() < 10  ? '0' + new_date.getHours() : new_date.getHours()) + ':' + (new_date.getMinutes() < 10 ? '0' + new_date.getMinutes() : new_date.getMinutes())
+    // const new_date = new Date(res)
+    // const date_time = new_date.getFullYear() + '年' + (new_date.getMonth() + 1) + '月' + new_date.getDay() + '日'
+    // const hour_time = (new_date.getHours() < 10  ? '0' + new_date.getHours() : new_date.getHours()) + ':' + (new_date.getMinutes() < 10 ? '0' + new_date.getMinutes() : new_date.getMinutes())
+    if (!res) {
+        return {
+            date_time: '-',
+            hour_time: '-'
+        }
+    }
+    const new_date = res.split(' ')
+    const dates = new_date[0].split('-')
+    const date_time = dates[0] + '年' + dates[1] + '月' + dates[2] + '日'
+    const hour_time = new_date[1].slice(0, -3)
     return {
         date_time,
         hour_time
@@ -263,7 +273,7 @@ const type_list = ref([
                             <span>
                                 {{ t('message.order') }}：
                             </span>
-                            <div>
+                            <div class="info_block">
                                 {{ res.order_information ? res.order_information.username : '-' }}
                             </div>
                         </div>
@@ -271,15 +281,21 @@ const type_list = ref([
                             <span>
                                 {{ t('message.getVisaer') }}：
                             </span>
-                            <div>
-                                {{ fliterUserList(res.user_list) }}
+                            <div class="info_block">
+                                <div>
+                                    {{ fliterUserList(res.user_list) }}
+                                </div>
+                                <div class="d-flex">
+                                    <span v-if="res.used_name">有曾用名</span>
+                                    <span v-if="res.have_child">有{{res.child_count}}位小孩</span>
+                                </div>
                             </div>
                         </div>
                         <div class="info">
                             <span>
                                 {{ t('message.address') }}：
                             </span>
-                            <div>
+                            <div class="info_block">
                                 {{ res.immigration_office }}
                             </div>
                         </div>
@@ -287,7 +303,7 @@ const type_list = ref([
                             <span>
                                 {{ t('message.timer') }}：
                             </span>
-                            <div>
+                            <div class="info_block">
                                 {{ fliterGoTime(res.go_time).date_time + ' ' + fliterGoTime(res.go_time).hour_time }}
                             </div>
                         </div>
@@ -295,7 +311,7 @@ const type_list = ref([
                             <span>
                                 {{ t('message.manager') }}：
                             </span>
-                            <div>
+                            <div class="info_block">
                                 <div class="phone">
                                     {{ res.service_name || '-' }}
                                 </div>
@@ -475,6 +491,29 @@ const type_list = ref([
                             .iconfont {
                                 margin-left: 16px;
                                 font-size: 36px
+                            }
+                        }
+
+                        &_block {
+                            max-width: 422px;
+                        }
+                        .d-flex {
+                            justify-content: flex-end;
+                            align-items: center;
+                            span {
+                                display: block;
+                                margin-left: 12px;
+                                border-radius: 6px;
+                                font-size: 20px;
+                                height: 33px;
+                                padding: 0 8px;
+                                color: #198CFF;
+                                background: rgba(25, 140, 255, 0.08);
+
+                                &:first-of-type {
+                                    color: #9060F6;
+                                    background: rgba(144, 96, 246, 0.08);
+                                }
                             }
                         }
                     }

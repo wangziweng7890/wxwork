@@ -19,8 +19,54 @@ const formData = computed({
 const showPicker = ref(false);
 // 展示同事弹窗
 const showWorker = ref(false);
-const columns = ref([])
-
+const columns = ref([
+        {
+            label: t('message.address_1'),
+            value: 1
+        },
+        {
+            label: t('message.address_2'),
+            value: 2
+        },
+        {
+            label: t('message.address_3'),
+            value: 3
+        },
+        {
+            label: t('message.address_4'),
+            value: 4
+        },
+        {
+            label: t('message.address_5'),
+            value: 5
+        },
+        {
+            label: t('message.address_6'),
+            value: 6
+        },
+        {
+            label: t('message.address_7'),
+            value: 7
+        },
+])
+const stastusList = ref([
+    {
+        label: t('message.waitDistributed'),
+        value: 0
+    },
+    {
+        label: t('message.waitProcessed'),
+        value: 1
+    },
+    {
+        label: t('message.processed'),
+        value: 2
+    },
+    {
+        label: t('message.licensed'),
+        value: 3
+    },
+])
 const customFieldName = ref({
       text: 'label',
       value: 'value',
@@ -43,56 +89,56 @@ const picker_title = () => {
         case 'user_id':
             return t('message.choose_worker');
         case 'address':
-        columns.value = [
-                {
-                    label: '入境无要求',
-                    value: 1
-                },
-                {
-                    label: '港岛办事处(湾仔)',
-                    value: 2
-                },
-                {
-                    label: '火炭办事处(火炭)',
-                    value: 3
-                },
-                {
-                    label: '屯门办事处(屯门)',
-                    value: 4
-                },
-                {
-                    label: '元朗办事处(元朗)',
-                    value: 5
-                },
-                {
-                    label: '九龙办事处(长沙湾)',
-                    value: 6
-                },
-                {
-                    label: '观塘办事处(观塘)',
-                    value: 7
-                },
-            ]
+        // columns.value = [
+        //         {
+        //             label: t('message.address_1'),
+        //             value: 1
+        //         },
+        //         {
+        //             label: t('message.address_2'),
+        //             value: 2
+        //         },
+        //         {
+        //             label: t('message.address_3'),
+        //             value: 3
+        //         },
+        //         {
+        //             label: t('message.address_4'),
+        //             value: 4
+        //         },
+        //         {
+        //             label: t('message.address_5'),
+        //             value: 5
+        //         },
+        //         {
+        //             label: t('message.address_6'),
+        //             value: 6
+        //         },
+        //         {
+        //             label: t('message.address_7'),
+        //             value: 7
+        //         },
+        //     ]
             return t('message.address');
         case 'task_status':
-        columns.value = [
-                {
-                    label: t('message.waitDistributed'),
-                    value: 0
-                },
-                {
-                    label: t('message.waitProcessed'),
-                    value: 1
-                },
-                {
-                    label: t('message.processed'),
-                    value: 2
-                },
-                {
-                    label: t('message.licensed'),
-                    value: 3
-                },
-            ]
+        // columns.value = [
+        //         {
+        //             label: t('message.waitDistributed'),
+        //             value: 0
+        //         },
+        //         {
+        //             label: t('message.waitProcessed'),
+        //             value: 1
+        //         },
+        //         {
+        //             label: t('message.processed'),
+        //             value: 2
+        //         },
+        //         {
+        //             label: t('message.licensed'),
+        //             value: 3
+        //         },
+        //     ]
             return t('message.choose_status');
         default:
             break;
@@ -196,8 +242,9 @@ const search = (type?: string) => {
             round
             :confirmButtonext="t('message.confirm_text')"
         >
+        <!-- columns动态赋值在手机上会报错，电脑无恙 -->
             <van-picker
-                :columns="columns"
+                :columns="picker_type === 'address' ? columns : stastusList"
                 @confirm="onConfirm"
                 @cancel="showPicker = false"
                 :columns-field-names="customFieldName"

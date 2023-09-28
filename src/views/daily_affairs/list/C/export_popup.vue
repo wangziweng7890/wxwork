@@ -39,31 +39,31 @@ const clickPicker = (type: number) => {
         case 1:
             list.value = [
                 {
-                    label: '入境无要求',
+                    label: t('message.address_1'),
                     value: 1
                 },
                 {
-                    label: '港岛办事处(湾仔)',
+                    label: t('message.address_2'),
                     value: 2
                 },
                 {
-                    label: '火炭办事处(火炭)',
+                    label: t('message.address_3'),
                     value: 3
                 },
                 {
-                    label: '屯门办事处(屯门)',
+                    label: t('message.address_4'),
                     value: 4
                 },
                 {
-                    label: '元朗办事处(元朗)',
+                    label: t('message.address_5'),
                     value: 5
                 },
                 {
-                    label: '九龙办事处(长沙湾)',
+                    label: t('message.address_6'),
                     value: 6
                 },
                 {
-                    label: '观塘办事处(观塘)',
+                    label: t('message.address_7'),
                     value: 7
                 },
             ]

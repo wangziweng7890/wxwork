@@ -34,7 +34,6 @@ const previewImage = async (url: string, save?: Boolean) => {
 // 上传之后的回调
 const afteruploader = async (file: any) => {
     const { url }: imageInfo = await props.ossService.uploadFile(file)
-    // const res = await previewOss({ object: url })
     previewImage(url)
 }
 
@@ -43,9 +42,14 @@ onMounted(() => {
         previewImage(props.resData.cert_url, true)
     }
 })
+// 有图片的时候不需要再次执行上传
+const add = () => {
+    // return false
+    return !fileList.value
+}
 </script>
 <template>
-    <van-uploader :after-read="afteruploader" :show-upload="false" :disabled="!props.resData.is_current_batch"> 
+    <van-uploader :before-read="add" :after-read="afteruploader" :show-upload="false" :disabled="!props.resData.is_current_batch"> 
     <!-- <van-button icon="plus" type="primary">上传文件</van-button> -->
         <div class="upload_image flex-center-center">
             <template v-if="props.resData.is_current_batch">

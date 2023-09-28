@@ -2,7 +2,7 @@
  * @Author: Autumn.again
  * @Date: 2023-09-27 09:25:43
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-09-28 14:30:19
+ * @LastEditTime: 2023-09-28 17:07:27
  * @FilePath: \workwexin-h5-sidebar\src\views\daily_affairs\list\daily_affairs.vue
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
 -->
@@ -28,7 +28,8 @@ const filterData: filter_params = reactive({
     task_status: '',// 状态:0待分配,1待办理,2已办理,3已领证
     start_time: '', // 开始
     end_time: '', // 结束
-    is_convert: 0 // 是否转换数据格式为按天统计：1转换,0不转换
+    is_convert: 0, // 是否转换数据格式为按天统计：1转换,0不转换
+    chinese_convert: 1
 })
 // 展开
 const showBottom = ref(false)
@@ -67,6 +68,8 @@ const active = ref('0')
 // 简体中英文繁体字切换
 const changeLang = () => {
   locale.value = locale.value === 'HK' ? 'ZH' : 'HK'
+  filterData.chinese_convert = locale.value === 'HK' ? 1 : 0
+  getTransactionList()
 }
 
 const higLight = () => {

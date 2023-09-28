@@ -83,7 +83,7 @@ const filterDay = (values: any) => {
             @month-show="showMonth"
         >
         <template #top-info="date">
-            {{ filterDay(date).holiday || '' }}
+            {{ locale === 'HK' ? filterDay(date).traditional_holiday : filterDay(date).holiday || '' }}
         </template>
         <template #bottom-info="date">
             {{ filterDay(date).people || 0 }} 人

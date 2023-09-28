@@ -17,6 +17,7 @@ interface filter_params {
     start_time?: string | number // 开始时间
     end_time?: string | number // 结束时间
     is_convert?: number
+    chinese_convert?: number
 }
 interface imageInfo {
     name: string

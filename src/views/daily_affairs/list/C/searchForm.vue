@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import WorkerPopup from './worker_popup.vue'
+import CalendarPopup from './calender_popup.vue'
 import { useUserStore } from '@/stores/modules/user'
 const { workmateList } = useUserStore() as any
 const {t}=useI18n()
@@ -20,7 +21,6 @@ const showPicker = ref(false);
 const showWorker = ref(false);
 const columns = ref([])
 
-const showCalendar = ref(false)
 const customFieldName = ref({
       text: 'label',
       value: 'value',
@@ -31,10 +31,7 @@ const picker_type =  ref('')
 const openPicker = (type?: string) => {
     // type = ''/时间选择，user_id/同事选择，address/地点选择，task_status/状态选择
     picker_type.value = type
-    if (type === 'create_at') {
-        showCalendar.value = true
-        return 
-    } else if (type === 'user_id') {
+    if (type === 'user_id') {
         showWorker.value = true
     } else {
         showPicker.value = true
@@ -101,11 +98,8 @@ const picker_title = () => {
             break;
     }
 }
-const create_at = ref('')
 
 // 过滤时间
-const formatDate = (date) => `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-
 const fliterValue = () => {
     const user = workmateList.find((item: any) => item.id === formData.value.user_id) as any
     const status = columns.value.find((item: any) => item.value === formData.value.task_status) as any
@@ -116,25 +110,18 @@ const fliterValue = () => {
 }
 // popup弹出层确认
 const onConfirm = (values) => {
-    if (picker_type.value === 'create_at') {
-        const [start, end] = values;
-        formData.value.start_time = formatDate(start)
-        formData.value.end_time = start === end ? '' : formatDate(end)
-        create_at.value = formatDate(start) + ' - ' + formatDate(end)
-        showCalendar.value = false
-    } else {
-        const { selectedOptions } = values
-        formData.value[picker_type.value] = picker_type.value === 'address' ? selectedOptions[0]?.label : selectedOptions[0]?.value
-        showPicker.value = false
-        if (!!formData.value.user_id || !!formData.value.task_status) {
-            fliterValue()
-        }
+    const { selectedOptions } = values
+    formData.value[picker_type.value] = picker_type.value === 'address' ? selectedOptions[0]?.label : selectedOptions[0]?.value
+    showPicker.value = false
+    if (!!formData.value.user_id || !!formData.value.task_status) {
+        fliterValue()
     }
 }
 const new_date = () => {
   const newDate = new Date()
   return newDate.getFullYear() + '-' + (newDate.getMonth() + 1) + '-' + newDate.getDate()
 }
+const calendar = ref(null)
 // 确定搜索或重置
 const search = (type?: string) => {
     if (type) {
@@ -143,9 +130,9 @@ const search = (type?: string) => {
             formData.value[item] = ''
         })
         formData.value.start_time = new_date()
-        create_at.value = ''
+        calendar.value.time_text = ''
     } else {
-        formData.value.is_convert = !!create_at.value ? 1 : 0
+        formData.value.is_convert = !!calendar.value.time_text ? 1 : 0
         emit('getTransactionList', true)
     }
 }
@@ -174,15 +161,7 @@ const search = (type?: string) => {
                 @click="openPicker('user_id')"
                 v-if="!!props.role_key"
             />
-            <van-field
-                v-model="create_at"
-                is-link
-                readonly
-                name="create_at"
-                :label="t('message.timer')"
-                :placeholder="t('message.not_checked')"
-                @click="openPicker('create_at')"
-            />
+            <CalendarPopup v-model:form-data="formData" :type="'start_end'" ref="calendar"/>
             <van-field
                 v-model="formData.address"
                 is-link
@@ -231,8 +210,6 @@ const search = (type?: string) => {
             </template>
             </van-picker>
         </van-popup>
-        <van-calendar v-model:show="showCalendar" type="range" @confirm="onConfirm" :allow-same-day="true">
-        </van-calendar>
         <WorkerPopup v-model:showWorker="showWorker" v-model:formData="formData"/>
     </div>
 </template>

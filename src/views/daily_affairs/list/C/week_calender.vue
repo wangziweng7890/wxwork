@@ -2,8 +2,8 @@
  * @Author: Autumn.again
  * @Date: 2023-09-19 13:53:38
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-09-26 18:25:55
- * @FilePath: \workwexin-h5-sidebar\src\views\daily_affairs\C\week_calender.vue
+ * @LastEditTime: 2023-09-28 14:03:20
+ * @FilePath: \workwexin-h5-sidebar\src\views\daily_affairs\list\C\week_calender.vue
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
 -->
 <script setup lang="ts">
@@ -76,7 +76,12 @@ const arrow_date = () => {
 // 回到今天
 const backToday = () => {
     calendar.value.today()
+    chooseDate.value = new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate()
 }
+// 导出方法
+defineExpose({
+    backToday
+})
 // 是否今天
 const show_back_today = () => {
     const new_date = new Date()
@@ -84,9 +89,8 @@ const show_back_today = () => {
     let today = new_date.getFullYear() + '-' + (month < 10 ? '0' + month : month ) + '-' + new_date.getDate()
     return today !== chooseDate.value
 }
-onMounted(() => {
-    loading.value = true
-})
+
+// 操作栏
 const click_action = (type?: number) => {
     emit('click_action', type)
 }
@@ -108,6 +112,7 @@ const getMonthDetail = (values: any) => {
 }
 // 初始化日期
 onMounted(() => {
+    loading.value = true
     if (!calendarInfo.value.length && chooseDate.value) {
         getMonthDetail(chooseDate.value)
     }

@@ -403,9 +403,14 @@ const type_list = ref([
                     }
                 }
                 &_name {
+                    max-width: 190px;
                     color: #198CFF;
                     position: relative;
                     padding: 0 16px;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    word-break: break-all;
+                    white-space: nowrap;
                     &::after, &::before {
                         content: '';
                         position: absolute;

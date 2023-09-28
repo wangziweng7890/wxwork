@@ -2,7 +2,7 @@
  * @Author: Autumn.again
  * @Date: 2023-09-27 09:25:43
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-09-28 11:16:50
+ * @LastEditTime: 2023-09-28 14:30:19
  * @FilePath: \workwexin-h5-sidebar\src\views\daily_affairs\list\daily_affairs.vue
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
 -->
@@ -37,8 +37,15 @@ const showAction = ref(false)
 const showExprot = ref(false)
 
 const workmateList = ref([])
+const listData = ref([])
+// const date = ref([])
+const date = ref('')
 onMounted(async () => {
     const res = await getTransactionUserList() as any
+    setWorkmateList(res.data)
+    // date.value = res.data.map(item => {
+    //   return ''
+    // })
     workmateList.value = [
       {
         id: '',
@@ -46,7 +53,6 @@ onMounted(async () => {
       },
       ...res.data
     ]
-    setWorkmateList(workmateList.value.slice(1))
 })
 // 点击搜索
 const searchClick = (value?: string | number) => {
@@ -63,14 +69,14 @@ const changeLang = () => {
   locale.value = locale.value === 'HK' ? 'ZH' : 'HK'
 }
 
-const listData = ref([])
-const date = ref('')
 const higLight = () => {
   const { customer_name, user_id, address, task_status, end_time, is_convert} = filterData
   return !!customer_name || !!end_time|| !!user_id || !!address || task_status !== '' || !!is_convert
 }
 // 监听数值变化就调用接口
 const getTransactionList = async (type?: Boolean) => {
+  const res = await getTransactionTaskList(filterData)
+  listData.value = res.data || []
   if (!!type) {
     showWeek_Candeler.value =  false
     showWeek_Candeler.value = (!filterData.start_time || !filterData.end_time)
@@ -78,13 +84,13 @@ const getTransactionList = async (type?: Boolean) => {
   if (showBottom.value) {
     showBottom.value = false
   }
-  const res = await getTransactionTaskList(filterData)
-  listData.value = res.data || []
 }
+
 watch(() => date.value, (newVal, oldVal) => {
   filterData.start_time = newVal
   getTransactionList()
 })
+
 const click_action = (type?: number) => {
   switch (type) {
     case 0:
@@ -119,7 +125,11 @@ const action_content = ref([
 const handler_action = (index?: number) => {
   switch (index) {
     case 0:
-    canBatchAction.value = true
+      if (listData.value.length) {
+        canBatchAction.value = true
+      } else {
+        showToast(t('message.not_batch_check_data'))
+      }
       break;
     case 1:
       changeLang()
@@ -133,16 +143,14 @@ const handler_action = (index?: number) => {
   showAction.value = false
 }
 
-// const new_date = () => {
-//   const newDate = new Date()
-//   return newDate.getFullYear() + '-' + (newDate.getMonth() + 1) + '-' + newDate.getDate()
-// }
 // 切换table栏
-
 const onClickTab = (res: any) => {
   const { name } = res
   filterData.user_id = workmateList.value[name].id
-  // date.value = new_date()
+  // if (week.value[name]) {
+  //   // week.value[name].backToday()
+  // }
+  getTransactionList()
 }
 
 provide('getTransactionList', getTransactionList);
@@ -180,7 +188,9 @@ const batchAllotClick = () => {
       @click-tab="onClickTab"
     >
       <van-tab :title="item.wework_name || '-'" v-for="(item, index) in workmateList" :key="index" class="table_items">
-        <weekCalender
+      </van-tab>
+    </van-tabs>
+    <weekCalender
           v-model:date="date"
           :role_key="userInfo.role_key"
           :highLight="higLight()"
@@ -202,8 +212,6 @@ const batchAllotClick = () => {
         <template v-else>
           <PendingList :listData="listData" :canBatchAction="canBatchAction"/>
         </template>
-      </van-tab>
-    </van-tabs>
     <van-popup
       v-model:show="showBottom"
       round

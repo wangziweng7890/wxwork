@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { exportData } from '@/api/daily_affairs'
 import * as wx from '@wecom/jssdk'
-
+import CalendarPopup from './calender_popup.vue'
 const {t, locale} = useI18n()
 const props = defineProps({
     showExprot: Boolean,
@@ -21,23 +21,20 @@ const formData: exportForm = reactive({
 })
 // 展开弹窗
 const showPicker = ref(false)
-// 展开日历
-const showCalendar = ref(false)
+
 // 弹窗类型
 const Picker_type = ref(null)
 // 状态文本
 const task_status_text = ref('')
 // 地点文本
 const address_text = ref('')
-// 时间文本
-const time_text = ref('')
 
 const clickPicker = (type: number) => {
     Picker_type.value = type
-    if (!type) {
-        showCalendar.value = true
-        return false
-    }
+    // if (!type) {
+    //     showCalendar.value = true
+    //     return false
+    // }
     switch (type) {
         case 1:
             list.value = [
@@ -154,13 +151,7 @@ const clickExportData = () => {
         }
     })
 }
-const formatDate = (date) => `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-const confirmDate = (values) => {
-    const [start, end] = values;
-    showCalendar.value = false;
-    formData.go_time = [`${formatDate(start)} 00:00`, `${formatDate(end)} 23:59:59`]
-    time_text.value = `${formatDate(start)} - ${formatDate(end)}`;
-};
+
 </script>
 
 <template>
@@ -179,14 +170,7 @@ const confirmDate = (values) => {
                 </div>
             </div>
             <div class="actioner_action">
-                <van-field
-                    v-model="time_text"
-                    is-link
-                    readonly
-                    :label="t('message.timer')"
-                    :placeholder="t('message.not_checked')"
-                    @click="clickPicker(0)"
-                    />
+                <CalendarPopup v-model:form-data="formData" :type="'go_time'"/>
                 <van-field
                     v-model="address_text"
                     is-link
@@ -248,7 +232,7 @@ const confirmDate = (values) => {
             </van-cell-group>
             </van-checkbox-group>
         </van-popup>
-        <van-calendar v-model:show="showCalendar" type="range" @confirm="confirmDate" :allow-same-day="true"/>
+        <!-- <van-calendar v-model:show="showCalendar" type="range" @confirm="confirmDate" :allow-same-day="true"/> -->
     </van-popup>
 </template>
 

@@ -91,6 +91,7 @@ const Zh_message = {
             confirm_text: '确认',
             set_warning_text: ' 确定是否要将任务转给',
             not_batch_set_data: '未选中分配数据',
+            not_batch_check_data: '没有可以批量分配的数据哦',
         }
     }
 }

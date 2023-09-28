@@ -2,7 +2,7 @@
  * @Author: Autumn.again
  * @Date: 2023-09-27 09:25:43
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-09-28 08:59:06
+ * @LastEditTime: 2023-09-28 11:16:50
  * @FilePath: \workwexin-h5-sidebar\src\views\daily_affairs\list\daily_affairs.vue
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
 -->
@@ -14,6 +14,7 @@ import weekCalender from './C/week_calender.vue'
 import SearchForm from './C/searchForm.vue'
 import { useUserStore } from '@/stores/modules/user'
 import { getTransactionTaskList, getTransactionUserList } from '@/api/daily_affairs'
+import { showToast } from 'vant'
 
 const {t, locale} = useI18n()
 const router = useRouter()
@@ -158,6 +159,10 @@ const batchAllotClick = () => {
       AllotIds.value.push(item.id)
     }
   })
+  if (!AllotIds.value.length) {
+    showToast(t('message.not_batch_set_data'))
+    return false
+  }
   showWorker.value = true
 }
 </script>

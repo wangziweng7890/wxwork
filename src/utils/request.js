@@ -72,7 +72,7 @@ function responseHook(res) {
         return;
     }
     // 其他状态码
-    return showToast({ message: data.msg, icon: "cross" });
+    return showToast({ message: data.message, icon: "cross" });
 }
 
 function responseError(error) {

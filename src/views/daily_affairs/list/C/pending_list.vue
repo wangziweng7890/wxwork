@@ -89,8 +89,8 @@ const submitMessage = (res?: any, index?: number) => {
         saveDemand({
             content: res.message,
             id: res.id
-        }).then((res: any) => {
-            if (res.code === 200) {
+        }).then((rel: any) => {
+            if (rel.code === 200) {
                 res.message = ''
                 showToast('保存意向需求成功')
             }
@@ -253,7 +253,7 @@ const type_list = ref([
                         <van-checkbox
                             :name="res.id"
                             v-model="res.checked"
-                            v-if="canBatchAction"
+                            v-if="canBatchAction && (!res.task_status || res.task_status === 1)"
                         />
                     </div>
                 </template>
@@ -304,7 +304,7 @@ const type_list = ref([
                                 </div>
                             </div>
                         </div>
-                        <div class="transmit" v-if="userInfo.role_key">
+                        <div class="transmit" v-if="userInfo.role_key && (!res.task_status || res.task_status === 1)">
                             <div class="transmit_button flex-center-center" @click="transmit(res)">
                                 {{ t('message.setOther') }}
                             </div>

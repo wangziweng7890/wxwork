@@ -90,6 +90,7 @@ const HK_message = {
             choose_status: '請選擇狀態',
             confirm_text: '確認',
             set_warning_text: '確定是否要將任務轉給',
+            not_batch_set_data: '未選取分配數據',
         }
     }
 }

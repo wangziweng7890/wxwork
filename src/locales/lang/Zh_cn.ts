@@ -2,7 +2,7 @@
  * @Author: Autumn.again
  * @Date: 2023-09-14 17:43:52
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-09-27 16:37:10
+ * @LastEditTime: 2023-09-28 11:16:31
  * @FilePath: \workwexin-h5-sidebar\src\locales\lang\Zh_cn.ts
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
  */
@@ -90,6 +90,7 @@ const Zh_message = {
             choose_status: '请选择状态',
             confirm_text: '确认',
             set_warning_text: ' 确定是否要将任务转给',
+            not_batch_set_data: '未选中分配数据',
         }
     }
 }

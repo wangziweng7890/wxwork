@@ -20,7 +20,11 @@
             <div>{{ detailList.country?.split('-')[0] }}</div>
             <div style="word-break: break-all">
               {{ $t('message.liveCountry') }}:
-              {{ `${detailList.live_country?.area.join('')}${detailList.live_country?.details}` }}
+              {{
+                `${detailList.live_country?.area.join('')}${
+                  detailList.live_country?.details
+                }`
+              }}
             </div>
             <div>
               {{ $t('message.allCount') }}: {{ detailList.all_count }}人
@@ -91,7 +95,7 @@ import { showImagePreview } from 'vant'
 const active = ref(0)
 const detailList = reactive({})
 const route = useRoute()
-const { t , locale} = useI18n()
+const { t, locale } = useI18n()
 const taskStatusMap = {
   0: {
     class: 'tag-orange',
@@ -123,16 +127,20 @@ const componentsName = computed(() => {
 })
 const headImage = ref('')
 const proofImage = async () => {
-  const urlArray = []
-  detailList.receipts.forEach(async item => {
-    const url = await previewOss({ object: item })
-    urlArray.push(url)
-  })
+   const urlArray = await Promise.all(
+    detailList.receipts.map(async (item) => {
+      const url = await previewOss({ object: item.url })
+      return url
+    })
+  )
   if (urlArray.length < 1) return
   showImagePreview({ images: urlArray })
 }
 const getList = async () => {
-  const { data, code } = await getOssConfig({ id: route.query.tableId,chinese_convert:locale.value==='HK'?1:0 })
+  const { data, code } = await getOssConfig({
+    id: route.query.tableId,
+    chinese_convert: locale.value === 'HK' ? 1 : 0
+  })
   if (code === 200) {
     Object.assign(detailList, data)
     detailList.go_time = dayjs(detailList.go_time).format(
@@ -155,7 +163,7 @@ const setDefaultImage = () => {
 }
 provide('getList', getList)
 onMounted(async () => {
- await getList()
+  await getList()
   active.value = route.query.isActive === 'clientTag' ? 3 : 0
 })
 </script>

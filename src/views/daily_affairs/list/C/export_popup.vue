@@ -202,9 +202,12 @@ const confirmDate = (values) => {
                     :label="t('message.status_text')"
                     :placeholder="t('message.not_checked')"
                     @click="clickPicker(2)"
+                    class="no_border"
                     />
-                <div class="confirm_bottom flex-center-center" @click="clickExportData">
-                    {{t('message.submit')}}
+                <div class="confirm_buttones">
+                    <div class="confirm_bottom flex-center-center" @click="clickExportData">
+                        {{t('message.submit')}}
+                    </div>
                 </div>
             </div>
         </div>
@@ -275,14 +278,26 @@ const confirmDate = (values) => {
   .van-field {
         padding: 25px 42px;
     }
-    .confirm_bottom {
-        height: 96px;
-        border-radius: 16px;
-        background: #198CFF;
-        font-size: 30px;
-        font-weight: 500;
-        color: #fff;
-        margin: 96px 32px 16px;
+    .actioner_action {
+        .no_border{
+            &::after {
+                border: none;
+            }
+        }
+    }
+
+    .confirm_buttones {
+        border-top: 1px solid #f0f0f0;
+        margin-top: 80px;
+        .confirm_bottom {
+            height: 96px;
+            border-radius: 16px;
+            background: #198CFF;
+            font-size: 30px;
+            font-weight: 500;
+            color: #fff;
+            margin: 16px 32px 16px;
+        }
     }
 }
 .checked_title {

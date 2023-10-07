@@ -5,6 +5,7 @@ const props = defineProps({
     resData: Object,
     fn: Function,
     id: Number,
+    type: Number
 });
 const fileList = ref('')
 // 移除图片
@@ -48,7 +49,8 @@ onMounted(() => {
     <van-uploader :after-read="afteruploader" :show-upload="false" :disabled="!props.resData.is_current_batch"> 
     <!-- <van-button icon="plus" type="primary">上传文件</van-button> -->
         <div class="upload_image flex-center-center">
-            <template v-if="props.resData.is_current_batch">
+            <!-- 不是当前批次不展示，小白条例外 -->
+            <template v-if="props.resData.is_current_batch || props.type === 1">
                 <i class="iconfont icon-Subtract1" @click="removeImage" v-if="fileList"></i>
                 <img :src="fileList" alt="" srcset="" v-if="fileList" class="image">
                 <i class="iconfont icon-icon_tianjia" v-else></i>

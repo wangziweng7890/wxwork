@@ -8,6 +8,7 @@
 -->
 <script setup lang="ts">
 import { getMonthInfo } from '@/api/daily_affairs'
+import dayjs from 'dayjs'
 
 const props = defineProps({
     date: String,
@@ -76,19 +77,17 @@ const arrow_date = () => {
 // 回到今天
 const backToday = () => {
     calendar.value.today()
-    chooseDate.value = new Date().getFullYear() + '-' + (new Date().getMonth() + 1) + '-' + new Date().getDate()
+    chooseDate.value = dayjs().format('YYYY-MM-DD')
 }
 // 导出方法
 defineExpose({
     backToday
 })
 // 是否今天
-const show_back_today = () => {
-    const new_date = new Date()
-    const month = new_date.getMonth() + 1
-    let today = new_date.getFullYear() + '-' + (month < 10 ? '0' + month : month ) + '-' + new_date.getDate()
-    return today !== chooseDate.value
-}
+const show_back_today = computed(() => {
+    console.log(dayjs().format('YYYY-MM-DD'), chooseDate.value)
+    return !dayjs().isSame(chooseDate.value, 'day')
+})
 
 // 操作栏
 const click_action = (type?: number) => {
@@ -162,7 +161,7 @@ onMounted(() => {
                 <span>
                     {{ arrow_date().week_day }}
                 </span>
-                <span @click="backToday" v-if="show_back_today()" class="back_today">
+                <span @click="backToday" v-if="show_back_today" class="back_today">
                     回今天
                 </span>
             </div>

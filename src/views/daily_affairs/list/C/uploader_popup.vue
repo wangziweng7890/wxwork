@@ -103,7 +103,7 @@ const clickType = (value?: number) => {
                                 <div class="user_name">
                                     {{ res.user_name }}
                                 </div>
-                                <uploadImage :ossService="ossService" :resData="res" :fn="updateCertificate" :id="props.id"/>
+                                <uploadImage :ossService="ossService" :resData="res" :type="item.type" :fn="updateCertificate" :id="props.id"/>
                             </div>
                         </div>
                     </div>

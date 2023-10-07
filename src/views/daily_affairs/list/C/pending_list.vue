@@ -190,7 +190,8 @@ watch(() => props.canBatchAction, (value) => {
         fold.value.toggleAll(false)
     }
 })
-const type_list = ref([
+const type_list = computed(function() {
+    return [
         {
             label: t('message.waitDistributed'),
             value: 0,
@@ -215,7 +216,7 @@ const type_list = ref([
             color: '#3ECDC3',
             background: 'rgba(62, 205, 195, 0.08)'
         },
-])
+]})
 </script>
 <template>
     <div class="pending_list" v-if="props.listData && props.listData.length">

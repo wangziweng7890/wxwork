@@ -1,7 +1,6 @@
 <script setup name="pending_list" lang="tsx">
 import { showToast } from 'vant';
 import uploaderPopup from './uploader_popup.vue'
-import { useUserStore } from '@/stores/modules/user'
 import Tag from '@/components/tag/tag.vue'
 import { saveDemand } from '@/api/daily_affairs'
 import WorkerPopup from './worker_popup.vue'
@@ -9,7 +8,6 @@ import WorkerPopup from './worker_popup.vue'
 const {t}=useI18n()
 // import HistoryDemand from '@/components/historyDemand/historyDemand.vue'
 const router = useRouter()
-const { userInfo } = useUserStore() as any
 // 获取DOM值
 const fold = ref(null)
 // 下一天的loading
@@ -22,6 +20,7 @@ const uploaderId = ref(0)
 const props = defineProps<{
     listData: any
     canBatchAction: boolean
+    role_key: boolean
 }>()
 
 const emit = defineEmits(['update:listData'])
@@ -321,7 +320,7 @@ const type_list = computed(function() {
                                 </div>
                             </div>
                         </div>
-                        <div class="transmit" v-if="userInfo.role_key && (!res.task_status || res.task_status === 1)">
+                        <div class="transmit" v-if="props.role_key && (!res.task_status || res.task_status === 1)">
                             <div class="transmit_button flex-center-center" @click="transmit(res)">
                                 {{ t('message.setOther') }}
                             </div>

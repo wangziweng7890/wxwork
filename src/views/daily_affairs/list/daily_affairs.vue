@@ -217,7 +217,7 @@ const batchAllotClick = () => {
           </div>
         </template>
         <template v-else>
-          <PendingList :listData="listData" :canBatchAction="canBatchAction"/>
+          <PendingList :listData="listData" :canBatchAction="canBatchAction" :role_key="isMaster"/>
         </template>
     <van-popup
       v-model:show="showBottom"

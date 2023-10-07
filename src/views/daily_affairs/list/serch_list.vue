@@ -8,7 +8,7 @@
 -->
 <script lang="ts" setup name="serch_detail">
 import PendingList from "./C/pending_list.vue";
-import { getTransactionTaskList } from '@/api/daily_affairs'
+import { getTransactionTaskList, getRole } from '@/api/daily_affairs'
 
 // 定义搜索参数
 const filterData: filter_params = reactive({
@@ -30,6 +30,12 @@ const onClickButton = async () => {
         listData.value = res.data
     }
 }
+const isMaster = ref(false)
+
+onMounted(async () => {
+    const { data } = await getRole()
+    isMaster.value = data === 'hk_transaction_master'
+})
 
 </script>
 <template>
@@ -61,7 +67,7 @@ const onClickButton = async () => {
                 <div @click="onClickButton" class="search_button">搜索</div>
             </template>
         </van-search> -->
-        <PendingList :listData="listData" :canBatchAction="false"/>
+        <PendingList :listData="listData" :canBatchAction="false" :role_key="isMaster"/>
     </div>
 </template>
 <style lang="scss" scoped>

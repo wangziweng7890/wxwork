@@ -102,6 +102,9 @@ const click_action = (type?: number) => {
       break;
   }
 }
+const localeText=computed(()=>{
+return locale.value === 'HK' ?  t('message.hk_batch_check') :  t('message.batch_check') 
+})
 // 批量操作控制
 const canBatchAction = ref(false)
 const action_content = ref([
@@ -110,7 +113,7 @@ const action_content = ref([
     value: 0
   },
   {
-    label: t('message.batch_check'),
+    label:localeText,
     value: 1
   },
   {

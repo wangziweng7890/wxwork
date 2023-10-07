@@ -13,12 +13,13 @@ import ExportPopup from './C/export_popup.vue'
 import weekCalender from './C/week_calender.vue'
 import SearchForm from './C/searchForm.vue'
 import { useUserStore } from '@/stores/modules/user'
-import { getTransactionTaskList, getTransactionUserList } from '@/api/daily_affairs'
+import { getTransactionTaskList, getTransactionUserList, getRole } from '@/api/daily_affairs'
 import { showToast } from 'vant'
 
 const {t, locale} = useI18n()
 const router = useRouter()
-const { userInfo, setWorkmateList } = useUserStore() as any
+const { setWorkmateList } = useUserStore() as any
+const isMaster = ref(false)
 const showWeek_Candeler = ref(true)
 // 定义搜索参数
 const filterData: filter_params = reactive({
@@ -42,6 +43,8 @@ const listData = ref([])
 // const date = ref([])
 const date = ref('')
 onMounted(async () => {
+    const { data } = await getRole()
+    isMaster.value = data === 'hk_transaction_master'
     const res = await getTransactionUserList() as any
     setWorkmateList(res.data)
     // date.value = res.data.map(item => {
@@ -181,14 +184,14 @@ const batchAllotClick = () => {
 
 <template>
   <div class="daily" :class="{ suspend: canBatchAction}">
-      <div class="title_action"  v-if="!!userInfo.role_key">
+    <div class="title_action"  v-if="isMaster">
         <i class="iconfont icon-icon_sousuo" @click="searchClick()"></i>
         <i class="iconfont icon-icon_luodou" @click="searchClick('fliter')" :class="{highLight: higLight()}"></i>
-      </div>
+    </div>
     <van-tabs
       v-model:active="active"
       class="tables"
-      :class="{hiddenTab: !userInfo.role_key}"
+      :class="{hiddenTab: !isMaster}"
       @click-tab="onClickTab"
     >
       <van-tab :title="item.wework_name || '-'" v-for="(item, index) in workmateList" :key="index" class="table_items">
@@ -196,7 +199,7 @@ const batchAllotClick = () => {
     </van-tabs>
     <weekCalender
           v-model:date="date"
-          :role_key="userInfo.role_key"
+          :role_key="isMaster"
           :highLight="higLight()"
           :language="locale"
           @click_action="click_action"
@@ -224,7 +227,7 @@ const batchAllotClick = () => {
       close-icon="close"
       closeable
     >
-      <SearchForm v-model:filterData="filterData" :role_key="userInfo.role_key" @getTransactionList="getTransactionList" />
+      <SearchForm v-model:filterData="filterData" :role_key="isMaster" @getTransactionList="getTransactionList" />
     </van-popup>
     <van-popup
       v-model:show="showAction"
@@ -238,7 +241,7 @@ const batchAllotClick = () => {
       <div class="actiones_title">
         更多操作
       </div>
-      <div v-for="(item, index) in (!!userInfo.role_key ? action_content : action_content.slice(1))" :key="index" class="actiones_button" @click="handler_action(item.value)">
+      <div v-for="(item, index) in (isMaster ? action_content : action_content.slice(1))" :key="index" class="actiones_button" @click="handler_action(item.value)">
         {{ item.label }}
       </div>
     </div>
@@ -262,6 +265,9 @@ const batchAllotClick = () => {
   font-size: 28px;
   height: 100%;
   background: #F8F8F8;
+}
+.flex {
+  display: flex;
 }
 .title_action {
   position: absolute;
@@ -290,7 +296,7 @@ const batchAllotClick = () => {
   }
 }
 :deep(.van-tabs__nav--complete) {
-  padding-right: 160px;
+  padding-right: 175px;
   padding-left: 0;
 }
 .actiones {

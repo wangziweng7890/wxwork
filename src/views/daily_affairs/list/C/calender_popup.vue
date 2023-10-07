@@ -59,7 +59,6 @@ const filterDay = (values: any) => {
     const new_date = new Date(values.date)
     const date = formatDate(new_date)
     const finded = calendarInfo.value.find((item: any) => item.datetime === date)
-    console.log(finded, 'filterDay------------------------------->');
     return finded || {}
 }
 </script>

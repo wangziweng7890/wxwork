@@ -6,7 +6,7 @@ const { workmateList } = useUserStore() as any
 const {t}=useI18n()
 const props = defineProps({
     filterData: Object,
-    role_key: String,
+    role_key: Boolean,
     // loaclDate: String
 });
 const emit = defineEmits(['update:filterData', 'getTransactionList'])

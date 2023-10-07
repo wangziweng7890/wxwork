@@ -12,7 +12,7 @@ import dayjs from 'dayjs'
 
 const props = defineProps({
     date: String,
-    role_key: String, // 是否是主管
+    role_key: Boolean, // 是否是主管
     highLight: Boolean,
     language: String, //语言, 默认繁体
 });
@@ -85,7 +85,6 @@ defineExpose({
 })
 // 是否今天
 const show_back_today = computed(() => {
-    console.log(dayjs().format('YYYY-MM-DD'), chooseDate.value)
     return !dayjs().isSame(chooseDate.value, 'day')
 })
 

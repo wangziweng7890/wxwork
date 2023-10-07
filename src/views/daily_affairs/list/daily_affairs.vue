@@ -102,11 +102,7 @@ const click_action = (type?: number) => {
       break;
   }
 }
-const localeText=computed(()=>{
-  console.log( locale.value === 'HK' ?  t('message.hk_batch_check') :  t('message.batch_check') );
-  
-  return  locale.value === 'HK' ?  t('message.hk_batch_check') :  t('message.batch_check') 
-})
+const localeText=computed(()=>locale.value === 'HK' ? t('message.hk_batch_check') : t('message.batch_check'))
 // 批量操作控制
 const canBatchAction = ref(false)
 const action_content = computed(function () {

@@ -77,7 +77,7 @@ const HK_message = {
             goto_upload: '去上傳',
             refresh_text: '已經到底，繼續上拉可翻到下一日',
             batch_set: '批量分配',
-            batch_check: '簡轉繁',
+            batch_check: '繁轉簡',
             batch_export: '匯出Excel',
             flter_text: '篩選',
             custer_name: '客戶姓名',

@@ -65,6 +65,7 @@ const HK_message = {
             insurance: '保險',
             treatment: '醫療',
             drivingLicense: '駕照',
+            property: '房産',
             getVisa: '辦身份證',
             getVisaer: '辦證者',
             address: '地點',

@@ -16,7 +16,8 @@ const filterData = computed({
     },
 })
 
-const formatDate = (date) => `${date.getFullYear()}-${date.getMonth() + 1 < 10 ? ('0' + (date.getMonth() + 1)) : date.getMonth() + 1}-${date.getDate()}`;
+const formatDate = (date) => `${date.getFullYear()}-${date.getMonth() + 1 < 10 ? ('0' + (date.getMonth() + 1)) : date.getMonth() + 1}-${date.getDate()< 10 ? ('0' + (date.getDate())) : date.getDate() 
+}`;
 // 时间文本
 const time_text = ref('')
 // 抛出数值
@@ -82,7 +83,7 @@ const filterDay = (values: any) => {
             @month-show="showMonth"
         >
         <template #top-info="date">
-            {{ locale === 'HK' ? filterDay(date).traditional_holiday : filterDay(date).holiday || '' }}
+       <div>     {{ locale === 'HK' ? filterDay(date).traditional_holiday : filterDay(date).holiday || '' }}</div>
         </template>
         <template #bottom-info="date">
             {{ filterDay(date).people || 0 }} 人

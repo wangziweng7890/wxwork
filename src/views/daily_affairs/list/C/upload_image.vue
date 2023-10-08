@@ -9,18 +9,9 @@ const props = defineProps({
     type: Number
 });
 const fileList = ref('')
-// 移除图片
-const removeImage = () => {
-    fileList.value = ''
-}
-// 预览图片
-const previewImage = async (url: string, save?: Boolean) => {
-    await previewOss({ object: url }).then((res: any) => {
-        fileList.value = res
-        if (save) {
-            return false
-        }
-        const { cert_type, user_name, user_id } = JSON.parse(JSON.stringify(props.resData))
+
+const updateImage = (url: string) => {
+    const { cert_type, user_name, user_id } = JSON.parse(JSON.stringify(props.resData))
         const params = {
             id: props.id,
             user_id,
@@ -31,6 +22,15 @@ const previewImage = async (url: string, save?: Boolean) => {
         props.fn(params).then((rel: any) => {
             // 图片上传成功
         })
+}
+// 预览图片
+const previewImage = async (url: string, save?: Boolean) => {
+    await previewOss({ object: url }).then((res: any) => {
+        fileList.value = res
+        if (save) {
+            return false
+        }
+        updateImage(url)
     })
 }
 // 上传之后的回调
@@ -52,6 +52,11 @@ const add = () => {
 // 预览文件
 const previewFile = () => {
     showImagePreview([fileList.value]);
+}
+// 移除图片
+const removeImage = () => {
+    fileList.value = ''
+    updateImage('')
 }
 </script>
 <template>

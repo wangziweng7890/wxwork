@@ -146,7 +146,7 @@ const search = (type?: string) => {
 </script>
 <template>
     <div class="search">
-        <div class="search_title">
+        <div class="search_title fw-500">
             {{ t('message.flter_text') }}
         </div>
         <!-- <van-form @submit="onSubmit"> -->

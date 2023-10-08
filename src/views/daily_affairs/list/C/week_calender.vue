@@ -2,7 +2,7 @@
  * @Author: Autumn.again
  * @Date: 2023-09-19 13:53:38
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-09-28 14:03:20
+ * @LastEditTime: 2023-10-08 17:28:58
  * @FilePath: \workwexin-h5-sidebar\src\views\daily_affairs\list\C\week_calender.vue
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
 -->
@@ -200,11 +200,15 @@ onMounted(() => {
         text-align: center;
         height: 28px;
     }
+    &_day {
+        font-weight: 500;
+    }
     .small {
         font-size: 18px;
     }
 }
-.calendar_day_checked {
+:deep(.calendar_day_checked ){
+    background: #198CFF;
     .lunar-content_people {
         color: #fff;
     }
@@ -221,6 +225,8 @@ onMounted(() => {
                 position: relative;
                 height: 45px;
                 line-height: 45px;
+                font-size: 26px;
+                font-weight: 500;
                 &::before {
                     content: '';
                     width: 1px;

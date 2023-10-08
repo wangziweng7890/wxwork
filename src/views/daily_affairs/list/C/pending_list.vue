@@ -226,6 +226,13 @@ const type_list = computed(function() {
             background: 'rgba(62, 205, 195, 0.08)'
         },
 ]})
+const getTransactionList = inject('getTransactionList') as any
+watch(() => showUploder.value, (value) => {
+    // 关闭整个弹窗的时候请求列表接口，刷新状态
+    if (!value) {
+        getTransactionList() 
+    }
+})
 </script>
 <template>
     <div class="pending_list" v-if="props.listData && props.listData.length">
@@ -268,62 +275,64 @@ const type_list = computed(function() {
                     </div>
                 </template>
                 <div class="fold_item_content">
-                    <div class="fold_item_content_message block">
-                        <div class="info">
-                            <span>
-                                {{ t('message.order') }}：
-                            </span>
-                            <div class="info_block">
-                                {{ res.order_information ? res.order_information.username : '-' }}
-                            </div>
-                        </div>
-                        <div class="info">
-                            <span>
-                                {{ t('message.getVisaer') }}：
-                            </span>
-                            <div class="info_block">
-                                <div class="user_list_name">
-                                    {{ fliterUserList(res.user_list) }}
-                                </div>
-                                <div class="d-flex">
-                                    <span v-if="res.break_married" class="break_married">离婚</span>
-                                    <span v-if="res.used_name" class="used_name" >有曾用名</span>
-                                    <span v-if="res.have_child">有{{res.child_count}}位小孩</span>
+                    <div class="block">
+                        <div class="fold_item_content_message">
+                            <div class="info">
+                                <span>
+                                    {{ t('message.order') }}：
+                                </span>
+                                <div class="info_block">
+                                    {{ res.order_information ? res.order_information.username : '-' }}
                                 </div>
                             </div>
-                        </div>
-                        <div class="info">
-                            <span>
-                                {{ t('message.address') }}：
-                            </span>
-                            <div class="info_block">
-                                {{ res.immigration_office }}
-                            </div>
-                        </div>
-                        <div class="info">
-                            <span>
-                                {{ t('message.timer') }}：
-                            </span>
-                            <div class="info_block">
-                                {{ fliterGoTime(res.go_time).date_time + ' ' + fliterGoTime(res.go_time).hour_time }}
-                            </div>
-                        </div>
-                        <div class="info">
-                            <span>
-                                {{ t('message.manager') }}：
-                            </span>
-                            <div class="info_block">
-                                <div class="phone">
-                                    {{ res.service_name || '-' }}
-                                </div>
-                                <div class="service_phone">
-                                    <a :href="`tel:${res.service_phone}`" v-if="res.service_phone"> {{ res.service_phone }} <i class="iconfont icon-icon_dianhua"></i></a>
+                            <div class="info">
+                                <span>
+                                    {{ t('message.getVisaer') }}：
+                                </span>
+                                <div class="info_block">
+                                    <div class="user_list_name">
+                                        {{ fliterUserList(res.user_list) }}
+                                    </div>
+                                    <div class="d-flex">
+                                        <span v-if="res.break_married" class="break_married">离婚</span>
+                                        <span v-if="res.used_name" class="used_name" >有曾用名</span>
+                                        <span v-if="res.have_child">有{{res.child_count}}位小孩</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="transmit" v-if="props.role_key && (!res.task_status || res.task_status === 1)">
-                            <div class="transmit_button flex-center-center" @click="transmit(res)">
-                                {{ t('message.setOther') }}
+                            <div class="info">
+                                <span>
+                                    {{ t('message.address') }}：
+                                </span>
+                                <div class="info_block">
+                                    {{ res.immigration_office }}
+                                </div>
+                            </div>
+                            <div class="info">
+                                <span>
+                                    {{ t('message.timer') }}：
+                                </span>
+                                <div class="info_block">
+                                    {{ fliterGoTime(res.go_time).date_time + ' ' + fliterGoTime(res.go_time).hour_time }}
+                                </div>
+                            </div>
+                            <div class="info">
+                                <span>
+                                    {{ t('message.manager') }}：
+                                </span>
+                                <div class="info_block">
+                                    <div class="phone">
+                                        {{ res.service_name || '-' }}
+                                    </div>
+                                    <div class="service_phone">
+                                        <a :href="`tel:${res.service_phone}`" v-if="res.service_phone"> {{ res.service_phone }} <i class="iconfont icon-icon_dianhua"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="transmit" v-if="props.role_key && (!res.task_status || res.task_status === 1)">
+                                <div class="transmit_button flex-center-center" @click="transmit(res)">
+                                    {{ t('message.setOther') }}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -402,6 +411,9 @@ const type_list = computed(function() {
             margin: 20px;
             border-radius: 20px;
             overflow: hidden;
+            :deep(.van-collapse-item__title) {
+                padding: 32px;
+            }
             .title_box {
                 display: flex;
                 // justify-content: space-between;
@@ -409,6 +421,7 @@ const type_list = computed(function() {
                 font-size: 32px;
                 div {
                     margin-right: 16px;
+                    font-weight: 500;
                 }
                 &_left {
                     display: flex;
@@ -458,13 +471,21 @@ const type_list = computed(function() {
             .warning {
                 color: #FF5C00;
             }
+            :deep(.van-collapse-item__content) {
+                padding: 42px 36px;
+            }
             &_content {
                 color: #222222;
                 font-size: 30px;
                 .block {
-                    margin-bottom: 42px;
+                    padding: 42px 0;
+                    border-bottom: 1px solid #F0F0F0;
                     &:last-of-type {
-                        margin-bottom: 0;
+                        border-bottom: none;
+                        padding-bottom: 0;
+                    }
+                    &:first-of-type {
+                        padding-top: 0;
                     }
                 }
                 &_message {

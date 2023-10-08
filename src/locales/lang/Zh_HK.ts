@@ -102,6 +102,7 @@ const HK_message = {
             address_7: '觀塘辦事處(觀塘)',
             getBatcher: '獲批者',
             not_batch_text: '該獲批者不在本批次當中',
+            get_visa_text: '是否代領',
         }
     }
 }

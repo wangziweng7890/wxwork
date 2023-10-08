@@ -1,3 +1,11 @@
+<!--
+ * @Author: Autumn.again
+ * @Date: 2023-09-28 14:37:34
+ * @LastEditors: Autumn.again
+ * @LastEditTime: 2023-10-08 11:09:36
+ * @FilePath: \workwexin-h5-sidebar\src\views\daily_affairs\list\C\calender_popup.vue
+ * Copyright: 2023 by Autumn.again, All Rights Reserved.
+-->
 <script lang="ts" setup>
 import { getMonthInfo } from '@/api/daily_affairs'
 
@@ -28,7 +36,7 @@ const confirmDate = (values) => {
     const [start, end] = values;
     showCalendar.value = false;
     if (props.type === 'go_time') {
-        filterData.value.go_time = [`${formatDate(start)} 00:00`, `${formatDate(end)} 23:59:59`]
+        filterData.value.go_time = [`${formatDate(start)} 00:00:00`, `${formatDate(end)} 23:59:59`]
     } else if (props.type === 'start_end') {
         filterData.value.start_time = formatDate(start)
         filterData.value.end_time = formatDate(end)
@@ -83,7 +91,7 @@ const filterDay = (values: any) => {
             @month-show="showMonth"
         >
         <template #top-info="date">
-       <div>     {{ locale === 'HK' ? filterDay(date).traditional_holiday : filterDay(date).holiday || '' }}</div>
+            <div class="top_info">{{ locale === 'HK' ? filterDay(date).traditional_holiday : filterDay(date).holiday || '' }}</div>
         </template>
         <template #bottom-info="date">
             {{ filterDay(date).people || 0 }} 人
@@ -92,7 +100,16 @@ const filterDay = (values: any) => {
     </div>
 </template>
 <style lang="scss" scoped>
+.calender {
+    padding: 25px 42px 0;
+}
   .van-field {
-        padding: 25px 42px;
+        // padding: 25px 42px;
+        border-bottom: 1px solid var(--van-cell-border-color);
+        padding:0 0 25px;
+    }
+    .top_info {
+        font-size: 16px;
+        line-height: 20px;
     }
 </style>

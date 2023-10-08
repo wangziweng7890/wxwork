@@ -20,7 +20,7 @@ const toast = (msg) => {
                 router.replace({
                     path: "/login",
                     query: {
-                        redirect_uri: encodeURIComponent(location.href)
+                        redirect_uri: encodeURIComponent(location.pathname + location.search)
                     }
                 })
             }
@@ -72,7 +72,7 @@ function responseHook(res) {
         return;
     }
     // 其他状态码
-    return showToast({ message: data.message, icon: "cross" });
+    return showToast({ message: data.message || data.msg, icon: "cross" });
 }
 
 function responseError(error) {
@@ -88,12 +88,16 @@ function responseError(error) {
                 if (error.response.data) {
                     msg = error.response.data.msg;
                     if (error.response.data.code == 401) {
-                        toast("身份验证失败,请重新登陆");
+                        return toast("身份验证失败,请重新登陆");
                     }
                 } else {
                     msg = "服务器内部错误！";
                 }
                 break;
+            case 401:
+                return toast("身份验证失败,请重新登陆");
+            case 403:
+                return toast("身份验证失败,请重新登陆");
             default:
                 msg = "未知错误！";
                 break;

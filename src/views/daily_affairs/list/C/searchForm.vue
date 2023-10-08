@@ -23,7 +23,7 @@ const columns = computed(function() {
     return [
         {
             label: t('message.address_1'),
-            value: '入境无要求'
+            value: ''
         },
         {
             label: t('message.address_2'),
@@ -99,20 +99,25 @@ const picker_title = computed(() => {
     }
 })
 
-// 过滤时间
+// 过滤时间/状态
 const fliterValue = () => {
     const user = workmateList.find((item: any) => item.id === formData.value.user_id) as any
     const status = stastusList.value.find((item: any) => item.value === formData.value.task_status) as any
+    const address = columns.value.find((item: any) => item.value === formData.value.address) as any
     return {
         user_name: user ? user.wework_name : '',
-        status_name: status ? status.label : ''
+        status_name: status ? status.label : '',
+        address_name: address ? address.label : '',
     }
 }
 // popup弹出层确认
 const onConfirm = (values) => {
-    debugger
     const { selectedOptions } = values
+    console.log(picker_type.value, selectedOptions[0]?.value);
     formData.value[picker_type.value] = selectedOptions[0]?.value
+    // if (picker_type.value === 'address' && selectedOptions[0]?.value === '入境无要求') {
+    //     formData.value[picker_type.value] = ''
+    // }
     showPicker.value = false
     if (!!formData.value.user_id || !!formData.value.task_status) {
         fliterValue()
@@ -164,7 +169,7 @@ const search = (type?: string) => {
             />
             <CalendarPopup v-model:form-data="formData" :type="'start_end'" ref="calendar"/>
             <van-field
-                v-model="formData.address"
+                v-model="fliterValue().address_name"
                 is-link
                 readonly
                 name="address"

@@ -296,7 +296,7 @@ const batchAllotClick = () => {
   }
 }
 :deep(.van-tabs__nav--complete) {
-  padding-right: 175px;
+  padding-right: 160px!important;
   padding-left: 0;
 }
 .actiones {

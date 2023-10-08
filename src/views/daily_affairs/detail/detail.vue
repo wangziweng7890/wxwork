@@ -1,77 +1,80 @@
 <template>
   <div class="detailPage">
     <div class="content">
-   <div class="top">
-       <div class="peopleDetail">
-        <div>
-          <img :src="headImage" alt="" @error="setDefaultImage" />
-        </div>
-        <div>
-          <div class="nameTitle">
-            <span class="name">{{ detailList.username }}</span>
-            <div class="tag" v-if="detailList.product_name">
-              {{ detailList.product_name }}
+      <div class="top">
+        <div class="peopleDetail">
+          <div>
+            <img :src="headImage" alt="" @error="setDefaultImage" />
+          </div>
+          <div>
+            <div class="nameTitle">
+              <span class="name">{{ detailList.username }}</span>
+              <div class="tag" v-if="detailList.product_name">
+                {{ detailList.product_name }}
+              </div>
+            </div>
+            <div class="manDetail">
+              <div>
+                {{ detailList.username_pinyin?.family_name
+                }}{{ detailList.username_pinyin?.given_name }}
+              </div>
+              <div>{{ detailList.country?.split('-')[0] }}</div>
+              <div style="word-break: break-all">
+                {{ $t('message.liveCountry') }}:
+                {{
+                  `${detailList.live_country?.area.join('')}${
+                    detailList.live_country?.details
+                  }`
+                }}
+              </div>
+              <div>
+                {{ $t('message.allCount') }}: {{ detailList.all_count }}人
+              </div>
+              <div>
+                {{ $t('message.orderNumber') }}: {{ detailList.order_number }}
+              </div>
             </div>
           </div>
-          <div class="manDetail">
-            <div>
-              {{ detailList.username_pinyin?.family_name
-              }}{{ detailList.username_pinyin?.given_name }}
-            </div>
-            <div>{{ detailList.country?.split('-')[0] }}</div>
-            <div style="word-break: break-all">
-              {{ $t('message.liveCountry') }}:
-              {{
-                `${detailList.live_country?.area.join('')}${
-                  detailList.live_country?.details
-                }`
-              }}
-            </div>
-            <div>
-              {{ $t('message.allCount') }}: {{ detailList.all_count }}人
-            </div>
-            <div>
-              {{ $t('message.orderNumber') }}: {{ detailList.order_number }}
-            </div>
-          </div>
         </div>
-      </div>
-      <div class="appointmentDetail">
-        <div class="title">
-          <div class="titleLeft">
-            <span class="cardTitle">{{
-              $t('message.certificateAppointment')
-            }}</span>
-            <span
-              :class="['tag', taskStatusMap[detailList.task_status]?.class]"
-              >{{ taskStatusMap[detailList.task_status]?.value }}</span
+        <div class="appointmentDetail">
+          <div class="title">
+            <div class="titleLeft">
+              <span class="cardTitle">{{
+                $t('message.certificateAppointment')
+              }}</span>
+              <span
+                :class="['tag', taskStatusMap[detailList.task_status]?.class]"
+                >{{ taskStatusMap[detailList.task_status]?.value }}</span
+              >
+            </div>
+            <div
+              class="proof"
+              :class="[
+                'proof',
+                detailList.receipts?.length < 1 ? 'disable' : ''
+              ]"
+              @click="proofImage"
             >
+              {{ $t('message.proof') }}
+            </div>
           </div>
-          <div
-            class="proof"
-            :class="['proof', detailList.receipts?.length < 1 ? 'disable' : '']"
-            @click="proofImage"
-          >
-            {{ $t('message.proof') }}
-          </div>
-        </div>
-        <div>
-          <div class="mb-32 item">
-            <div class="label">{{ $t('message.reserve') }}:</div>
-            <div class="value">{{ detailList.reserve_count }}人</div>
-          </div>
-          <div class="mb-32 item">
-            <div class="label">{{ $t('message.immigrationOffice') }}:</div>
-            <div class="value">{{ detailList.immigration_office }}</div>
-          </div>
-          <div class="item">
-            <div class="label">{{ $t('message.goTime') }}:</div>
-            <div class="value">{{ detailList.go_time }}</div>
+          <div>
+            <div class="mb-32 item">
+              <div class="label">{{ $t('message.reserve') }}:</div>
+              <div class="value">{{ detailList.reserve_count }}人</div>
+            </div>
+            <div class="mb-32 item">
+              <div class="label">{{ $t('message.immigrationOffice') }}:</div>
+              <div class="value">{{ detailList.immigration_office }}</div>
+            </div>
+            <div class="item">
+              <div class="label">{{ $t('message.goTime') }}:</div>
+              <div class="value">{{ detailList.go_time }}</div>
+            </div>
           </div>
         </div>
       </div>
-   </div>
-      <van-tabs style="margin:20px -42px 0;padding:0 42px; background-color: #fff;" v-model:active="active">
+      <van-tabs class="vanTab" v-model:active="active">
         <van-tab :title="$t('message.orderDetail')"></van-tab>
         <van-tab :title="$t('message.familyDeatil')"></van-tab>
         <van-tab :title="$t('message.customsClearanceDocument')"></van-tab>
@@ -129,8 +132,8 @@ const componentsName = computed(() => {
 })
 const headImage = ref('')
 const proofImage = async () => {
-   const urlArray = await Promise.all(
-    detailList.receipts.map(async (item) => {
+  const urlArray = await Promise.all(
+    detailList.receipts.map(async item => {
       const url = await previewOss({ object: item.url })
       return url
     })
@@ -173,17 +176,17 @@ onMounted(async () => {
 <style lang="scss" scoped>
 .detailPage {
   font-size: 28px;
-//  background: #f8f9fb;
+
   .mb-32 {
     margin-bottom: 32px;
   }
 
   .content {
     padding: 42px;
-    .top{
- background: #fff;
- margin:-42px;
- padding: 42px;
+    .top {
+      background: #fff;
+      margin: -42px;
+      padding: 42px;
     }
   }
 
@@ -201,7 +204,7 @@ onMounted(async () => {
       height: 239px;
       margin-right: 52px;
       border-radius: 16px;
-      border: 1px solid #F3F4F5;
+      border: 1px solid #f3f4f5;
     }
 
     .nameTitle {
@@ -306,6 +309,14 @@ onMounted(async () => {
   .disable {
     color: #888f98 !important;
     cursor: no-drop !important;
+  }
+  .vanTab {
+    margin: 20px -42px 0;
+    padding: 0 42px;
+    background-color: #fff;
+    :deep(.van-tab--active) {
+      font-weight: 600 !important;
+    }
   }
 }
 </style>

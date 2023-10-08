@@ -32,10 +32,6 @@ const show = ref(false)
 const images = ref([])
 const showPreview = file_list => {
   if (file_list[0].ext === 'pdf') {
-    console.log('url',file_list[0].url);
-    console.log('url',file_list[0].name);
-    console.log('url',file_list[0].size);
-
     wx.previewFile({
       url: file_list[0].url,
       name: file_list[0].name,

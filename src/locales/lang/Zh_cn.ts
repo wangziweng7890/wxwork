@@ -100,6 +100,8 @@ const Zh_message = {
             address_5: '元朗办事处(元朗)',
             address_6: '九龙办事处(长沙湾)',
             address_7: '观塘办事处(观塘)',
+            getBatcher: '获批者',
+            not_batch_text: '该获批者不在本批次当中',
         }
     }
 }

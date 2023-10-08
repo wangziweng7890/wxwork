@@ -2,7 +2,7 @@
  * @Author: Autumn.again
  * @Date: 2023-09-20 13:44:22
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-10-08 13:35:14
+ * @LastEditTime: 2023-10-08 16:16:31
  * @FilePath: \workwexin-h5-sidebar\src\views\daily_affairs\list\serch_list.vue
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
 -->
@@ -22,12 +22,13 @@ const filterData: filter_params = reactive({
 })
 
 const listData = ref([])
-
+const showSearchResult = ref(false)
 // 点击搜索按钮
 const onClickButton = async () => {
     const res = await getTransactionTaskList(filterData) as any
     if (res.code === 200) {
         listData.value = res.data
+        showSearchResult.value = true
     }
 }
 const isMaster = ref(false)
@@ -73,7 +74,10 @@ onMounted(async () => {
               {{ item }}
             </div>
             <PendingList :listData="listData[item]" :canBatchAction="false" :role_key="isMaster"/>
-          </div>
+        </div>
+        <div class="not_data" v-if="!Object.keys(listData).length && showSearchResult">
+            暂无搜索数据
+        </div>
     </div>
 </template>
 <style lang="scss" scoped>
@@ -92,12 +96,16 @@ onMounted(async () => {
         margin-left: 24px;
     }
     .van-search__content {
-        background: #F8F9FB;
+        .van-field {
+            background: #F8F9FB;
+            flex-wrap: nowrap;
+            border-radius: 70px;
+        }
     }
 }
 .not_data {
     font-size: 28px;
-    padding-top: 50px;
+    text-align: center;
     color: #999;
 }
 .listData_title {

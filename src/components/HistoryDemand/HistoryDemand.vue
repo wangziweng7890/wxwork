@@ -9,7 +9,7 @@
         <div class="title">
           <span class="time">{{ item.created_at }}</span
           ><span>{{$t('message.hkPeople')}}</span
-          ><span class="people">{{ item.user_name }} </span>添加了:
+          ><span class="people">{{ item.user_name }} </span>添加了 :
         </div>
         <div class="demand">
           {{ item.content }}

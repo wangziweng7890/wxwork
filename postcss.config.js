@@ -20,7 +20,7 @@ module.exports = {
       minPixelValue: 1,
       mediaQuery: false,
       replace: true,
-      exclude: /(\/|\\)(node_modules)(\/|\\)/,
+      exclude: /(\/|\\)(node_modules|OrderList)(\/|\\)/, // 订单管理样式先忽略，否则样式会太小
     }),
     // 解决viewport适配vant 
     require("postcss-px-to-viewport")({

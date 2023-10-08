@@ -96,7 +96,7 @@ const clickType = (value?: number) => {
                     <div class="listes" v-for="(item, index) in (checked_value === 1 ? imageList : imageList.slice(0, 1))" :key="index">
                         <div class="title d-flex">
                             <div class="type">{{ filterType(item.type) }}</div>
-                            <div class="tips">{{ `(${item.type === 1 ? t('message.getBatcher') : t('message.getVisaer')}每个人一${item.type === 1 ? '张' : '封'})` }}</div>
+                            <div class="tips">{{ `(${item.type === 1 ? t('message.getBatcher') : t('message.getVisaer')}每个人一${[1, 4].includes(item.type) ? '张' : '封'})` }}</div>
                         </div>
                         <div class="list">
                             <div class="list_item" v-for="(res, resIndex) in item.data" :key="resIndex">

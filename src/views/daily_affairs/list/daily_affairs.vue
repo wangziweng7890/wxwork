@@ -211,7 +211,7 @@ const batchAllotClick = () => {
             <div class="listData_title">
               {{ item }}
             </div>
-            <PendingList :listData="listData[item]" :canBatchAction="canBatchAction"/>
+            <PendingList :listData="listData[item]" :canBatchAction="canBatchAction" :role_key="isMaster"/>
           </div>
           <div v-if="!listData.length" class="not_data flex-center-center">
             暂无搜索数据

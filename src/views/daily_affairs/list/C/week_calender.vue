@@ -202,6 +202,7 @@ onMounted(() => {
     }
     &_day {
         font-weight: 500;
+        text-align: center;
     }
     .small {
         font-size: 18px;

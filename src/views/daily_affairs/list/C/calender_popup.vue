@@ -2,7 +2,7 @@
  * @Author: Autumn.again
  * @Date: 2023-09-28 14:37:34
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-10-08 10:20:31
+ * @LastEditTime: 2023-10-08 10:30:32
  * @FilePath: \workwexin-h5-sidebar\src\views\daily_affairs\list\C\calender_popup.vue
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
 -->
@@ -36,7 +36,7 @@ const confirmDate = (values) => {
     const [start, end] = values;
     showCalendar.value = false;
     if (props.type === 'go_time') {
-        filterData.value.go_time = [`${formatDate(start)} 00:00`, `${formatDate(end)} 23:59:59`]
+        filterData.value.go_time = [`${formatDate(start)} 00:00:00`, `${formatDate(end)} 23:59:59`]
     } else if (props.type === 'start_end') {
         filterData.value.start_time = formatDate(start)
         filterData.value.end_time = formatDate(end)

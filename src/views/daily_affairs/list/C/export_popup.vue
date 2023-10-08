@@ -40,31 +40,31 @@ const clickPicker = (type: number) => {
             list.value = [
                 {
                     label: t('message.address_1'),
-                    value: 1
+                    value: ''
                 },
                 {
                     label: t('message.address_2'),
-                    value: 2
+                    value: '港岛办事处(湾仔)'
                 },
                 {
                     label: t('message.address_3'),
-                    value: 3
+                    value: '火炭办事处(火炭)'
                 },
                 {
                     label: t('message.address_4'),
-                    value: 4
+                    value: '屯门办事处(屯门)'
                 },
                 {
                     label: t('message.address_5'),
-                    value: 5
+                    value: '元朗办事处(元朗)'
                 },
                 {
                     label: t('message.address_6'),
-                    value: 6
+                    value: '九龙办事处(长沙湾)'
                 },
                 {
                     label: t('message.address_7'),
-                    value: 7
+                    value: '观塘办事处(观塘)'
                 },
             ]
             checked.value = address_text.value.split('、')
@@ -114,7 +114,14 @@ const confirmContent = () => {
         return res
     })
     if (Picker_type.value === 1) {
-        formData.immigration_office = neArr
+        const address_list = []
+        neArr.map((res: any) => {
+            const canpush = list.value.find(item => item.label === res)
+            if (canpush.value) {
+                address_list.push(canpush.value)
+            }
+        })
+        formData.immigration_office = address_list
         address_text.value = neArr.join('、')
     } else {
         const ids = []
@@ -140,8 +147,6 @@ const clickExportData = () => {
     // })
     const params = JSON.parse(JSON.stringify(formData)) as any
     params.convert_rule = locale.value === 'HK' ? 's2t' : 't2s'
-    console.log(params,'******************');
-    
     exportData(params).then((res: any) => {
         if (res.code === 200) {
             wx.shareAppMessage({

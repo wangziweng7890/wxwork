@@ -21,6 +21,7 @@
         "sass": "^1.66.1",
         "spark-md5": "^3.0.2",
         "vant": "^4.3.2",
+        "vconsole": "^3.15.1",
         "vue": "^3.3.2",
         "vue-i18n": "^9.4.0",
         "vue-router": "^4.2.0",
@@ -28,9 +29,8 @@
         "web-storage-cache": "^1.1.1"
     },
     "devDependencies": {
-        "unplugin-icons": "^0.16.1",
-        "@galaxy-fe/vite-plugin-unocss-iconfont": "^1.2.1",
         "@antfu/eslint-config": "^0.25.2",
+        "@galaxy-fe/vite-plugin-unocss-iconfont": "^1.2.1",
         "@typescript-eslint/eslint-plugin": "^5.61.0",
         "@typescript-eslint/parser": "^5.61.0",
         "@vitejs/plugin-vue": "^4.2.3",
@@ -46,6 +46,7 @@
         "typescript": "^4.7.4",
         "unocss": "^0.55.7",
         "unplugin-auto-import": "^0.16.6",
+        "unplugin-icons": "^0.16.1",
         "unplugin-vue-components": "^0.24.1",
         "vite": "^4.3.5",
         "vitest": "^0.31.0"

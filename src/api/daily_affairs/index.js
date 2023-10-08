@@ -49,3 +49,6 @@ export const saveDemand = (params) => api.post(`/api/customer-service/transactio
 
 // 获取过关证件
 export const getArchivist = (params) =>api.get(`/api/customer-service/transaction/archivist`, {params});
+
+// 获取角色
+export const getRole = () => api.get('/api/customer-service/transaction/get-role')

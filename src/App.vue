@@ -10,12 +10,30 @@
 import { RouterView } from 'vue-router'
 import vLoading from './components/Loading/Loading.vue'
 import { useCommonStoreInfo } from '@/stores/modules/common'
+import VConsole from 'vconsole';
 const useCommonStore = useCommonStoreInfo()
+
+// 5秒内点击10次
+let clickCount = 0;
+let timer = null;
+
+function showDebugger() {
+	clickCount++;
+    if (clickCount >= 10) {
+        clearTimeout(timer);
+        clickCount = 0;
+		new VConsole();
+    } else {
+        timer = setTimeout(() => {
+            clickCount = 0;
+        }, 5000);
+    }
+}
 
 </script>
 
 <template>
-	<div class="height_100">
+	<div class="height_100" @click="showDebugger">
 		<!-- 全局loading -->
         <v-loading v-show="useCommonStore.getLoading" />
 		<!-- 路由 -->

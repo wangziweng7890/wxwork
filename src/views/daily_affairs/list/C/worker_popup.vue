@@ -106,10 +106,11 @@ const confirm = () => {
                 {{ t('message.set_warning_text') }} "{{user_info.wework_name || '-'}}" ？
             </div>
             <div class="buttones d-flex flex-jusify-between">
-                <div class="flex-center-center" @click="canTransmit = false">
+                <div class="flex-center-center flex-1" @click="canTransmit = false">
                     取消
                 </div>
-                <div class="flex-center-center" @click="confirm">
+                <span class="w-20px"></span>
+                <div class="flex-center-center flex-1" @click="confirm">
                    {{ t('message.confirm_text') }}
                 </div>
             </div>
@@ -120,6 +121,9 @@ const confirm = () => {
 <style lang="scss" scoped>
 .popup_title {
     font-size: 34px;
+}
+.w-20px {
+    width: 20px;
 }
 :deep(.dialog_worker) {
     height: 322px;

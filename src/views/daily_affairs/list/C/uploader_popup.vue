@@ -96,7 +96,7 @@ const clickType = (value?: number) => {
                     <div class="listes" v-for="(item, index) in (checked_value === 1 ? imageList : imageList.slice(0, 1))" :key="index">
                         <div class="title d-flex">
                             <div class="type">{{ filterType(item.type) }}</div>
-                            <div class="tips">{{ `(${item.type === 1 ? '办证者' : '获批者'}每人一张)` }}</div>
+                            <div class="tips">{{ `(${item.type === 1 ? t('message.getBatcher') : t('message.getVisaer')}每个人一${item.type === 1 ? '张' : '封'})` }}</div>
                         </div>
                         <div class="list">
                             <div class="list_item" v-for="(res, resIndex) in item.data" :key="resIndex">
@@ -160,6 +160,7 @@ const clickType = (value?: number) => {
               color: #222222; 
               font-size: 32px; 
               line-height: 42px;
+              font-weight: 500;
             }
             .tips {
                 font-size: 26px;
@@ -168,7 +169,8 @@ const clickType = (value?: number) => {
         }
         .list {
             display: flex;
-            overflow-x: auto;
+            flex-wrap: wrap;
+            gap: 22px;
             .list_item {
                 .upload_image, .user_name {
                     text-align: center;

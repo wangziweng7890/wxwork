@@ -1,4 +1,5 @@
-### 企业微信侧边栏项目
+### 企业微信项目
+http://wiki.galaxy-immi.com:8090/display/technologyPubDocs/Q
 
 ## 项目地址
 ## test环境

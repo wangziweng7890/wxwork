@@ -282,7 +282,7 @@ const type_list = computed(function() {
                                 {{ t('message.getVisaer') }}：
                             </span>
                             <div class="info_block">
-                                <div>
+                                <div class="user_list_name">
                                     {{ fliterUserList(res.user_list) }}
                                 </div>
                                 <div class="d-flex">
@@ -501,6 +501,7 @@ const type_list = computed(function() {
                         .d-flex {
                             justify-content: flex-end;
                             align-items: center;
+                            margin-top: 8px;
                             span {
                                 display: block;
                                 margin-left: 12px;
@@ -519,6 +520,10 @@ const type_list = computed(function() {
                                 color: #757C86;
                                 background: rgba(136, 143, 152, 0.08);
                             }
+                        }
+                        .user_list_name {
+                            display: flex;
+                            justify-content: flex-end;
                         }
                     }
                     .transmit {

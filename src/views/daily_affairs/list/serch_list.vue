@@ -2,7 +2,7 @@
  * @Author: Autumn.again
  * @Date: 2023-09-20 13:44:22
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-10-08 11:44:50
+ * @LastEditTime: 2023-10-08 13:35:14
  * @FilePath: \workwexin-h5-sidebar\src\views\daily_affairs\list\serch_list.vue
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
 -->
@@ -47,6 +47,7 @@ onMounted(async () => {
             :left-icon="''"
             placeholder="输入客户姓名"
             @search="onClickButton"
+            shape="round"
         >
             <template #action>
                 <div @click="onClickButton" class="search_button">搜索</div>
@@ -89,6 +90,9 @@ onMounted(async () => {
     .van-search__action {
         padding: 0;
         margin-left: 24px;
+    }
+    .van-search__content {
+        background: #F8F9FB;
     }
 }
 .not_data {

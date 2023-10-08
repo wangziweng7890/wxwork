@@ -2,7 +2,7 @@
  * @Author: Autumn.again
  * @Date: 2023-09-20 13:44:22
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-10-08 13:35:14
+ * @LastEditTime: 2023-10-08 14:28:20
  * @FilePath: \workwexin-h5-sidebar\src\views\daily_affairs\list\serch_list.vue
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
 -->
@@ -92,7 +92,11 @@ onMounted(async () => {
         margin-left: 24px;
     }
     .van-search__content {
-        background: #F8F9FB;
+        .van-field {
+            background: #F8F9FB;
+            flex-wrap: nowrap;
+            border-radius: 70px;
+        }
     }
 }
 .not_data {

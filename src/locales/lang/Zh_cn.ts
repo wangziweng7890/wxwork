@@ -65,6 +65,7 @@ const Zh_message = {
             insurance: '保险',
             treatment: '医疗',
             drivingLicense: '驾照',
+            property: '房产',
             getVisa: '办身份证',
             getVisaer: '办证者',
             address: '地点',

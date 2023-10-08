@@ -160,6 +160,7 @@ const clickType = (value?: number) => {
               color: #222222; 
               font-size: 32px; 
               line-height: 42px;
+              font-weight: 500;
             }
             .tips {
                 font-size: 26px;
@@ -168,7 +169,8 @@ const clickType = (value?: number) => {
         }
         .list {
             display: flex;
-            overflow-x: auto;
+            flex-wrap: wrap;
+            gap: 22px;
             .list_item {
                 .upload_image, .user_name {
                     text-align: center;

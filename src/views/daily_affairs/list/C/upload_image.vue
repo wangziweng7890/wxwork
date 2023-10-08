@@ -92,17 +92,18 @@ const removeImage = () => {
         height: 128px;
         border: 1px dashed #eff0f2;
         border-radius: 12px;
-        margin-right: 24px;
         width: 204px;
         position: relative;
         .iconfont {
             font-size: 32px;
+            color: #d7dadd;
         }
         .icon-Subtract1 {
             position: absolute;
             right: -16px;
             top: -24px;
             z-index: 99;
+            color: #222;
         }
         .image {
             width: 100%;
@@ -112,7 +113,7 @@ const removeImage = () => {
         }
     }
     .not_bacth {
-        color: rgba(136, 143, 152, 0.50);
+        color: rgba(136, 143, 152, 0.5);
         font-size: 22px;
         font-weight: 400;
         padding: 0 18px;

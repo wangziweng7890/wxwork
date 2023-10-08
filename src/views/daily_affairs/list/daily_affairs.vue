@@ -2,7 +2,7 @@
  * @Author: Autumn.again
  * @Date: 2023-09-27 09:25:43
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-09-28 17:07:27
+ * @LastEditTime: 2023-10-08 17:15:42
  * @FilePath: \workwexin-h5-sidebar\src\views\daily_affairs\list\daily_affairs.vue
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
 -->
@@ -239,7 +239,7 @@ const batchAllotClick = () => {
       closeable
     >
     <div class="actiones">
-      <div class="actiones_title">
+      <div class="actiones_title fw-500">
         更多操作
       </div>
       <div v-for="(item, index) in (isMaster ? action_content : action_content.slice(1))" :key="index" class="actiones_button" @click="handler_action(item.value)">
@@ -295,6 +295,20 @@ const batchAllotClick = () => {
   :deep(.van-tabs__content) {
     flex: 1;
   }
+  :deep(.van-tab__text) {
+    font-size: 34px;
+    color: #888F98;
+    flex: 1;
+  }
+  :deep(.van-tab--active) {
+    .van-tab__text {
+      color: #198CFF;
+      font-weight: 600;
+    }
+  }
+  :deep(.van-tabs__line) {
+    width: 34px;
+  }
 }
 :deep(.van-tabs__nav--complete) {
   padding-right: 160px!important;
@@ -347,6 +361,9 @@ const batchAllotClick = () => {
   }
   :deep(.van-tabs__wrap), :deep(.calender) {
     position: relative;
+  }
+  :deep(.van-tabs__wrap) {
+    border-bottom: 1px solid #F0F0F0;
   }
   .batch_buttones {
     height: 128px;

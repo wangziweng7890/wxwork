@@ -79,14 +79,14 @@ const clickType = (value?: number) => {
         >
             <div class="uploader flex-direction-column">
                 <div class="titles">
-                    <div class="tiile flex-align-items-center d-flex">
+                    <div class="tiile flex-align-items-center d-flex fw-500">
                         {{ t('message.upload_visa_text') }}
                     </div>
                 </div>
                 <div class="uploader_content">
                     <div class="replace flex-jusify-between d-flex">
                         <div class="replace_title">
-                            是否代领
+                            {{ t('message.get_visa_text') }}
                         </div>
                         <div class="buttones d-flex">
                             <div class="flex-center-center" :class="checked_value === 1 ? 'checked' : ''" @click="clickType(1)"> 是 </div>
@@ -96,7 +96,7 @@ const clickType = (value?: number) => {
                     <div class="listes" v-for="(item, index) in (checked_value === 1 ? imageList : imageList.slice(0, 1))" :key="index">
                         <div class="title d-flex">
                             <div class="type">{{ filterType(item.type) }}</div>
-                            <div class="tips">{{ `(${item.type === 1 ? t('message.getBatcher') : t('message.getVisaer')}每个人一${item.type === 1 ? '张' : '封'})` }}</div>
+                            <div class="tips">{{ `(${item.type === 1 ? t('message.getBatcher') : t('message.getVisaer')}每个人一${[1, 4].includes(item.type) ? '张' : '封'})` }}</div>
                         </div>
                         <div class="list">
                             <div class="list_item" v-for="(res, resIndex) in item.data" :key="resIndex">

@@ -67,8 +67,9 @@ const confirm = () => {
             if (getTransactionList) {
                 getTransactionList()
             }
-            canTransmit.value = false
         }
+    }).finally(()=>{
+       canTransmit.value = false
     })
 }
 

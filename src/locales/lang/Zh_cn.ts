@@ -78,6 +78,7 @@ const Zh_message = {
             refresh_text: '已经到底，继续上拉可翻到下一日',
             batch_set: '批量分配',
             batch_check: '简转繁',
+            hk_batch_check: '繁转简',
             batch_export: '导出Excel',
             flter_text: '筛选',
             custer_name: '客户姓名',

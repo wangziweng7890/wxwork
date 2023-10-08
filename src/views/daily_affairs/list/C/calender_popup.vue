@@ -2,7 +2,7 @@
  * @Author: Autumn.again
  * @Date: 2023-09-28 14:37:34
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-10-08 11:09:36
+ * @LastEditTime: 2023-10-08 16:36:42
  * @FilePath: \workwexin-h5-sidebar\src\views\daily_affairs\list\C\calender_popup.vue
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
 -->
@@ -56,9 +56,17 @@ const getMonthDetail = (values: any) => {
         calendarInfo.value.push(...data)
     })
 }
+
 // 可选时间区间
-const minDate = ref(new Date(2016, 1, 1))
-const maxDate = ref(new Date(2030, 1, 1))
+const minDate = ref()
+const maxDate = ref()
+
+onMounted(() => {
+    const new_date = new Date()
+    const new_date_year = new_date.getFullYear()
+    minDate.value = new Date(new_date_year - 6, 1, 1)
+    maxDate.value = new Date(new_date_year + 6, 1, 1)
+})
 // 月份曝光只会执行一次
 const showMonth = async (e: any) => {
     const date = formatDate(e.date)

@@ -2,7 +2,7 @@
  * @Author: Autumn.again
  * @Date: 2023-09-14 17:44:19
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-09-27 16:46:20
+ * @LastEditTime: 2023-10-08 16:39:46
  * @FilePath: \workwexin-h5-sidebar\src\locales\lang\Zh_HK.ts
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
  */
@@ -100,6 +100,8 @@ const HK_message = {
             address_5: '元朗辦事處(元朗)',
             address_6: '九龍辦事處(長沙灣)',
             address_7: '觀塘辦事處(觀塘)',
+            getBatcher: '獲批者',
+            not_batch_text: '該獲批者不在本批次當中',
         }
     }
 }

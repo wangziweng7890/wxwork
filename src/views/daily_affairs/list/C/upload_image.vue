@@ -8,6 +8,8 @@ const props = defineProps({
     id: Number,
     type: Number
 });
+const {t}=useI18n()
+
 const fileList = ref('')
 
 const updateImage = (url: string) => {
@@ -77,7 +79,7 @@ const removeImage = () => {
             </template>
             <template v-else>
                 <div class="not_bacth">
-                    该获批者不在本批次当中
+                    {{ t('message.not_batch_text') }}
                 </div>
             </template>
         </div>

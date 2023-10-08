@@ -48,7 +48,7 @@
 
 <script setup name="clientTag">
 import Tag from '@/components/tag/tag.vue'
-import HistoryDemand from '@/components/historyDemand/historyDemand.vue'
+import HistoryDemand from '@/components/HistoryDemand/HistoryDemand.vue'
 import { judgeInput } from '@/utils/enter'
 import { saveDemand } from '@/api/daily_affairs/index'
 import { showSuccessToast } from 'vant'

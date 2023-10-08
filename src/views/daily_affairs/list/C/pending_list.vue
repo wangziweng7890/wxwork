@@ -408,7 +408,7 @@ watch(() => showUploder.value, (value) => {
     overflow-y: auto;
     .fold {
         &_item {
-            margin: 20px;
+            margin: 32px;
             border-radius: 20px;
             overflow: hidden;
             :deep(.van-collapse-item__title) {

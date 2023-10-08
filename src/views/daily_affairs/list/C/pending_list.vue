@@ -286,7 +286,8 @@ const type_list = computed(function() {
                                     {{ fliterUserList(res.user_list) }}
                                 </div>
                                 <div class="d-flex">
-                                    <span v-if="res.used_name">有曾用名</span>
+                                    <span v-if="res.break_married" class="break_married">离婚</span>
+                                    <span v-if="res.used_name" class="used_name" >有曾用名</span>
                                     <span v-if="res.have_child">有{{res.child_count}}位小孩</span>
                                 </div>
                             </div>
@@ -509,11 +510,14 @@ const type_list = computed(function() {
                                 padding: 0 8px;
                                 color: #198CFF;
                                 background: rgba(25, 140, 255, 0.08);
-
-                                &:first-of-type {
-                                    color: #9060F6;
-                                    background: rgba(144, 96, 246, 0.08);
-                                }
+                            }
+                            .used_name {
+                                color: #9060F6;
+                                background: rgba(144, 96, 246, 0.08);
+                            }
+                            .break_married {
+                                color: #757C86;
+                                background: rgba(136, 143, 152, 0.08);
                             }
                         }
                     }

@@ -2,7 +2,7 @@
  * @Author: Autumn.again
  * @Date: 2023-09-28 14:37:34
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-10-08 10:30:32
+ * @LastEditTime: 2023-10-08 11:09:36
  * @FilePath: \workwexin-h5-sidebar\src\views\daily_affairs\list\C\calender_popup.vue
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
 -->
@@ -100,8 +100,13 @@ const filterDay = (values: any) => {
     </div>
 </template>
 <style lang="scss" scoped>
+.calender {
+    padding: 25px 42px 0;
+}
   .van-field {
-        padding: 25px 42px;
+        // padding: 25px 42px;
+        border-bottom: 1px solid var(--van-cell-border-color);
+        padding:0 0 25px;
     }
     .top_info {
         font-size: 16px;

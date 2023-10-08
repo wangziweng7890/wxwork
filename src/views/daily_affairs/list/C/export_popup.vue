@@ -171,7 +171,7 @@ const clickExportData = () => {
         round
     >
         <div class="actiones">
-            <div class="actiones_title">
+            <div class="actiones_title fw-500">
                 <div class="actioes_border">
                     {{t('message.batch_export')}}
                 </div>

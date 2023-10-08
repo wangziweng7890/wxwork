@@ -65,6 +65,7 @@ const Zh_message = {
             insurance: '保险',
             treatment: '医疗',
             drivingLicense: '驾照',
+            property: '房产',
             getVisa: '办身份证',
             getVisaer: '办证者',
             address: '地点',
@@ -102,6 +103,7 @@ const Zh_message = {
             address_7: '观塘办事处(观塘)',
             getBatcher: '获批者',
             not_batch_text: '该获批者不在本批次当中',
+            get_visa_text: '是否代领',
         }
     }
 }

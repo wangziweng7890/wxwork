@@ -65,6 +65,7 @@ const HK_message = {
             insurance: '保險',
             treatment: '醫療',
             drivingLicense: '駕照',
+            property: '房産',
             getVisa: '辦身份證',
             getVisaer: '辦證者',
             address: '地點',
@@ -102,6 +103,7 @@ const HK_message = {
             address_7: '觀塘辦事處(觀塘)',
             getBatcher: '獲批者',
             not_batch_text: '該獲批者不在本批次當中',
+            get_visa_text: '是否代領',
         }
     }
 }

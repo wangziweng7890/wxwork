@@ -19,7 +19,7 @@ import VueHashCalendar from "vue3-hash-calendar";
 import "vue3-hash-calendar/es/index.css";
 import i18n from "./locales/setupI18n";
 import 'virtual:iconfont'
-
+import "./style/index.scss"
 // 创建实例
 const setupAll = async () => {
   const app = createApp(App);

@@ -79,14 +79,14 @@ const clickType = (value?: number) => {
         >
             <div class="uploader flex-direction-column">
                 <div class="titles">
-                    <div class="tiile flex-align-items-center d-flex">
+                    <div class="tiile flex-align-items-center d-flex fw-500">
                         {{ t('message.upload_visa_text') }}
                     </div>
                 </div>
                 <div class="uploader_content">
                     <div class="replace flex-jusify-between d-flex">
                         <div class="replace_title">
-                            是否代领
+                            {{ t('message.get_visa_text') }}
                         </div>
                         <div class="buttones d-flex">
                             <div class="flex-center-center" :class="checked_value === 1 ? 'checked' : ''" @click="clickType(1)"> 是 </div>

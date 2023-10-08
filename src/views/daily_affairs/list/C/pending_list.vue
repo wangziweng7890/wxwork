@@ -622,6 +622,9 @@ const type_list = computed(function() {
                 }
             }
         }
+        &::after {
+            border-width: 0;
+        }
     }
     &_loadingText {
         text-align: center;

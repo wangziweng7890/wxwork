@@ -1,3 +1,11 @@
+<!--
+ * @Author: Autumn.again
+ * @Date: 2023-09-28 14:37:34
+ * @LastEditors: Autumn.again
+ * @LastEditTime: 2023-10-08 10:20:31
+ * @FilePath: \workwexin-h5-sidebar\src\views\daily_affairs\list\C\calender_popup.vue
+ * Copyright: 2023 by Autumn.again, All Rights Reserved.
+-->
 <script lang="ts" setup>
 import { getMonthInfo } from '@/api/daily_affairs'
 
@@ -83,7 +91,7 @@ const filterDay = (values: any) => {
             @month-show="showMonth"
         >
         <template #top-info="date">
-       <div>     {{ locale === 'HK' ? filterDay(date).traditional_holiday : filterDay(date).holiday || '' }}</div>
+            <div class="top_info">{{ locale === 'HK' ? filterDay(date).traditional_holiday : filterDay(date).holiday || '' }}</div>
         </template>
         <template #bottom-info="date">
             {{ filterDay(date).people || 0 }} 人
@@ -94,5 +102,9 @@ const filterDay = (values: any) => {
 <style lang="scss" scoped>
   .van-field {
         padding: 25px 42px;
+    }
+    .top_info {
+        font-size: 16px;
+        line-height: 20px;
     }
 </style>

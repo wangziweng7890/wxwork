@@ -2,7 +2,7 @@
  * @Author: Autumn.again
  * @Date: 2023-09-20 13:44:22
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-09-27 10:42:45
+ * @LastEditTime: 2023-10-08 10:08:31
  * @FilePath: \workwexin-h5-sidebar\src\views\daily_affairs\list\serch_list.vue
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
 -->
@@ -18,7 +18,7 @@ const filterData: filter_params = reactive({
     task_status: '',// 状态:0待分配,1待办理,2已办理,3已领证
     start_time: '', // 开始
     end_time: '', // 结束
-    is_convert: 0 // 是否转换数据格式为按天统计：1转换,0不转换
+    is_convert: 1 // 是否转换数据格式为按天统计：1转换,0不转换
 })
 
 const listData = ref([])
@@ -67,7 +67,13 @@ onMounted(async () => {
                 <div @click="onClickButton" class="search_button">搜索</div>
             </template>
         </van-search> -->
-        <PendingList :listData="listData" :canBatchAction="false" :role_key="isMaster"/>
+        <!-- <PendingList :listData="listData" :canBatchAction="false" :role_key="isMaster"/> -->
+        <div v-for="(item, index) in Object.keys(listData)" :key="index">
+            <div class="listData_title">
+              {{ item }}
+            </div>
+            <PendingList :listData="listData[item]" :canBatchAction="false" :role_key="isMaster"/>
+          </div>
     </div>
 </template>
 <style lang="scss" scoped>
@@ -80,6 +86,7 @@ onMounted(async () => {
 }
 :deep(.van-search) {
     padding: 24px 32px;
+    margin-bottom: 20px;
     .van-search__action {
         padding: 0;
         margin-left: 24px;
@@ -89,5 +96,11 @@ onMounted(async () => {
     font-size: 28px;
     padding-top: 50px;
     color: #999;
+}
+.listData_title {
+  color: #888F98;
+  padding-left: 40px;
+  background-color: #F8F8F8;
+  font-size: 28px;
 }
 </style>

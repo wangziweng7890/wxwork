@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { previewOss } from '@/api/common/index'
+import { showImagePreview } from 'vant';
 const props = defineProps({
     ossService: Object,
     resData: Object,
@@ -48,16 +49,26 @@ const add = () => {
     // return false
     return !fileList.value
 }
+// 预览文件
+const previewFile = () => {
+    showImagePreview([fileList.value]);
+}
 </script>
 <template>
-    <van-uploader :before-read="add" :after-read="afteruploader" :show-upload="false" :disabled="!props.resData.is_current_batch"> 
+    <template v-if="fileList">
+        <div class="upload_image flex-center-center">
+            <i class="iconfont icon-Subtract1" @click="removeImage"></i>
+            <img :src="fileList" alt="" srcset="" class="image" @click="previewFile">
+        </div>
+    </template>
+    <van-uploader :before-read="add" :after-read="afteruploader" :show-upload="false" :disabled="!props.resData.is_current_batch  && props.type !== 1" v-else> 
     <!-- <van-button icon="plus" type="primary">上传文件</van-button> -->
         <div class="upload_image flex-center-center">
             <!-- 不是当前批次不展示，小白条例外 -->
             <template v-if="props.resData.is_current_batch || props.type === 1">
-                <i class="iconfont icon-Subtract1" @click="removeImage" v-if="fileList"></i>
-                <img :src="fileList" alt="" srcset="" v-if="fileList" class="image">
-                <i class="iconfont icon-icon_tianjia" v-else></i>
+                <!-- <i class="iconfont icon-Subtract1" @click="removeImage" v-if="fileList"></i>
+                <img :src="fileList" alt="" srcset="" v-if="fileList" class="image"> -->
+                <i class="iconfont icon-icon_tianjia"></i>
             </template>
             <template v-else>
                 <div class="not_bacth">

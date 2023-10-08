@@ -23,7 +23,14 @@
       </div>
       <div class="item">
         <div class="label">{{ $t('message.orderNumber') }}:</div>
-        <div class="value">{{ data.order_number }}</div>
+        <div class="value copyValue">
+          <div style="word-break: break-all">
+            {{ data.order_number }}
+          </div>
+          <div class="copyBtn" @click="CopyText(data.order_number)">
+            {{ $t('message.copy') }}
+          </div>
+        </div>
       </div>
       <div class="item">
         <div class="label">{{ $t('message.usedName') }}:</div>

@@ -140,7 +140,9 @@ const clickExportData = () => {
     // })
     const params = JSON.parse(JSON.stringify(formData)) as any
     params.convert_rule = locale.value === 'HK' ? 's2t' : 't2s'
-    exportData({params}).then((res: any) => {
+    console.log(params,'******************');
+    
+    exportData(params).then((res: any) => {
         if (res.code === 200) {
             wx.shareAppMessage({
                 title: '香港日常事务协同',

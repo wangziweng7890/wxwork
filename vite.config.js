@@ -21,7 +21,7 @@ export default ({ mode }) => {
   const env = loadEnv(mode, process.cwd()); // 获取.env文件里定义的环境变量
   return defineConfig({
     //项目部署在主域名的子文件使用,例如http://localhost:3000/myvite/。不填默认就是/
-    base: "./",
+    // base: "./",
     plugins: [
       // iconfont 转换为 svg,
       // 使用如下

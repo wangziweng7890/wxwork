@@ -1,7 +1,8 @@
 <template>
   <div class="detailPage">
     <div class="content">
-      <div class="peopleDetail">
+   <div class="top">
+       <div class="peopleDetail">
         <div>
           <img :src="headImage" alt="" @error="setDefaultImage" />
         </div>
@@ -69,7 +70,8 @@
           </div>
         </div>
       </div>
-      <van-tabs style="margin-top: 20px;" v-model:active="active">
+   </div>
+      <van-tabs style="margin:20px -42px 0;padding:0 42px; background-color: #fff;" v-model:active="active">
         <van-tab :title="$t('message.orderDetail')"></van-tab>
         <van-tab :title="$t('message.familyDeatil')"></van-tab>
         <van-tab :title="$t('message.customsClearanceDocument')"></van-tab>
@@ -171,13 +173,18 @@ onMounted(async () => {
 <style lang="scss" scoped>
 .detailPage {
   font-size: 28px;
-
+//  background: #f8f9fb;
   .mb-32 {
     margin-bottom: 32px;
   }
 
   .content {
     padding: 42px;
+    .top{
+ background: #fff;
+ margin:-42px;
+ padding: 42px;
+    }
   }
 
   .cardTitle {

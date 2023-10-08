@@ -114,6 +114,7 @@ const CopyText = text => {
 
   padding: 32px;
   .title {
+    color: #222;
     padding-bottom: 24px;
     font-size: 34px;
     font-weight: 500;

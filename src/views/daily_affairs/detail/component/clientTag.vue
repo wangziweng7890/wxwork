@@ -101,6 +101,7 @@ const submit = async () => {
 
 <style lang="scss" scoped>
 .title {
+color: #222;
   padding-bottom: 24px;
   font-size: 34px;
   font-weight: 500;

@@ -7,7 +7,7 @@
         </div>
         <div class="content">
           <div class="item" v-for="(it, idx) in item.file_list" :key="idx">
-            <div class="label">{{ it.file_name }}:</div>
+            <div class="label">{{ it.file_name }}</div>
             <div class="value" @click="showPreview(it.file_source)">查看</div>
           </div>
         </div>
@@ -20,6 +20,7 @@
 
 <script setup>
 import { getArchivist } from '@/api/daily_affairs/index'
+import * as wx from '@wecom/jssdk'
 const { t, locale } = useI18n()
 const route = useRoute()
 const titleMap = {
@@ -29,12 +30,23 @@ const titleMap = {
 }
 const show = ref(false)
 const images = ref([])
-
 const showPreview = file_list => {
-  let imageArr = []
-  imageArr = file_list.map(item => item.url)
-  images.value = imageArr
-  show.value = true
+  if (file_list[0].ext === 'pdf') {
+    console.log('url',file_list[0].url);
+    console.log('url',file_list[0].name);
+    console.log('url',file_list[0].size);
+
+    wx.previewFile({
+      url: file_list[0].url,
+      name: file_list[0].name,
+      size: file_list[0].size
+    })
+  } else {
+    let imageArr = []
+    imageArr = file_list.map(item => item.url)
+    images.value = imageArr
+    show.value = true
+  }
 }
 const detailList = ref([])
 const getList = async () => {
@@ -62,6 +74,7 @@ onMounted(async () => {
 
   padding: 32px;
   .title {
+    color: #222;
     padding-bottom: 24px;
     font-size: 34px;
     font-weight: 500;

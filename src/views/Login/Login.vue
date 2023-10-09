@@ -39,7 +39,7 @@ const login = async () => {
         const { data } = await workWechatOauth({ code: route.query.code, agentid: getAgentid() })
         userStore.setToken(data.token)
         userStore.setUserInfo(data.corp_user_info || {})
-        const res = await getDwptoken({})
+        const res = await getDwptoken(data.token)
         userStore.setDwpToken(res.data.token)
         router.replace(decodeURIComponent(route.query.redirect_uri))
     } catch (error) {
@@ -47,13 +47,7 @@ const login = async () => {
     }
 }
 
-// 如果需要登录
-if (!userStore.getToken) {
-    !route.query.hasCode ? getWorkCode() : login()
-} else {
-    router.replace(decodeURIComponent(route.query.redirect_uri))
-}
-
+!route.query.hasCode ? getWorkCode() : login()
 </script>
 
 <template>

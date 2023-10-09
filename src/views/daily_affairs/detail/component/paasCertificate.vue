@@ -41,12 +41,8 @@ const showPreview = file_list => {
     } else {
       url = file_list[0].url
     }
-    console.log(url, '****')
-    wx.previewFile({
-      url: url,
-      name: file_list[0].name,
-      size: file_list[0].size
-    })
+    console.log(url, '**1**')
+    window.open(url)
   } else {
     let imageArr = []
     imageArr = file_list.map(item => item.url)

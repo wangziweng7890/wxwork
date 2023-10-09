@@ -32,8 +32,18 @@ const show = ref(false)
 const images = ref([])
 const showPreview = file_list => {
   if (file_list[0].ext === 'pdf') {
+    let url = ''
+    if (
+      import.meta.env.VUE_APP_ENV === 'test' ||
+      import.meta.env.VITE_ENV === 'dev'
+    ) {
+      url = file_list[0].url.replace('https', 'http')
+    } else {
+      url = file_list[0].url
+    }
+    console.log(url, '****')
     wx.previewFile({
-      url: file_list[0].url,
+      url: url,
       name: file_list[0].name,
       size: file_list[0].size
     })

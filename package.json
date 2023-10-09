@@ -1,35 +1,125 @@
 {
-  "name": "workwexin-h5-sidebar",
-  "version": "0.0.0",
-  "private": true,
-  "scripts": {
-    "dev": "vite --mode dev",
-    "test": "vite build --mode test",
-    "build": "vite build --mode production",
-    "preview": "vite preview --mode production",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
-  },
-  "dependencies": {
-    "axios": "^1.4.0",
-    "pinia": "^2.0.36",
-    "pinia-plugin-persist": "^1.0.0",
-    "qs": "^6.11.2",
-    "vant": "^4.3.2",
-    "vue": "^3.3.2",
-    "vue-router": "^4.2.0",
-    "web-storage-cache": "^1.1.1"
-  },
-  "devDependencies": {
-    "@vitejs/plugin-vue": "^4.2.3",
-    "@vitejs/plugin-vue-jsx": "^3.0.1",
-    "@vue/test-utils": "^2.3.2",
-    "eslint": "^8.39.0",
-    "eslint-plugin-vue": "^9.11.0",
-    "jsdom": "^22.0.0",
-    "less": "^4.1.3",
-    "less-loader": "^11.1.1",
-    "unplugin-vue-components": "^0.24.1",
-    "vite": "^4.3.5",
-    "vitest": "^0.31.0"
-  }
+    "name": "workwexin-h5-sidebar",
+    "version": "0.0.0",
+    "private": true,
+    "scripts": {
+        "dev": "vite --mode dev",
+        "test": "vite build --mode test",
+        "build": "vite build --mode production",
+        "preview": "vite preview --mode production",
+        "lint": "eslint .",
+        "eslint": "eslint . --fix"
+    },
+    "dependencies": {
+        "@wecom/jssdk": "^1.4.3",
+        "ali-oss": "^6.18.1",
+        "axios": "^1.4.0",
+        "dayjs": "^1.11.10",
+        "pinia": "^2.0.36",
+        "pinia-plugin-persist": "^1.0.0",
+        "qs": "^6.11.2",
+        "sass": "^1.66.1",
+        "spark-md5": "^3.0.2",
+        "vant": "^4.3.2",
+        "vconsole": "^3.15.1",
+        "vue": "^3.3.2",
+        "vue-i18n": "^9.4.0",
+        "vue-router": "^4.2.0",
+        "vue3-hash-calendar": "^1.1.3",
+        "web-storage-cache": "^1.1.1"
+    },
+    "devDependencies": {
+        "@antfu/eslint-config": "^0.25.2",
+        "@galaxy-fe/vite-plugin-unocss-iconfont": "^1.2.1",
+        "@typescript-eslint/eslint-plugin": "^5.61.0",
+        "@typescript-eslint/parser": "^5.61.0",
+        "@vitejs/plugin-vue": "^4.2.3",
+        "@vitejs/plugin-vue-jsx": "^3.0.1",
+        "@vue/test-utils": "^2.3.2",
+        "eslint": "^8.39.0",
+        "eslint-plugin-vue": "^9.11.0",
+        "jsdom": "^22.0.0",
+        "less": "^4.1.3",
+        "less-loader": "^11.1.1",
+        "postcss-px-to-viewport": "^1.1.1",
+        "postcss-scss": "^4.0.4",
+        "typescript": "^4.7.4",
+        "unocss": "^0.55.7",
+        "unplugin-auto-import": "^0.16.6",
+        "unplugin-icons": "^0.16.1",
+        "unplugin-vue-components": "^0.24.1",
+        "vite": "^4.3.5",
+        "vitest": "^0.31.0"
+    },
+    "lint-staged": {
+        "src/**/*.{js,jsx,ts,tsx,vue}": [
+            "eslint . --fix"
+        ],
+        "src/**/*.{css,vue,scss}": [
+            "pnpm stylelint"
+        ]
+    },
+    "eslintConfig": {
+        "extends": "@antfu",
+        "ignorePatterns": [
+            "src/services/apifox/**/*.ts"
+        ],
+        "rules": {
+            "jsonc/indent": [
+                "error",
+                4
+            ],
+            "yml/indent": [
+                "error",
+                4
+            ],
+            "import/no-mutable-exports": [
+                "error"
+            ],
+            "vue/html-indent": [
+                "error",
+                4,
+                {
+                    "attribute": 1,
+                    "baseIndent": 1,
+                    "closeBracket": 0,
+                    "alignAttributesVertically": true,
+                    "ignores": []
+                }
+            ],
+            "vue/multi-word-component-names": "off",
+            "vue/self-closing-comp": "off",
+            "vue/prop-name-casing": "off",
+            "vue/no-template-shadow": "off",
+            "vue/v-on-event-hyphenation": "off",
+            "vue/first-attribute-linebreak": [
+                2,
+                {
+                    "singleline": "beside",
+                    "multiline": "below"
+                }
+            ],
+            "vue/max-attributes-per-line": [
+                2,
+                {
+                    "singleline": 10,
+                    "multiline": {
+                        "max": 1
+                    }
+                }
+            ],
+            "indent": [
+                "error",
+                4
+            ],
+            "no-console": "off",
+            "eol-last": 0,
+            "@typescript-eslint/indent": 0,
+            "@typescript-eslint/no-var-requires": 0,
+            "curly": "off",
+            "react/no-unknown-property": "off",
+            "react/self-closing-comp": "off",
+            "vue/no-parsing-error": "off"
+        }
+    }
 }

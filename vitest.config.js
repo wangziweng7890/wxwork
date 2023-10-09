@@ -1,3 +1,11 @@
+/*
+ * @Author: Autumn.again
+ * @Date: 2023-09-12 17:15:47
+ * @LastEditors: Autumn.again
+ * @LastEditTime: 2023-09-13 10:46:23
+ * @FilePath: \workwexin-h5-sidebar\vitest.config.js
+ * Copyright: 2023 by Autumn.again, All Rights Reserved.
+ */
 import { fileURLToPath } from 'node:url'
 import { mergeConfig } from 'vite'
 import { configDefaults, defineConfig } from 'vitest/config'
@@ -13,6 +21,6 @@ export default mergeConfig(
       transformMode: {
         web: [/\.[jt]sx$/],
       },
-    }
+    },
   })
 )

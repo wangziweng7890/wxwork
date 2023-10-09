@@ -2,7 +2,7 @@
  * @Author: Autumn.again
  * @Date: 2023-09-14 17:44:19
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-09-27 16:46:20
+ * @LastEditTime: 2023-10-08 16:39:46
  * @FilePath: \workwexin-h5-sidebar\src\locales\lang\Zh_HK.ts
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
  */
@@ -65,6 +65,7 @@ const HK_message = {
             insurance: '保險',
             treatment: '醫療',
             drivingLicense: '駕照',
+            property: '房産',
             getVisa: '辦身份證',
             getVisaer: '辦證者',
             address: '地點',
@@ -77,7 +78,8 @@ const HK_message = {
             goto_upload: '去上傳',
             refresh_text: '已經到底，繼續上拉可翻到下一日',
             batch_set: '批量分配',
-            batch_check: '繁轉簡',
+            batch_check: '簡轉繁',
+            hk_batch_check: '繁轉簡',
             batch_export: '匯出Excel',
             flter_text: '篩選',
             custer_name: '客戶姓名',
@@ -92,6 +94,15 @@ const HK_message = {
             set_warning_text: '確定是否要將任務轉給',
             not_batch_set_data: '未選取分配數據',
             not_batch_check_data: '沒有可以批量分配的數據哦',
+            address_1: '入境無要求',
+            address_2: '港島辦事處(灣仔)',
+            address_3: '火炭辦事處(火炭)',
+            address_4: '屯門辦事處(屯門)',
+            address_5: '元朗辦事處(元朗)',
+            address_6: '九龍辦事處(長沙灣)',
+            address_7: '觀塘辦事處(觀塘)',
+            getBatcher: '獲批者',
+            not_batch_text: '該獲批者不在本批次當中',
         }
     }
 }

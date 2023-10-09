@@ -65,6 +65,7 @@ const Zh_message = {
             insurance: '保险',
             treatment: '医疗',
             drivingLicense: '驾照',
+            property: '房产',
             getVisa: '办身份证',
             getVisaer: '办证者',
             address: '地点',
@@ -78,6 +79,7 @@ const Zh_message = {
             refresh_text: '已经到底，继续上拉可翻到下一日',
             batch_set: '批量分配',
             batch_check: '简转繁',
+            hk_batch_check: '繁转简',
             batch_export: '导出Excel',
             flter_text: '筛选',
             custer_name: '客户姓名',
@@ -92,6 +94,15 @@ const Zh_message = {
             set_warning_text: ' 确定是否要将任务转给',
             not_batch_set_data: '未选中分配数据',
             not_batch_check_data: '没有可以批量分配的数据哦',
+            address_1: '入境无要求',
+            address_2: '港岛办事处(湾仔)',
+            address_3: '火炭办事处(火炭)',
+            address_4: '屯门办事处(屯门)',
+            address_5: '元朗办事处(元朗)',
+            address_6: '九龙办事处(长沙湾)',
+            address_7: '观塘办事处(观塘)',
+            getBatcher: '获批者',
+            not_batch_text: '该获批者不在本批次当中',
         }
     }
 }

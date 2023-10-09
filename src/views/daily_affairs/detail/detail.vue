@@ -69,7 +69,7 @@
           </div>
         </div>
       </div>
-      <van-tabs v-model:active="active">
+      <van-tabs style="margin-top: 20px;" v-model:active="active">
         <van-tab :title="$t('message.orderDetail')"></van-tab>
         <van-tab :title="$t('message.familyDeatil')"></van-tab>
         <van-tab :title="$t('message.customsClearanceDocument')"></van-tab>
@@ -193,6 +193,8 @@ onMounted(async () => {
       width: 171px;
       height: 239px;
       margin-right: 52px;
+      border-radius: 16px;
+      border: 1px solid #F3F4F5;
     }
 
     .nameTitle {

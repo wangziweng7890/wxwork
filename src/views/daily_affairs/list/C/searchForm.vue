@@ -6,7 +6,7 @@ const { workmateList } = useUserStore() as any
 const {t}=useI18n()
 const props = defineProps({
     filterData: Object,
-    role_key: String,
+    role_key: Boolean,
     // loaclDate: String
 });
 const emit = defineEmits(['update:filterData', 'getTransactionList'])
@@ -19,8 +19,56 @@ const formData = computed({
 const showPicker = ref(false);
 // 展示同事弹窗
 const showWorker = ref(false);
-const columns = ref([])
-
+const columns = computed(function() {
+    return [
+        {
+            label: t('message.address_1'),
+            value: ''
+        },
+        {
+            label: t('message.address_2'),
+            value: '港岛办事处(湾仔)'
+        },
+        {
+            label: t('message.address_3'),
+            value: '火炭办事处(火炭)'
+        },
+        {
+            label: t('message.address_4'),
+            value: '屯门办事处(屯门)'
+        },
+        {
+            label: t('message.address_5'),
+            value: '元朗办事处(元朗)'
+        },
+        {
+            label: t('message.address_6'),
+            value: '九龙办事处(长沙湾)'
+        },
+        {
+            label: t('message.address_7'),
+            value: '观塘办事处(观塘)'
+        },
+]})
+const stastusList = computed(function() {
+    return [
+    {
+        label: t('message.waitDistributed'),
+        value: 0
+    },
+    {
+        label: t('message.waitProcessed'),
+        value: 1
+    },
+    {
+        label: t('message.processed'),
+        value: 2
+    },
+    {
+        label: t('message.licensed'),
+        value: 3
+    },
+]})
 const customFieldName = ref({
       text: 'label',
       value: 'value',
@@ -38,80 +86,38 @@ const openPicker = (type?: string) => {
     }
 }
 // 过滤展示标题
-const picker_title = () => {
+const picker_title = computed(() => {
     switch (picker_type.value) {
         case 'user_id':
             return t('message.choose_worker');
         case 'address':
-        columns.value = [
-                {
-                    label: '入境无要求',
-                    value: 1
-                },
-                {
-                    label: '港岛办事处(湾仔)',
-                    value: 2
-                },
-                {
-                    label: '火炭办事处(火炭)',
-                    value: 3
-                },
-                {
-                    label: '屯门办事处(屯门)',
-                    value: 4
-                },
-                {
-                    label: '元朗办事处(元朗)',
-                    value: 5
-                },
-                {
-                    label: '九龙办事处(长沙湾)',
-                    value: 6
-                },
-                {
-                    label: '观塘办事处(观塘)',
-                    value: 7
-                },
-            ]
             return t('message.address');
         case 'task_status':
-        columns.value = [
-                {
-                    label: t('message.waitDistributed'),
-                    value: 0
-                },
-                {
-                    label: t('message.waitProcessed'),
-                    value: 1
-                },
-                {
-                    label: t('message.processed'),
-                    value: 2
-                },
-                {
-                    label: t('message.licensed'),
-                    value: 3
-                },
-            ]
             return t('message.choose_status');
         default:
             break;
     }
-}
+})
 
-// 过滤时间
+// 过滤时间/状态
 const fliterValue = () => {
     const user = workmateList.find((item: any) => item.id === formData.value.user_id) as any
-    const status = columns.value.find((item: any) => item.value === formData.value.task_status) as any
+    const status = stastusList.value.find((item: any) => item.value === formData.value.task_status) as any
+    const address = columns.value.find((item: any) => item.value === formData.value.address) as any
     return {
         user_name: user ? user.wework_name : '',
-        status_name: status ? status.label : ''
+        status_name: status ? status.label : '',
+        address_name: address ? address.label : '',
     }
 }
 // popup弹出层确认
 const onConfirm = (values) => {
     const { selectedOptions } = values
-    formData.value[picker_type.value] = picker_type.value === 'address' ? selectedOptions[0]?.label : selectedOptions[0]?.value
+    console.log(picker_type.value, selectedOptions[0]?.value);
+    formData.value[picker_type.value] = selectedOptions[0]?.value
+    // if (picker_type.value === 'address' && selectedOptions[0]?.value === '入境无要求') {
+    //     formData.value[picker_type.value] = ''
+    // }
     showPicker.value = false
     if (!!formData.value.user_id || !!formData.value.task_status) {
         fliterValue()
@@ -163,7 +169,7 @@ const search = (type?: string) => {
             />
             <CalendarPopup v-model:form-data="formData" :type="'start_end'" ref="calendar"/>
             <van-field
-                v-model="formData.address"
+                v-model="fliterValue().address_name"
                 is-link
                 readonly
                 name="address"
@@ -196,8 +202,9 @@ const search = (type?: string) => {
             round
             :confirmButtonext="t('message.confirm_text')"
         >
+        <!-- columns动态赋值在手机上会报错，电脑无恙 -->
             <van-picker
-                :columns="columns"
+                :columns="picker_type === 'address' ? columns : stastusList"
                 @confirm="onConfirm"
                 @cancel="showPicker = false"
                 :columns-field-names="customFieldName"
@@ -205,7 +212,7 @@ const search = (type?: string) => {
             >
             <template #title>
                 <div class="popup_title">
-                    {{ picker_title() }}
+                    {{ picker_title }}
                 </div>
             </template>
             </van-picker>

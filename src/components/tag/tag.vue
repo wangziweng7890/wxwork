@@ -34,7 +34,8 @@ const tagArray = [
   { id: '4', name: t('message.Kangbao') },
   { id: '5', name: t('message.insurance') },
   { id: '6', name: t('message.treatment') },
-  { id: '7', name: t('message.drivingLicense') }
+  { id: '7', name: t('message.drivingLicense') },
+  { id: '8', name: t('message.property') },
 ]
 // 选中的数组
 const isActive = ref([])
@@ -74,8 +75,8 @@ onMounted(() => {
     position: relative;
     img {
       position: absolute;
-      right: 0;
-      bottom: 0;
+      right: -1px;
+      bottom: -1px;
       width: 28px;
       height: 28px;
     }

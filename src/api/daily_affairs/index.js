@@ -36,7 +36,7 @@ export const PostalloTtask = params => api.post(`/api/customer-service/transacti
 export const updateDemandInfo = params => api.post(`/api/customer-service/transaction/save-demand`, { ...params })
 
 // 导出接口
-export const exportData = params => api.post(`/api/customer-service/transaction/export-url`, { ...params })
+export const exportData = params => api.post(`/api/customer-service/transaction/export-url`, {...params})
 
 // 获取详情
 export const getOssConfig = (params) =>api.get(`/api/customer-service/transaction/customer-info`, { params});
@@ -49,3 +49,6 @@ export const saveDemand = (params) => api.post(`/api/customer-service/transactio
 
 // 获取过关证件
 export const getArchivist = (params) =>api.get(`/api/customer-service/transaction/archivist`, {params});
+
+// 获取角色
+export const getRole = () => api.get('/api/customer-service/transaction/get-role')

@@ -2,7 +2,7 @@
  * @Author: Autumn.again
  * @Date: 2023-09-27 09:25:43
  * @LastEditors: Autumn.again
- * @LastEditTime: 2023-09-28 14:30:19
+ * @LastEditTime: 2023-09-28 17:07:27
  * @FilePath: \workwexin-h5-sidebar\src\views\daily_affairs\list\daily_affairs.vue
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
 -->
@@ -13,12 +13,13 @@ import ExportPopup from './C/export_popup.vue'
 import weekCalender from './C/week_calender.vue'
 import SearchForm from './C/searchForm.vue'
 import { useUserStore } from '@/stores/modules/user'
-import { getTransactionTaskList, getTransactionUserList } from '@/api/daily_affairs'
+import { getTransactionTaskList, getTransactionUserList, getRole } from '@/api/daily_affairs'
 import { showToast } from 'vant'
 
 const {t, locale} = useI18n()
 const router = useRouter()
-const { userInfo, setWorkmateList } = useUserStore() as any
+const { setWorkmateList } = useUserStore() as any
+const isMaster = ref(false)
 const showWeek_Candeler = ref(true)
 // 定义搜索参数
 const filterData: filter_params = reactive({
@@ -28,7 +29,8 @@ const filterData: filter_params = reactive({
     task_status: '',// 状态:0待分配,1待办理,2已办理,3已领证
     start_time: '', // 开始
     end_time: '', // 结束
-    is_convert: 0 // 是否转换数据格式为按天统计：1转换,0不转换
+    is_convert: 0, // 是否转换数据格式为按天统计：1转换,0不转换
+    chinese_convert: 1
 })
 // 展开
 const showBottom = ref(false)
@@ -41,6 +43,8 @@ const listData = ref([])
 // const date = ref([])
 const date = ref('')
 onMounted(async () => {
+    const { data } = await getRole()
+    isMaster.value = data === 'hk_transaction_master'
     const res = await getTransactionUserList() as any
     setWorkmateList(res.data)
     // date.value = res.data.map(item => {
@@ -67,6 +71,8 @@ const active = ref('0')
 // 简体中英文繁体字切换
 const changeLang = () => {
   locale.value = locale.value === 'HK' ? 'ZH' : 'HK'
+  filterData.chinese_convert = locale.value === 'HK' ? 1 : 0
+  getTransactionList()
 }
 
 const higLight = () => {
@@ -102,6 +108,7 @@ const click_action = (type?: number) => {
       break;
   }
 }
+const localeText=computed(()=>locale.value === 'HK' ? t('message.hk_batch_check') : t('message.batch_check'))
 // 批量操作控制
 const canBatchAction = ref(false)
 const action_content = computed(function () {
@@ -111,7 +118,7 @@ const action_content = computed(function () {
     value: 0
   },
   {
-    label: t('message.batch_check'),
+    label:localeText.value,
     value: 1
   },
   {
@@ -178,14 +185,14 @@ const batchAllotClick = () => {
 
 <template>
   <div class="daily" :class="{ suspend: canBatchAction}">
-      <div class="title_action"  v-if="!!userInfo.role_key">
+    <div class="title_action"  v-if="isMaster">
         <i class="iconfont icon-icon_sousuo" @click="searchClick()"></i>
         <i class="iconfont icon-icon_luodou" @click="searchClick('fliter')" :class="{highLight: higLight()}"></i>
-      </div>
+    </div>
     <van-tabs
       v-model:active="active"
       class="tables"
-      :class="{hiddenTab: !userInfo.role_key}"
+      :class="{hiddenTab: !isMaster}"
       @click-tab="onClickTab"
     >
       <van-tab :title="item.wework_name || '-'" v-for="(item, index) in workmateList" :key="index" class="table_items">
@@ -193,7 +200,7 @@ const batchAllotClick = () => {
     </van-tabs>
     <weekCalender
           v-model:date="date"
-          :role_key="userInfo.role_key"
+          :role_key="isMaster"
           :highLight="higLight()"
           :language="locale"
           @click_action="click_action"
@@ -204,14 +211,14 @@ const batchAllotClick = () => {
             <div class="listData_title">
               {{ item }}
             </div>
-            <PendingList :listData="listData[item]" :canBatchAction="canBatchAction"/>
+            <PendingList :listData="listData[item]" :canBatchAction="canBatchAction" :role_key="isMaster"/>
           </div>
           <div v-if="!listData.length" class="not_data flex-center-center">
             暂无搜索数据
           </div>
         </template>
         <template v-else>
-          <PendingList :listData="listData" :canBatchAction="canBatchAction"/>
+          <PendingList :listData="listData" :canBatchAction="canBatchAction" :role_key="isMaster"/>
         </template>
     <van-popup
       v-model:show="showBottom"
@@ -221,7 +228,7 @@ const batchAllotClick = () => {
       close-icon="close"
       closeable
     >
-      <SearchForm v-model:filterData="filterData" :role_key="userInfo.role_key" @getTransactionList="getTransactionList" />
+      <SearchForm v-model:filterData="filterData" :role_key="isMaster" @getTransactionList="getTransactionList" />
     </van-popup>
     <van-popup
       v-model:show="showAction"
@@ -235,7 +242,7 @@ const batchAllotClick = () => {
       <div class="actiones_title">
         更多操作
       </div>
-      <div v-for="(item, index) in (!!userInfo.role_key ? action_content : action_content.slice(1))" :key="index" class="actiones_button" @click="handler_action(item.value)">
+      <div v-for="(item, index) in (isMaster ? action_content : action_content.slice(1))" :key="index" class="actiones_button" @click="handler_action(item.value)">
         {{ item.label }}
       </div>
     </div>
@@ -259,6 +266,9 @@ const batchAllotClick = () => {
   font-size: 28px;
   height: 100%;
   background: #F8F8F8;
+}
+.flex {
+  display: flex;
 }
 .title_action {
   position: absolute;
@@ -287,7 +297,7 @@ const batchAllotClick = () => {
   }
 }
 :deep(.van-tabs__nav--complete) {
-  padding-right: 160px;
+  padding-right: 160px!important;
   padding-left: 0;
 }
 .actiones {

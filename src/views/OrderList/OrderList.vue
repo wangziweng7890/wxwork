@@ -1,7 +1,7 @@
 <script setup>
-import { getClientInfo, getOrderInfo, getWorkWechatConfig } from '@/api/user'
-import { agentConfig } from '@/utils/wxconfig'
+import { getClientInfo, getOrderInfo } from '@/api/user'
 import { reactive, ref } from 'vue'
+import * as wx from '@wecom/jssdk'
 
 const parm = reactive({
     phone: '',
@@ -42,44 +42,22 @@ const getOrderList = async () => {
     }
 }
 
-// 获取的企业微信授权初始化jsdk
-const getWxConfig = async () => {
-    try {
-        const { code, data } = await getWorkWechatConfig({url: location.href})
-        if (code === 200) {
-            agentConfig(data.config, () => {
-                wx.invoke('getCurExternalContact', {}, function (res) {
-                    if (res.err_msg == "getCurExternalContact:ok") {
-                        getInfo(res.userId)
-                    } else {
-                        //错误处理
-                    }
-                })
-            })
-        }
-    } catch (error) {
-        
-    }
-}
-
 // 跳转到CRM
-const toCrm = (item) => {
+const toCrm = async (item) => {
     // window.open('https://www.baidu.com#target=out')
     const query = `client_id=${item.client_id}&order_id=${item.order_id}&customer_id=${item.customer_id}&order_task_id=${item.order_task_id}&task_key=${item.task_key}`
-    wx.invoke('openDefaultBrowser', {
+    await wx.openDefaultBrowser({
         url: `${import.meta.env.VITE_CRM_SERVERURL}/work_wechat?${query}`
-    }, function (res) {
-        if (res.err_msg == "openDefaultBrowser:ok") {
-            console.log('跳转成功！')
-        } else {
-            //错误处理
-        }
     })
 }
 
+// 获取的企业微信授权初始化jsdk
+const getWxConfig = async () => {
+    const res = await wx.getCurExternalContact()
+    getInfo(res.userId)
+}
+
 getWxConfig()
-
-
 </script>
 
 <template>

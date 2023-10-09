@@ -339,7 +339,7 @@ watch(() => showUploder.value, (value) => {
                     <div class="fold_item_content_servise block">
                         {{ t('message.hoper_text') }}：
                         <div class="tages">
-                            <Tag :tableId="res.id" :clientArray="res.journey_service.split(',')" class="Tag"></Tag>
+                            <Tag :tableId="res.id" :clientArray="res.journey_service?res.journey_service.split(','):[]" class="Tag"></Tag>
                         </div>
                     </div>
                     <div class="fold_item_content_text block">

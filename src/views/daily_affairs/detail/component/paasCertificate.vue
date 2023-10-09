@@ -34,8 +34,8 @@ const showPreview = file_list => {
   if (file_list[0].ext === 'pdf') {
     let url = ''
     if (
-      import.meta.env.VUE_APP_ENV === 'test' ||
-      import.meta.env.VITE_ENV === 'dev'
+      import.meta.env.VITE_APP_ENV === 'test' ||
+      import.meta.env.VITE_APP_ENV === 'dev'
     ) {
       url = file_list[0].url.replace('https', 'http')
     } else {

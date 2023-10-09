@@ -23,10 +23,10 @@ export const getOssConfig = params => http.get(`/common/sts-credential`, { param
 export const previewOss = params => http.get(`/service-acceleration/push/storage/grant`, { params }).then(res => res.data.url)
 
 // 换取dwptoken
-export const getDwptoken = params => {
+export const getDwptoken = token => {
     const userStore = useUserStore();
-    return http.get(`/customer-service/transaction/dwp-token`, { params, 
-        headers: { 'Token': userStore.getToken }
+    return http.get(`/customer-service/transaction/dwp-token`, { params: {}, 
+        headers: { 'Token': token }
      })
 }
 

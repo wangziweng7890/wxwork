@@ -4,7 +4,8 @@
       <div class="top">
         <div class="peopleDetail">
           <div>
-            <img :src="headImage" alt="" @error="setDefaultImage" />
+            <img v-if="errorImg" :src="headImage" alt="" @error="setDefaultImage" />
+            <img v-else :src="defaultImg" />
           </div>
           <div>
             <div class="nameTitle">
@@ -130,7 +131,7 @@ const componentsName = computed(() => {
     return ClientTag
   }
 })
-const headImage = ref('')
+const headImage = ref(new URL(`@/assets/defaultimage.png`, import.meta.url))
 const proofImage = async () => {
   const urlArray = await Promise.all(
     detailList.receipts.map(async item => {
@@ -141,6 +142,7 @@ const proofImage = async () => {
   if (urlArray.length < 1) return
   showImagePreview({ images: urlArray })
 }
+const errorImg = ref(false)
 const getList = async () => {
   const { data, code } = await getOssConfig({
     id: route.query.tableId,
@@ -155,16 +157,17 @@ const getList = async () => {
     if (detailList.head_pic) {
       const url = await previewOss({ object: detailList.head_pic })
       headImage.value = url
+      errorImg.value = true
     } else {
       // 没头像展示默认图
-      headImage.value = new URL(`@/assets/defaultimage.png`, import.meta.url)
+      errorImg.value = false
     }
   }
 }
-
+const defaultImg = new URL(`@/assets/defaultimage.png`, import.meta.url)
 // 加载失败展示默认图
 const setDefaultImage = () => {
-  headImage.value = new URL(`@/assets/defaultimage.png`, import.meta.url)
+  errorImg.value = false
 }
 provide('getList', getList)
 onMounted(async () => {
@@ -200,6 +203,7 @@ onMounted(async () => {
     display: flex;
     align-items: center;
     img {
+      display: inline-block;
       width: 171px;
       height: 239px;
       margin-right: 52px;

@@ -185,19 +185,21 @@ const batchAllotClick = () => {
 
 <template>
   <div class="daily" :class="{ suspend: canBatchAction}">
-    <div class="title_action"  v-if="isMaster">
-        <i class="iconfont icon-icon_sousuo" @click="searchClick()"></i>
-        <i class="iconfont icon-icon_luodou" @click="searchClick('fliter')" :class="{highLight: higLight()}"></i>
+    <div class="flex">
+      <van-tabs
+        v-model:active="active"
+        class="tables"
+        :class="{hiddenTab: !isMaster}"
+        @click-tab="onClickTab"
+      >
+        <van-tab :title="item.wework_name || '-'" v-for="(item, index) in workmateList" :key="index" class="table_items">
+        </van-tab>
+      </van-tabs>
+      <div class="title_action"  v-if="isMaster">
+          <i class="iconfont icon-icon_sousuo" @click="searchClick()"></i>
+          <i class="iconfont icon-icon_luodou" @click="searchClick('fliter')" :class="{highLight: higLight()}"></i>
+      </div>
     </div>
-    <van-tabs
-      v-model:active="active"
-      class="tables"
-      :class="{hiddenTab: !isMaster}"
-      @click-tab="onClickTab"
-    >
-      <van-tab :title="item.wework_name || '-'" v-for="(item, index) in workmateList" :key="index" class="table_items">
-      </van-tab>
-    </van-tabs>
     <weekCalender
           v-model:date="date"
           :role_key="isMaster"
@@ -269,29 +271,29 @@ const batchAllotClick = () => {
 }
 .flex {
   display: flex;
+  align-items: center;
 }
 .title_action {
-  position: absolute;
-  top: 25px;
-  right: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 195px;
-  height: 42px;
-  z-index: 99;
+  width: 165px;
+  height: 88px;
   background: #fff;
-  padding: 0 32px 0 47px;
+  padding: 0 32px 0 22px;
+  border-bottom: 1px solid #F0F0F0;
   .iconfont {
     font-size: 42px;
   }
   .highLight {
     color: #198CFF;
   }
-  background: linear-gradient(to right, transparent 0%, #fff 25%);
+  // background: linear-gradient(to right, transparent 0%, #fff 25%);
   // background: linear-gradient(270deg, #FFF 0%, #FFF 81.31%, rgba(255, 255, 255, 0.00) 100%);
 }
 .tables {
+  flex: 1;
+  width: 0;
   :deep(.van-tabs__content) {
     flex: 1;
   }
@@ -311,7 +313,6 @@ const batchAllotClick = () => {
   }
 }
 :deep(.van-tabs__nav--complete) {
-  padding-right: 160px!important;
   padding-left: 0;
 }
 .actiones {

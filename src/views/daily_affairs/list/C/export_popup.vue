@@ -103,7 +103,7 @@ const checkboxRefs = ref([])
 const toggle = (index) => {
     checkboxRefs.value[index].toggle();
 };
-
+const calendarRef=ref()
 onBeforeUpdate(() => {
     checkboxRefs.value = [];
 });
@@ -158,7 +158,14 @@ const clickExportData = () => {
         }
     })
 }
-
+const close=()=>{
+    address_text.value=''
+    task_status_text.value=''
+    calendarRef.value.time_text=''
+      formData.task_status=[]
+      formData.go_time=[]
+      formData.immigration_office=[]
+}
 </script>
 
 <template>
@@ -168,6 +175,7 @@ const clickExportData = () => {
         :style="{ minHeight: '30%', maxHeight: '80%' }"
         closeable
         close-icon="close"
+        @close="close"
         round
     >
         <div class="actiones">
@@ -177,7 +185,7 @@ const clickExportData = () => {
                 </div>
             </div>
             <div class="actioner_action">
-                <CalendarPopup v-model:form-data="formData" :type="'go_time'"/>
+                <CalendarPopup v-model:form-data="formData" :type="'go_time'" ref="calendarRef"/>
                 <van-field
                     v-model="address_text"
                     is-link

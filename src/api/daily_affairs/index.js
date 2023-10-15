@@ -12,7 +12,7 @@ import api from '@/utils/request'
 export const getTransactionUserList = params => api.get(`/api/customer-service/transaction/user-list`, { params })
 
 // 获取任务列表接口
-export const getTransactionTaskList = params => api.get(`/api/customer-service/transaction/task-list`, { params })
+export const getTransactionTaskList = params => api.get(`/api/customer-service/transaction/task-list`, { params, hideLoading: false })
 
 // 筛选赴港人数
 export const getTransactionMonthInfo = params => api.get(`/api/customer-service/transaction/month-info`, { params })
@@ -27,7 +27,7 @@ export const updateCertificate = params => api.post(`/api/customer-service/trans
 export const updateSaveAgent = params => api.post(`/api/customer-service/transaction/save-agent`, { ...params })
 
 // 保存是否代领
-export const getMonthInfo = params => api.get(`/api/customer-service/transaction/month-info`, { params })
+export const getMonthInfo = params => api.get(`/api/customer-service/transaction/month-info`, { params, hideLoading: true })
 
 // 转让任务
 export const PostalloTtask = params => api.post(`/api/customer-service/transaction/allot-task`, { ...params })
@@ -42,7 +42,7 @@ export const exportData = params => api.post(`/api/customer-service/transaction/
 export const getOssConfig = (params) =>api.get(`/api/customer-service/transaction/customer-info`, { params});
 
 // 保存期望标签
-export const saveTag = (params) =>api.post(`/api/customer-service/transaction/save-tag`, { ...params });
+export const saveTag = (params) =>api.post(`/api/customer-service/transaction/save-tag`, { ...params }, { hideLoading: true });
 
 // 保存意向需求
 export const saveDemand = (params) => api.post(`/api/customer-service/transaction/save-demand`,{ ...params });
@@ -52,3 +52,7 @@ export const getArchivist = (params) =>api.get(`/api/customer-service/transactio
 
 // 获取角色
 export const getRole = () => api.get('/api/customer-service/transaction/get-role')
+
+// 能否识别收据
+export const getRecognition = () => api.get('/api/customer-service/transaction/recognition')
+

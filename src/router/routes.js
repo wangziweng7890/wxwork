@@ -41,18 +41,8 @@ export default [
         name: "daily_affairs",
         component: () => import("@/views/daily_affairs/list/daily_affairs.vue"),
         meta: {
-          jsApiList: ["shareAppMessage", "selectEnterpriseContact"],
+          jsApiList: ["shareAppMessage", "selectEnterpriseContact", 'openEnterpriseChat'],
         },
-        children: [
-            {
-                path: 'list',
-                name: 'daily_affairs',
-                component:() => import("@/views/daily_affairs/list/daily_affairs.vue"),
-                meta: {
-                    jsApiList: ['shareAppMessage', 'selectEnterpriseContact'],
-                },
-            },
-        ]
       },
       {
         path: "detail",

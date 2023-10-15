@@ -16,16 +16,16 @@ const toast = (msg) => {
         {
             message: msg,
             icon: 'cross',
-            onClose: () => {
-                router.replace({
-                    path: "/login",
-                    query: {
-                        redirect_uri: encodeURIComponent(location.pathname + location.search)
-                    }
-                })
-            }
         }
     )
+    setTimeout(() => {
+        router.replace({
+            path: "/login",
+            query: {
+                redirect_uri: encodeURIComponent(location.pathname + location.search)
+            }
+        })
+    }, 300);
 }
 
 function requestHook(config, isDwp) {
@@ -72,7 +72,8 @@ function responseHook(res) {
         return;
     }
     // 其他状态码
-    return showToast({ message: data.message || data.msg, icon: "cross" });
+    showToast({ message: data.message || data.msg, icon: "cross" });
+    return Promise.reject(res);
 }
 
 function responseError(error) {

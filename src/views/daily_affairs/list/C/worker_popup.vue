@@ -43,15 +43,15 @@ const user_info = ref(null)
 const canTransmit = ref(false)
 // popup弹出层确认
 const onConfirm = (values) => {
-        const { selectedOptions } = values
-        // formData.value[picker_type.value] = selectedOptions[0]?.value
-        _visible.value = false
-        user_info.value = selectedOptions[0]
-        if (!!fliterData.value) {
-            fliterData.value.user_id = selectedOptions[0]?.id || ''
-        } else {
-            canTransmit.value = true
-        }
+    const { selectedOptions } = values
+    // formData.value[picker_type.value] = selectedOptions[0]?.value
+    _visible.value = false
+    user_info.value = selectedOptions[0]
+    if (!!fliterData.value) {
+        fliterData.value.user_id = selectedOptions[0]?.id || ''
+    } else {
+        canTransmit.value = true
+    }
 }
 // 从顶级组件中选出的列表刷新方法
 const getTransactionList = inject('getTransactionList') as any
@@ -65,7 +65,7 @@ const confirm = () => {
         if (res.code === 200) {
             showToast('转交任务成功')
             if (getTransactionList) {
-                getTransactionList()
+                getTransactionList(1)
             }
         }
     }).finally(()=>{

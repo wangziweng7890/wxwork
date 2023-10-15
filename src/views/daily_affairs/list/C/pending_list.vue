@@ -4,6 +4,7 @@ import uploaderPopup from './uploader_popup.vue'
 import Tag from '@/components/tag/tag.vue'
 import { saveDemand } from '@/api/daily_affairs'
 import WorkerPopup from './worker_popup.vue'
+import * as wx from '@wecom/jssdk'
 
 const {t}=useI18n()
 // import HistoryDemand from '@/components/historyDemand/historyDemand.vue'
@@ -230,9 +231,20 @@ const getTransactionList = inject('getTransactionList') as any
 watch(() => showUploder.value, (value) => {
     // 关闭整个弹窗的时候请求列表接口，刷新状态
     if (!value) {
-        getTransactionList() 
+        getTransactionList(1) 
     }
 })
+
+// 打开聊天会话
+function openChat(id) {
+    id && wx.openEnterpriseChat({
+        userIds: [
+            id
+        ],
+    }).catch(err => {
+        console.log(err)
+    })
+}
 </script>
 <template>
     <div class="pending_list" v-if="props.listData && props.listData.length">
@@ -269,6 +281,7 @@ watch(() => showUploder.value, (value) => {
                         </div>
                         <van-checkbox
                             :name="res.id"
+                            @click.stop="() => {}"
                             v-model="res.checked"
                             v-if="canBatchAction && (!res.task_status || res.task_status === 1)"
                         />
@@ -321,9 +334,17 @@ watch(() => showUploder.value, (value) => {
                                     {{ t('message.manager') }}：
                                 </span>
                                 <div class="info_block">
-                                    <div class="phone">
+                                    <div class="phone" @click="openChat(res.wework_key)">
                                         {{ res.service_name || '-' }}
+                                        <van-icon v-if="res.wework_key" name="arrow" class="baseline" />
                                     </div>
+                                </div>
+                            </div>
+                            <div class="info">
+                                <span>
+                                    {{ t('message.managerTel') }}：
+                                </span>
+                                <div class="info_block">
                                     <div class="service_phone">
                                         <a :href="`tel:${res.service_phone}`" v-if="res.service_phone"> {{ res.service_phone }} <i class="iconfont icon-icon_dianhua"></i></a>
                                     </div>
@@ -402,6 +423,10 @@ watch(() => showUploder.value, (value) => {
     </div>
 </template>
 <style lang="scss" scoped>
+.baseline {
+    vertical-align: baseline;
+    color: #9B9B9B;
+}
 .pending_list {
     background: #F8F8F8;
     flex: 1;

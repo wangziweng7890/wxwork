@@ -1,17 +1,8 @@
 <script lang="ts" setup>
 import { getTransactionInfo, updateCertificate, updateSaveAgent } from '@/api/daily_affairs'
-import AliyunOssService from '@/utils/ali-oss'
 import uploadImage from './upload_image.vue'
 const {t}=useI18n()
 
-let ossService = null
-// 初始化oss
-const initOss = async () => {
-    ossService = await AliyunOssService.createFromBackend()
-}
-onMounted(async () => {
-    await initOss()
-})
 const props = defineProps({
     showUploder: Boolean,
     id: Number,
@@ -103,7 +94,7 @@ const clickType = (value?: number) => {
                                 <div class="user_name">
                                     {{ res.user_name }}
                                 </div>
-                                <uploadImage :ossService="ossService" :resData="res" :type="item.type" :fn="updateCertificate" :id="props.id"/>
+                                <uploadImage :resData="res" :type="item.type" :fn="updateCertificate" :id="props.id"/>
                             </div>
                         </div>
                     </div>

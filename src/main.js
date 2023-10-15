@@ -15,7 +15,6 @@ import router from './router'
 import 'vant/es/toast/style'
 // 引入状态管理
 import { setupStore } from "@/stores";
-import VueHashCalendar from "vue3-hash-calendar";
 import "vue3-hash-calendar/es/index.css";
 import i18n from "./locales/setupI18n";
 import 'virtual:iconfont'
@@ -24,7 +23,7 @@ import "./style/index.scss"
 const setupAll = async () => {
   const app = createApp(App);
   await setupStore(app);
-  app.use(router).use(VueHashCalendar).use(i18n);
+  app.use(router).use(i18n);
   app.mount("#app");
 };
 

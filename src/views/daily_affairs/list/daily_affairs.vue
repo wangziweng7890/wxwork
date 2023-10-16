@@ -63,6 +63,18 @@ onMounted(async () => {
   ];
 });
 
+// 记住位置
+const yScroll = ref(null)
+let scrollTop = ''
+onActivated(() => {
+    yScroll.value.scrollTop = scrollTop || 0
+})
+onBeforeRouteLeave((to, from, next) => {
+    scrollTop = yScroll.value.scrollTop
+    next()
+})
+
+
 // 点击搜索
 const searchClick = (value?: string | number) => {
   if (value) {
@@ -254,7 +266,7 @@ function showWeekCandeler(val) {
         ></i>
       </div>
     </div>
-    <div class="y-scroll">
+    <div class="y-scroll" ref="yScroll">
       <weekCalender
         @updateDate="updateDate"
         :role_key="isMaster"

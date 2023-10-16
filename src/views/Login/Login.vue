@@ -32,6 +32,7 @@ const getWorkCode = async () => {
     const redirectUri = encodeURIComponent(`${import.meta.env.VITE_REDIRECT_URI}/login?redirect_uri=${route.query.redirect_uri}&hasCode=1`)
     const url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirectUri}&response_type=code&scope=snsapi_base&state=STATE&agentid=${agentid}#wechat_redirect`
     listenerBack()
+    alert('埋点测试')
     window.location.replace(url)
 }
 

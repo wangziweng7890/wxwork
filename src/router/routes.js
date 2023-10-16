@@ -32,7 +32,7 @@ export default [
     path: "/daily_affairs",
     component: () => import("@/views/daily_affairs/index.vue"),
     meta: {
-      title: "香港事务日常协同",
+      title: "香港事务日常协同test",
       jsApiList: ["shareAppMessage", "selectEnterpriseContact"],
     },
     children: [

@@ -54,5 +54,5 @@ export const getArchivist = (params) =>api.get(`/api/customer-service/transactio
 export const getRole = () => api.get('/api/customer-service/transaction/get-role')
 
 // 能否识别收据
-export const getRecognition = () => api.get('/api/customer-service/transaction/recognition')
+export const getRecognition = (params) => api.get('/api/customer-service/transaction/recognition', { params })
 

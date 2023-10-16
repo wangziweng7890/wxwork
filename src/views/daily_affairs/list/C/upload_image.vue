@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { previewOss } from "@/api/common/index";
+import { getRecognition } from "@/api/daily_affairs/index";
 import { showImagePreview } from "vant";
 import { uploadFile } from "@/utils/crm-oss";
 import { showToast } from "vant";

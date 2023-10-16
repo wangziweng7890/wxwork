@@ -38,7 +38,7 @@ const getWorkCode = async () => {
 // 登录
 const login = async () => {
     try {
-        const { data } = await workWechatOauth({ code: route.query.code, agentid: getAgentid() })
+        const { data } = await workWechatOauth({ code: route.query.code, agent_id: getAgentid() })
         userStore.setToken(data.token)
         userStore.setUserInfo(data.corp_user_info || {})
         const res = await getDwptoken(data.token)

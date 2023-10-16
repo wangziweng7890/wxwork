@@ -32,21 +32,23 @@ const updateImage = (url: string) => {
   });
 };
 // 预览图片
-const previewImage = async (url: string, save?: Boolean) => {
-  fileList.value = url;
-  if (save) {
-    return false;
-  }
-  if (props.resData.cert_type === 3) {
-    let { data } = await getRecognition({ url });
-    if (data !== 1) {
-      fileList.value = "";
-      return showToast({
-        message: "无法识别收据,请重新上传",
-        icon: "cross",
-      });
+const previewImage = async (res: string, save?: Boolean) => {
+  previewOss({ object: res }).then(async (url) => {
+    fileList.value = url;
+    if (save) {
+      return false;
     }
-  }
+    if (props.resData.cert_type === 3) {
+      let { data } = await getRecognition({ url });
+      if (data !== 1) {
+        fileList.value = "";
+        return showToast({
+          message: "无法识别收据,请重新上传",
+          icon: "cross",
+        });
+      }
+    }
+  });
 
   updateImage(url);
   // await previewOss({ object: url }).then((res: any) => {

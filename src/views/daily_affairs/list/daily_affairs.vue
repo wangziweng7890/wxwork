@@ -369,7 +369,7 @@ function showWeekCandeler(val) {
 .daily {
   position: relative;
   font-size: 28px;
-  height: 100%;
+  min-height: 100%;
   background: #f8f8f8;
 }
 .sticky {

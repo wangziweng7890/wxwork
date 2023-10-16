@@ -48,9 +48,10 @@ const previewImage = async (res: string, save?: Boolean) => {
         });
       }
     }
+    updateImage(url);
+
   });
 
-  updateImage(url);
   // await previewOss({ object: url }).then((res: any) => {
   //     fileList.value = res
   //     if (save) {

@@ -264,7 +264,7 @@ function openChat(id) {
                                     {{ fliterGoTime(res.go_time).hour_time }}
                                 </div>
                             </div>
-                            <div class="title_box_name" @click="linkDetail(res)">
+                            <div class="title_box_name" @click.stop="linkDetail(res)">
                                 <!-- res.order_information用三元，可能会返回null -->
                                 {{ res.order_information ? res.order_information.username : '-' }}
                             </div>

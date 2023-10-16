@@ -52,8 +52,11 @@ const login = async () => {
 // 解决移动端后退问题
 function listenerBack() {
     window.addEventListener('popstate', function() {
+        alert(sessionStorage.getItem('redirectUri') + '===test=====' + location.href)
+
         if (sessionStorage.getItem('redirectUri') === location.href) { // 说明是点击授权前的页面，此页面在后退中不需要展示，直接关机即可
             // 关闭当前页面
+            alert(11111)
             window.close();
         }
     })

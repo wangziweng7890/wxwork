@@ -242,7 +242,7 @@ function showWeekCandeler(val) {
 
 <template>
   <div class="daily x-flex" :class="{ suspend: canBatchAction }">
-    <div class="flex">
+    <div class="flex sticky" >
       <van-tabs
         v-model:active="active"
         class="tables"
@@ -360,7 +360,7 @@ function showWeekCandeler(val) {
 .y-scroll {
   flex: 1;
   height: 0;
-  overflow-y: auto;
+//   overflow-y: auto;
 }
 .x-flex {
   display: flex;
@@ -371,6 +371,12 @@ function showWeekCandeler(val) {
   font-size: 28px;
   height: 100%;
   background: #f8f8f8;
+}
+.sticky {
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+    background: #fff;
 }
 .flex {
   display: flex;

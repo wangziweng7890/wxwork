@@ -39,7 +39,7 @@ const previewImage = async (res: string, save?: Boolean) => {
       return false;
     }
     if (props.resData.cert_type === 3) {
-      let { data } = await getRecognition({ url });
+      let { data } = await getRecognition({ url: res });
       if (data !== 1) {
         fileList.value = "";
         return showToast({

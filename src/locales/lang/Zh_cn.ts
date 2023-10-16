@@ -71,6 +71,7 @@ const Zh_message = {
             address: '地点',
             timer: '时间',
             manager: '客户经理',
+            managerTel: '客户经理电话',
             hoper_text: '期望银河提供服务',
             setOther: '转任务',
             history_text: '查看历史需求',

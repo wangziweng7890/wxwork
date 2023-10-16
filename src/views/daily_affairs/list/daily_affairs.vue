@@ -20,9 +20,7 @@ import {
 } from "@/api/daily_affairs";
 import { showToast } from "vant";
 import dayjs from "dayjs";
-import * as isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 
-dayjs.extend(isSameOrBefore);
 const { t, locale } = useI18n();
 const router = useRouter();
 const { setWorkmateList } = useUserStore() as any;
@@ -116,7 +114,7 @@ const getTransactionList = async (clear) => {
   } else {
     const res = await getTransactionTaskList(filterData);
     let i = filterData.start_time;
-    while (dayjs(i).isSameOrBefore(dayjs(filterData.end_time))) {
+    while (dayjs(i).isBefore(dayjs(filterData.end_time)) || dayjs(i).isSame(filterData.end_time)) {
       cacheList[i] = res.data?.[i] ?? [];
       i = dayjs(i).add(1, "day").format("YYYY-MM-DD");
     }

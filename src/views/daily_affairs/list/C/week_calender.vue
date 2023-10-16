@@ -10,8 +10,6 @@
 import { getMonthInfo } from "@/api/daily_affairs";
 import { cloneDeep } from "lodash";
 import dayjs from "dayjs";
-import isBetween from "dayjs/plugin/isBetween";
-dayjs.extend(isBetween);
 const props = defineProps({
   role_key: Boolean, // 是否是主管
   highLight: Boolean,
@@ -82,7 +80,7 @@ let endDate = "";
 // 回到今天
 const backToday = (flag) => {
   chooseDate.value = dayjs().format("YYYY-MM-DD");
-  if (!dayjs().isBetween(startDate, endDate) || flag === 1) {
+  if (!(dayjs().isBefore(endDate) && dayjs().isAfter(startDate)) || flag === 1) {
     selectDate.value = dayjs().format("YYYY-MM-DD");
     updateWeek();
   }

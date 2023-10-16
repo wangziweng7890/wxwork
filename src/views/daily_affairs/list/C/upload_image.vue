@@ -48,7 +48,7 @@ const previewImage = async (res: string, save?: Boolean) => {
         });
       }
     }
-    updateImage(url);
+    updateImage(res);
 
   });
 

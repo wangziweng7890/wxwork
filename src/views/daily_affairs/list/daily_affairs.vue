@@ -48,7 +48,6 @@ const showExprot = ref(false);
 const workmateList = ref([]);
 const listData = ref([]);
 // const date = ref([])
-const date = ref("");
 onMounted(async () => {
   const { data } = await getRole();
   isMaster.value = data === "hk_transaction_master";

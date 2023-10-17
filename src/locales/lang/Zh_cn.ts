@@ -105,6 +105,7 @@ const Zh_message = {
             getBatcher: '获批者',
             not_batch_text: '该获批者不在本批次当中',
             get_visa_text: '是否代领',
+            dateSelect: '日期选择',
         }
     }
 }

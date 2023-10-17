@@ -481,6 +481,8 @@ function showWeekCandeler(val) {
   border-bottom: 1px solid #f0f0f0;
 }
 .batch_buttones {
+  position: sticky;
+  bottom: 0;
   height: 128px;
   color: #222;
   font-size: 32px;

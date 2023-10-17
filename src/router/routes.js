@@ -50,7 +50,7 @@ export default [
         component: () => import("@/views/daily_affairs/detail/detail.vue"),
         meta: {
           title: "客户信息",
-           jsApiList: ["previewFile"],
+           jsApiList: ["previewFile", "openDefaultBrowser"],
         },
       },
       {

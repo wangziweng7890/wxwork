@@ -21,6 +21,8 @@
 <script setup>
 import { getArchivist } from '@/api/daily_affairs/index'
 import { previewOss } from '@/api/common/index'
+import * as wx from '@wecom/jssdk'
+
 const { t, locale } = useI18n()
 const route = useRoute()
 const titleMap = {
@@ -36,14 +38,11 @@ const showPreview = async (index, idx) => {
   if (file_list[0].ext === 'pdf') {
     let url = ''
     url = await previewOss({ object: file_list[0].url })
-        if (
-      import.meta.env.VITE_APP_ENV === 'test' ||
-      import.meta.env.VITE_APP_ENV === 'dev'
-    ) {
-      url = url.replace('https', 'http')
-    } 
-    console.log(url,'****');
-    window.open(url)
+    wx.openDefaultBrowser({ // 企微移动端直接调用 window.open 打不开页面，非得先调sdk方法，原因未知
+        url
+    }).catch(() => {
+        window.open(url)
+    })
   } else {
     const urlArray = await Promise.all(
       file_list.map(async item => {

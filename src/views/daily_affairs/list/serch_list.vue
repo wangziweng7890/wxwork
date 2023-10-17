@@ -19,6 +19,8 @@ const filterData: filter_params = reactive({
     end_time: '', // 结束
     is_convert: 1 // 是否转换数据格式为按天统计：1转换,0不转换
 })
+const { t } = useI18n();
+
 const router = useRouter()
 const listData = ref([])
 const showSearchResult = ref(false)
@@ -56,7 +58,7 @@ onActivated(() => {
             show-action
             label=""
             :left-icon="''"
-            placeholder="输入客户姓名"
+            :placeholder="t('message.searchPlaceholder')"
             @search="onClickButton"
             shape="round"
         >

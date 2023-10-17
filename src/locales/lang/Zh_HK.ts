@@ -106,6 +106,7 @@ const HK_message = {
             not_batch_text: '該獲批者不在本批次當中',
             get_visa_text: '是否代領',
             dateSelect: '日期選擇',
+            searchPlaceholder: '輸入客戶姓名',
         }
     }
 }

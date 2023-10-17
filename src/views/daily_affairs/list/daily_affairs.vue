@@ -48,7 +48,6 @@ const showExprot = ref(false);
 const workmateList = ref([]);
 const listData = ref([]);
 // const date = ref([])
-const date = ref("");
 onMounted(async () => {
   const { data } = await getRole();
   isMaster.value = data === "hk_transaction_master";
@@ -242,7 +241,7 @@ function showWeekCandeler(val) {
 
 <template>
   <div class="daily x-flex" :class="{ suspend: canBatchAction }">
-    <div class="flex">
+    <div class="flex sticky" >
       <van-tabs
         v-model:active="active"
         class="tables"
@@ -360,7 +359,7 @@ function showWeekCandeler(val) {
 .y-scroll {
   flex: 1;
   height: 0;
-  overflow-y: auto;
+//   overflow-y: auto;
 }
 .x-flex {
   display: flex;
@@ -369,8 +368,14 @@ function showWeekCandeler(val) {
 .daily {
   position: relative;
   font-size: 28px;
-  height: 100%;
+  min-height: 100%;
   background: #f8f8f8;
+}
+.sticky {
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+    background: #fff;
 }
 .flex {
   display: flex;
@@ -476,6 +481,8 @@ function showWeekCandeler(val) {
   border-bottom: 1px solid #f0f0f0;
 }
 .batch_buttones {
+  position: sticky;
+  bottom: 0;
   height: 128px;
   color: #222;
   font-size: 32px;

@@ -516,7 +516,6 @@ function openChat(id) {
                 &_message {
                     background: #F8F9FB;
                     border-radius: 12px;
-                    max-height: 570px;
                     padding: 32px 0;
                     font-size: 26px;
                     .info {

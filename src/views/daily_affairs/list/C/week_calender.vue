@@ -8,7 +8,6 @@
 -->
 <script setup lang="ts">
 import { getMonthInfo } from "@/api/daily_affairs";
-import { cloneDeep } from "lodash";
 import dayjs from "dayjs";
 const props = defineProps({
   role_key: Boolean, // 是否是主管
@@ -20,9 +19,7 @@ const chooseDate = ref("");
 const weekList = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
 const selectDate = ref(dayjs()); // 通过小图标展开的日历选中的时间
 const loadingMap = {};
-
-const calendar = ref(null);
-const calendarInfo = ref([]);
+const { t } = useI18n();
 
 function filterWeekDay(scope) {
   const info = scope.info;
@@ -255,6 +252,7 @@ defineExpose({
       </div>
     </div>
     <van-calendar
+      :title="t('message.dateSelect')"
       v-model:show="selectPanel"
       @confirm="selectDateFn"
       :show-confirm="false"

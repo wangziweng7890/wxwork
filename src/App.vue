@@ -45,4 +45,7 @@ function showDebugger() {
 #app {
     height: 100vh;
 }
+.height_100 {
+    height: 100vh;
+}
 </style>

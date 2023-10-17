@@ -91,10 +91,11 @@ const filterDay = (values: any) => {
             @click="clickPicker"
             />
         <van-calendar
-          v-if="showCalendar"
+            v-if="showCalendar"
             v-model:show="showCalendar"
             type="range"
             @confirm="confirmDate"
+            :title="t('message.dateSelect')"
             :allow-same-day="true"
             :min-date="minDate"
             :max-date="maxDate"

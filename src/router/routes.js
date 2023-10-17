@@ -55,11 +55,11 @@ export default [
       },
       {
         path: 'serch_list',
-        name: '/serch_list',
+        name: 'serch_list',
         component:() => import("@/views/daily_affairs/list/serch_list.vue"),
         title: "客户信息",
         meta: {
-            jsApiList: ['shareAppMessage'],
+            jsApiList: ['shareAppMessage', 'openEnterpriseChat'],
         },
     }
     ],

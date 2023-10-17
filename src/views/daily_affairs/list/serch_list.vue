@@ -9,7 +9,6 @@
 <script lang="ts" setup name="serch_detail">
 import PendingList from "./C/pending_list.vue";
 import { getTransactionTaskList, getRole } from '@/api/daily_affairs'
-
 // 定义搜索参数
 const filterData: filter_params = reactive({
     customer_name: '',
@@ -20,11 +19,12 @@ const filterData: filter_params = reactive({
     end_time: '', // 结束
     is_convert: 1 // 是否转换数据格式为按天统计：1转换,0不转换
 })
-
+const router = useRouter()
 const listData = ref([])
 const showSearchResult = ref(false)
 // 点击搜索按钮
 const onClickButton = async () => {
+    if (!filterData.customer_name) { return }
     const res = await getTransactionTaskList(filterData) as any
     if (res.code === 200) {
         listData.value = res.data
@@ -37,6 +37,16 @@ onMounted(async () => {
     const { data } = await getRole()
     isMaster.value = data === 'hk_transaction_master'
 })
+
+onActivated(() => {
+    if (!router.options.history.state.forward) {
+        // 说明是从列表页进来，此时清空条件
+        listData.value = []
+        showSearchResult.value = false
+        filterData.customer_name = ''
+    }
+})
+
 
 </script>
 <template>

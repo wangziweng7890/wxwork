@@ -71,6 +71,7 @@ const HK_message = {
             address: '地點',
             timer: '時間',
             manager: '客戶經理',
+            managerTel: '客戶經理電話',
             hoper_text: '期望銀河提供服務',
             setOther: '轉任務',
             history_text: '查看歷史需求',
@@ -104,6 +105,8 @@ const HK_message = {
             getBatcher: '獲批者',
             not_batch_text: '該獲批者不在本批次當中',
             get_visa_text: '是否代領',
+            dateSelect: '日期選擇',
+            searchPlaceholder: '輸入客戶姓名',
         }
     }
 }

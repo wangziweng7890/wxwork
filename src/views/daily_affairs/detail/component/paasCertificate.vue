@@ -8,7 +8,7 @@
         <div class="content">
           <div class="item" v-for="(it, idx) in item.file_list" :key="idx">
             <div class="label">{{ it.file_name }}</div>
-            <div class="value" @click="showPreview(it.file_source)">查看</div>
+            <div class="value" @click="showPreview(index, idx)">查看</div>
           </div>
         </div>
       </div>
@@ -20,7 +20,9 @@
 
 <script setup>
 import { getArchivist } from '@/api/daily_affairs/index'
+import { previewOss } from '@/api/common/index'
 import * as wx from '@wecom/jssdk'
+
 const { t, locale } = useI18n()
 const route = useRoute()
 const titleMap = {
@@ -28,29 +30,31 @@ const titleMap = {
   2: '配偶',
   3: '子女'
 }
+const detailList = ref([])
 const show = ref(false)
 const images = ref([])
-const showPreview = file_list => {
+const showPreview = async (index, idx) => {
+  let file_list = detailList.value[index].file_list[idx].file_source
   if (file_list[0].ext === 'pdf') {
     let url = ''
-    if (
-      import.meta.env.VITE_APP_ENV === 'test' ||
-      import.meta.env.VITE_APP_ENV === 'dev'
-    ) {
-      url = file_list[0].url.replace('https', 'http')
-    } else {
-      url = file_list[0].url
-    }
-    console.log(url, '**1**')
-    window.open(url)
+    url = await previewOss({ object: file_list[0].url })
+    wx.openDefaultBrowser({ // 企微移动端直接调用 window.open 打不开页面，非得先调sdk方法，原因未知
+        url
+    }).catch(() => {
+        window.open(url)
+    })
   } else {
-    let imageArr = []
-    imageArr = file_list.map(item => item.url)
-    images.value = imageArr
+    const urlArray = await Promise.all(
+      file_list.map(async item => {
+        const url = await previewOss({ object: item.url })
+        return url
+      })
+    )
+    if (urlArray.length < 1) return
+    images.value = urlArray
     show.value = true
   }
 }
-const detailList = ref([])
 const getList = async () => {
   const { code, data } = await getArchivist({
     order_id: route.query.orderId,

@@ -41,18 +41,8 @@ export default [
         name: "daily_affairs",
         component: () => import("@/views/daily_affairs/list/daily_affairs.vue"),
         meta: {
-          jsApiList: ["shareAppMessage", "selectEnterpriseContact"],
+          jsApiList: ["shareAppMessage", "selectEnterpriseContact", 'openEnterpriseChat'],
         },
-        children: [
-            {
-                path: 'list',
-                name: 'daily_affairs',
-                component:() => import("@/views/daily_affairs/list/daily_affairs.vue"),
-                meta: {
-                    jsApiList: ['shareAppMessage', 'selectEnterpriseContact'],
-                },
-            },
-        ]
       },
       {
         path: "detail",
@@ -60,16 +50,16 @@ export default [
         component: () => import("@/views/daily_affairs/detail/detail.vue"),
         meta: {
           title: "客户信息",
-           jsApiList: ["previewFile"],
+           jsApiList: ["previewFile", "openDefaultBrowser"],
         },
       },
       {
         path: 'serch_list',
-        name: '/serch_list',
+        name: 'serch_list',
         component:() => import("@/views/daily_affairs/list/serch_list.vue"),
         title: "客户信息",
         meta: {
-            jsApiList: ['shareAppMessage'],
+            jsApiList: ['shareAppMessage', 'openEnterpriseChat'],
         },
     }
     ],

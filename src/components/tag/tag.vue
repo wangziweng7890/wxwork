@@ -47,7 +47,15 @@ const activeTag = async id => {
   } else {
     isActive.value.push(id)
   }
-  await saveTag({ id: props.tableId, tags: isActive.value })
+  await saveTag({ id: props.tableId, tags: isActive.value }).catch(() => {
+    if (isActive.value.includes(id)) {
+      let index = isActive.value.findIndex(item => item === id)
+      isActive.value.splice(index, 1)
+    } else {
+      isActive.value.push(id)
+    }
+  })
+
 }
 onMounted(() => {
   isActive.value = props.clientArray

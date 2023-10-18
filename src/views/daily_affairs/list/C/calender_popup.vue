@@ -8,7 +8,7 @@
 -->
 <script lang="ts" setup>
 import { getMonthInfo } from '@/api/daily_affairs'
-
+import dayjs from 'dayjs'
 const {t, locale} = useI18n()
 // 展开日历
 const showCalendar = ref(false)
@@ -24,14 +24,14 @@ const filterData = computed({
     },
 })
 
-const formatDate = (date) => `${date.getFullYear()}-${date.getMonth() + 1 < 10 ? ('0' + (date.getMonth() + 1)) : date.getMonth() + 1}-${date.getDate()< 10 ? ('0' + (date.getDate())) : date.getDate() 
-}`;
+const formatDate = (date) => dayjs(date).format('YYYY-MM-DD')
 // 时间文本
 const time_text = ref('')
 // 抛出数值
 defineExpose({
     time_text,
 });
+
 const confirmDate = (values) => {
     const [start, end] = values;
     showCalendar.value = false;
@@ -40,6 +40,7 @@ const confirmDate = (values) => {
     } else if (props.type === 'start_end') {
         filterData.value.start_time = formatDate(start)
         filterData.value.end_time = formatDate(end)
+        filterData.value.hideWeekCandeler = 1
     }
     time_text.value = `${formatDate(start)} - ${formatDate(end)}`;
 };
@@ -49,7 +50,7 @@ const clickPicker = () => {
 const calendarInfo = ref([])
 // 获取月份信息
 const getMonthDetail = (values: any) => {
-    getMonthInfo({
+    return getMonthInfo({
         date_month: values
     }).then((res: any) => {
         const { data } = res;
@@ -90,9 +91,11 @@ const filterDay = (values: any) => {
             @click="clickPicker"
             />
         <van-calendar
+            v-if="showCalendar"
             v-model:show="showCalendar"
             type="range"
             @confirm="confirmDate"
+            :title="t('message.dateSelect')"
             :allow-same-day="true"
             :min-date="minDate"
             :max-date="maxDate"

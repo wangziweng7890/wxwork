@@ -71,6 +71,7 @@ const Zh_message = {
             address: '地点',
             timer: '时间',
             manager: '客户经理',
+            managerTel: '客户经理电话',
             hoper_text: '期望银河提供服务',
             setOther: '转任务',
             history_text: '查看历史需求',
@@ -104,6 +105,8 @@ const Zh_message = {
             getBatcher: '获批者',
             not_batch_text: '该获批者不在本批次当中',
             get_visa_text: '是否代领',
+            dateSelect: '日期选择',
+            searchPlaceholder: '输入客户姓名',
         }
     }
 }

@@ -24,19 +24,21 @@ const route = useRoute()
 const router = useRouter()
 
 // 企业微信静默授权重定向获取code
-const getWorkCode = () => {
+const getWorkCode = async () => {
+    sessionStorage.setItem('redirectUri', location.href)
     const appid = import.meta.env.VITE_APPID
     const agentid = getAgentid()
     const redirect_uri = route.query.redirect_uri
     const redirectUri = encodeURIComponent(`${import.meta.env.VITE_REDIRECT_URI}/login?redirect_uri=${route.query.redirect_uri}&hasCode=1`)
     const url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirectUri}&response_type=code&scope=snsapi_base&state=STATE&agentid=${agentid}#wechat_redirect`
+    listenerBack()
     window.location.replace(url)
 }
 
 // 登录
 const login = async () => {
     try {
-        const { data } = await workWechatOauth({ code: route.query.code, agentid: getAgentid() })
+        const { data } = await workWechatOauth({ code: route.query.code, agent_id: getAgentid() })
         userStore.setToken(data.token)
         userStore.setUserInfo(data.corp_user_info || {})
         const res = await getDwptoken(data.token)
@@ -45,6 +47,20 @@ const login = async () => {
     } catch (error) {
         console.error('login-error：', error)
     }
+}
+
+// 解决移动端后退问题
+function listenerBack() {
+    window.addEventListener('pageshow', function() {
+        if (sessionStorage.getItem('redirectUri') === location.href) { // 说明是点击授权前的页面，此页面在后退中不需要展示，直接关机即可
+            // 关闭当前页面
+            wx.closeWindow({
+                fail({ errMsg }) {
+                    console.log('closeWindow', errMsg)
+                }
+            });
+        }
+    })
 }
 
 !route.query.hasCode ? getWorkCode() : login()

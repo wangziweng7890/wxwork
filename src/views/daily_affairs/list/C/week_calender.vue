@@ -7,93 +7,95 @@
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
 -->
 <script setup lang="ts">
-import { getMonthInfo } from "@/api/daily_affairs";
-import dayjs from "dayjs";
+import { getMonthInfo } from '@/api/daily_affairs'
+import dayjs from 'dayjs'
 const props = defineProps({
   role_key: Boolean, // 是否是主管
   highLight: Boolean,
-  language: String, //语言, 默认繁体
-});
-const emit = defineEmits(["updateDate", "updateTimeRange", "click_action"]);
-const chooseDate = ref("");
-const weekList = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
-const selectDate = ref(dayjs()); // 通过小图标展开的日历选中的时间
-const loadingMap = {};
-const { t } = useI18n();
+  language: String //语言, 默认繁体
+})
+const emit = defineEmits(['updateDate', 'updateTimeRange', 'click_action'])
+const chooseDate = ref('')
+const weekList = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+const selectDate = ref(dayjs()) // 通过小图标展开的日历选中的时间
+const loadingMap = {}
+const { t } = useI18n()
 
 function filterWeekDay(scope) {
-  const info = scope.info;
-  let day_text = "";
+  const info = scope.info
+  let day_text = ''
   if (scope.date === 1) {
-    day_text = scope.month + "月";
+    day_text = scope.month + '月'
   } else {
-    day_text = scope.date;
+    day_text = scope.date
   }
   if (info?.holiday) {
-    day_text =
-      props.language === "ZH" ? info.holiday : info.traditional_holiday;
+    day_text = props.language === 'ZH' ? info.holiday : info.traditional_holiday
   }
-  const people = info?.people ?? 0;
+  const people = info?.people ?? 0
   return {
-    text: scope.isToday ? "今" : day_text,
-    bottomInfo: `${people}人`,
-  };
+    text: scope.isToday ? '今' : day_text,
+    bottomInfo: `${people}人`
+  }
 }
 
 function monthShow({ date }) {
-  return getMonthDetail(dayjs(date).format("YYYY-MM-DD"));
+  return getMonthDetail(dayjs(date).format('YYYY-MM-DD'))
 }
 
 // 过滤每天展示在日历当中的参数
 const filterDay = (scope) => {
-  const day = dayjs(scope.date);
-  const monthInfo = dateInfo.value[day.format("YYYY-MM")] ?? {};
-  const info = monthInfo[day.get("date") - 1] ?? {};
-  const people = info.people ?? 0;
+  const day = dayjs(scope.date)
+  const monthInfo = dateInfo.value[day.format('YYYY-MM')] ?? {}
+  const info = monthInfo[day.get('date') - 1] ?? {}
+  const people = info.people ?? 0
   scope.topInfo =
-    (props.language === "ZH" ? info.holiday : info.traditional_holiday) || "";
-  scope.bottomInfo = `${people}人`;
-  return scope;
-};
+    (props.language === 'ZH' ? info.holiday : info.traditional_holiday) || ''
+  scope.bottomInfo = `${people}人`
+  return scope
+}
 
 // 过滤展示天数
-const filter_text = ref("日一二三四五六");
+const filter_text = ref('日一二三四五六')
 
 // 过滤底部日期展示
 const arrow_date = () => {
   const week_day =
-    "星期" + filter_text.value[new Date(chooseDate.value).getDay()];
-  const date = chooseDate.value.split("-");
-  const date_content = date[0] + "年" + date[1] + "月" + date[2] + "日";
+    '星期' + filter_text.value[new Date(chooseDate.value).getDay()]
+  const date = chooseDate.value.split('-')
+  const date_content = date[0] + '年' + date[1] + '月' + date[2] + '日'
   const params = {
     date_content,
-    week_day,
-  };
-  return params;
-};
+    week_day
+  }
+  return params
+}
 
-let startDate = "";
-let endDate = "";
+let startDate = ''
+let endDate = ''
 // 回到今天
 const backToday = (flag) => {
-  chooseDate.value = dayjs().format("YYYY-MM-DD");
-  if (!(dayjs().isBefore(endDate) && dayjs().isAfter(startDate)) || flag === 1) {
-    selectDate.value = dayjs().format("YYYY-MM-DD");
-    updateWeek();
+  chooseDate.value = dayjs().format('YYYY-MM-DD')
+  if (
+    !(dayjs().isBefore(endDate) && dayjs().isAfter(startDate)) ||
+    flag === 1
+  ) {
+    selectDate.value = dayjs().format('YYYY-MM-DD')
+    updateWeek()
   }
-  emit("updateDate", chooseDate.value);
-  scrollToActive();
-};
+  emit('updateDate', chooseDate.value)
+  scrollToActive()
+}
 
 // 是否今天
 const show_back_today = computed(() => {
-  return !dayjs().isSame(chooseDate.value, "day");
-});
+  return !dayjs().isSame(chooseDate.value, 'day')
+})
 
 // 操作栏
 const click_action = (type?: number) => {
-  emit("click_action", type);
-};
+  emit('click_action', type)
+}
 // 监听年月份改变，则重新获取过滤信息
 // watch(() => props.date, (newVal, oldVal) => {
 //     const new_date = new Date(newVal)
@@ -103,121 +105,121 @@ const click_action = (type?: number) => {
 //     }
 // })
 
-const dateList = ref([]);
-const dateInfo = ref({}); //缓存月份信息
+const dateList = ref([])
+const dateInfo = ref({}) //缓存月份信息
 
 // 当星期日历的selectDate改变时,需要清除外层的缓存
 function updateWeek() {
-  calWeekList();
-  calWeekInfo();
-  updateTimeRange();
+  calWeekList()
+  calWeekInfo()
+  updateTimeRange()
 }
-updateWeek();
+updateWeek()
 
 // 计算日期列表
 
 async function calWeekList() {
-  const nowDay = selectDate.value;
-  let i = -10;
-  let arr = [];
+  const nowDay = selectDate.value
+  let i = -10
+  let arr = []
   while (i <= 10) {
-    const day = dayjs(nowDay).add(i, "day");
-    const year = dayjs(day).get("year");
-    const dateTime = dayjs(day).format("YYYY-MM-DD");
-    const date = dayjs(day).get("date");
-    const week = weekList[dayjs(day).get("day")];
-    const isToday = dayjs(day).isSame(dayjs(), "day");
-    i === -10 && (startDate = dateTime);
-    i === 10 && (endDate = dateTime);
+    const day = dayjs(nowDay).add(i, 'day')
+    const year = dayjs(day).get('year')
+    const dateTime = dayjs(day).format('YYYY-MM-DD')
+    const date = dayjs(day).get('date')
+    const week = weekList[dayjs(day).get('day')]
+    const isToday = dayjs(day).isSame(dayjs(), 'day')
+    i === -10 && (startDate = dateTime)
+    i === 10 && (endDate = dateTime)
     arr.push({
       year,
-      month: dayjs(day).get("month") + 1,
+      month: dayjs(day).get('month') + 1,
       date, // 日
       week,
       dateTime, // 2023-10-12
-      isToday,
-    });
-    i++;
+      isToday
+    })
+    i++
   }
-  dateList.value = arr;
-  scrollToActive();
+  dateList.value = arr
+  scrollToActive()
 }
 
 async function scrollToActive() {
-  await nextTick().then();
-  document.querySelector(".box.actived").scrollIntoView({
-    inline: "center",
-    block: "nearest",
-    behavior: "smooth",
-  });
+  await nextTick().then()
+  document.querySelector('.box.actived').scrollIntoView({
+    inline: 'center',
+    block: 'nearest',
+    behavior: 'smooth'
+  })
 }
 
 // 给每个日期加上相关信息
 async function calWeekInfo() {
-  const obj = new Set();
+  const obj = new Set()
   dateList.value.map((item) => {
-    obj.add(item.year + "-" + item.month + "-01");
-  });
+    obj.add(item.year + '-' + item.month + '-01')
+  })
   await Promise.all(
     Array.from(obj).map(async (key) => {
-      return getMonthDetail(key);
+      return getMonthDetail(key)
     })
-  );
+  )
   dateList.value = dateList.value.map((item) => {
-    const day = item.year + "-" + item.month;
+    const day = item.year + '-' + item.month
     return {
       ...item,
-      info: dateInfo.value?.[day]?.[item.date - 1],
-    };
-  });
+      info: dateInfo.value?.[day]?.[item.date - 1]
+    }
+  })
 }
 
 // 获取月份信息
 async function getMonthDetail(values) {
-  const format = values.slice(0, 7);
-  if (dateInfo.value[format]) return;
+  const format = values.slice(0, 7)
+  if (dateInfo.value[format]) return
   return getMonthInfo({
-    date_month: values,
+    date_month: values
   })
     .then((res) => {
-      dateInfo.value[format] = res.data;
+      dateInfo.value[format] = res.data
     })
     .finally(() => {
-      loadingMap[format] = false;
-    });
+      loadingMap[format] = false
+    })
 }
-const selectPanel = ref(false);
+const selectPanel = ref(false)
 function selectDateFn(value) {
-  const day = dayjs(value.getTime()).format("YYYY-MM-DD");
-  selectDate.value = day;
-  updateWeek();
-  chooseDate.value = day;
-  emit("updateDate", chooseDate.value);
-  selectPanel.value = false;
+  const day = dayjs(value.getTime()).format('YYYY-MM-DD')
+  selectDate.value = day
+  updateWeek()
+  chooseDate.value = day
+  emit('updateDate', chooseDate.value)
+  selectPanel.value = false
 }
 
 // 页面初始化完成后
-selectDateFn(new Date());
+selectDateFn(new Date())
 
-const minDate = dayjs().subtract(7, "year").toDate();
-const maxDate = dayjs().add(7, "year").toDate();
+const minDate = dayjs().subtract(7, 'year').toDate()
+const maxDate = dayjs().add(7, 'year').toDate()
 
 function clickWeek(item) {
-  chooseDate.value = item.dateTime;
-  emit("updateDate", chooseDate.value);
-  scrollToActive();
+  chooseDate.value = item.dateTime
+  emit('updateDate', chooseDate.value)
+  scrollToActive()
 }
 
 function updateTimeRange() {
-  emit("updateTimeRange", {
+  emit('updateTimeRange', {
     start_time: startDate,
-    end_time: endDate,
-  });
+    end_time: endDate
+  })
 }
 
 defineExpose({
-  backToday,
-});
+  backToday
+})
 </script>
 <template>
   <div class="calender">
@@ -368,12 +370,12 @@ defineExpose({
 }
 
 .small {
-  font-size: 14px!important;
-  line-height: 20px!important;
+  font-size: 14px !important;
+  line-height: 20px !important;
 }
 .small-week {
-  font-size: 14px!important;
-  line-height: 48px!important;
+  font-size: 14px !important;
+  line-height: 48px !important;
 }
 .w-14 {
   width: 14.285vw;
@@ -401,7 +403,7 @@ defineExpose({
         font-size: 26px;
         font-weight: 500;
         &::before {
-          content: "";
+          content: '';
           width: 1px;
           height: 20px;
           background-color: #e1e1e1;
@@ -438,7 +440,7 @@ defineExpose({
     font-size: 22px;
     position: relative;
     &::after {
-      content: "";
+      content: '';
       border-radius: 8px;
       background: #f8f8f8;
       width: 32px;

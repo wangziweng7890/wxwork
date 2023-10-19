@@ -4,7 +4,12 @@
       <div class="top">
         <div class="peopleDetail">
           <div>
-            <img v-if="errorImg" :src="headImage" alt="" @error="setDefaultImage" />
+            <img
+              v-if="errorImg"
+              :src="headImage"
+              alt=""
+              @error="setDefaultImage"
+            />
             <img v-else :src="defaultImg" />
           </div>
           <div>
@@ -82,7 +87,10 @@
         <van-tab :title="$t('message.clientTag')"> </van-tab>
       </van-tabs>
       <div class="component">
-        <component :is="componentsName" :detailList="detailList"></component>
+        <OrderDetail v-show="active === 0" :detailList="detailList" />
+        <FamilyDetail v-show="active === 1" :detailList="detailList" />
+        <PaasCertificate v-show="active === 2" :detailList="detailList" />
+        <ClientTag v-show="active === 3" :detailList="detailList" />
       </div>
     </div>
   </div>
@@ -134,7 +142,7 @@ const componentsName = computed(() => {
 const headImage = ref(new URL(`@/assets/defaultimage.png`, import.meta.url))
 const proofImage = async () => {
   const urlArray = await Promise.all(
-    detailList.receipts.map(async item => {
+    detailList.receipts.map(async (item) => {
       const url = await previewOss({ object: item.url })
       return url
     })

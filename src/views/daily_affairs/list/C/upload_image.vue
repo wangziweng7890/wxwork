@@ -1,56 +1,55 @@
 <script setup lang="ts">
-import { previewOss } from "@/api/common/index";
-import { getRecognition } from "@/api/daily_affairs/index";
-import { showImagePreview } from "vant";
-import { uploadFile } from "@/utils/crm-oss";
-import { showToast } from "vant";
+import { previewOss } from '@/api/common/index'
+import { getRecognition } from '@/api/daily_affairs/index'
+import { showImagePreview } from 'vant'
+import { uploadFile } from '@/utils/crm-oss'
+import { showToast } from 'vant'
 
 const props = defineProps({
   ossService: Object,
   resData: Object,
   fn: Function,
   id: Number,
-  type: Number,
-});
-const { t } = useI18n();
+  type: Number
+})
+const { t } = useI18n()
 
-const fileList = ref("");
+const fileList = ref('')
 
 const updateImage = (url: string) => {
   const { cert_type, user_name, user_id } = JSON.parse(
     JSON.stringify(props.resData)
-  );
+  )
   const params = {
     id: props.id,
     user_id,
     user_name,
     cert_type,
-    url,
-  };
+    url
+  }
   props.fn(params).then((rel: any) => {
     // 图片上传成功
-  });
-};
+  })
+}
 // 预览图片
 const previewImage = async (res: string, save?: Boolean) => {
   previewOss({ object: res }).then(async (url) => {
-    fileList.value = url;
+    fileList.value = url
     if (save) {
-      return false;
+      return false
     }
     if (props.resData.cert_type === 3) {
-      let { data } = await getRecognition({ url: res });
+      let { data } = await getRecognition({ url: res })
       if (data !== 1) {
-        fileList.value = "";
+        fileList.value = ''
         return showToast({
-          message: "无法识别收据,请重新上传",
-          icon: "cross",
-        });
+          message: '无法识别收据,请重新上传',
+          icon: 'cross'
+        })
       }
     }
-    updateImage(res);
-
-  });
+    updateImage(res)
+  })
 
   // await previewOss({ object: url }).then((res: any) => {
   //     fileList.value = res
@@ -59,32 +58,32 @@ const previewImage = async (res: string, save?: Boolean) => {
   //     }
   //     updateImage(url)
   // })
-};
+}
 // 上传之后的回调
 const afteruploader = async (file: any) => {
-  const { url }: imageInfo = await uploadFile(file.file); // 用crm上传,否则后端同步到crm中后,crm中会用不了dwp上传的oss
-  previewImage(url);
-};
+  const { url }: imageInfo = await uploadFile(file.file) // 用crm上传,否则后端同步到crm中后,crm中会用不了dwp上传的oss
+  previewImage(url)
+}
 
 onMounted(() => {
   if (props.resData.cert_url) {
-    previewImage(props.resData.cert_url, true);
+    previewImage(props.resData.cert_url, true)
   }
-});
+})
 // 有图片的时候不需要再次执行上传
 const add = () => {
   // return false
-  return !fileList.value;
-};
+  return !fileList.value
+}
 // 预览文件
 const previewFile = () => {
-  showImagePreview([fileList.value]);
-};
+  showImagePreview([fileList.value])
+}
 // 移除图片
 const removeImage = () => {
-  fileList.value = "";
-  updateImage("");
-};
+  fileList.value = ''
+  updateImage('')
+}
 </script>
 <template>
   <template v-if="fileList">
@@ -116,7 +115,7 @@ const removeImage = () => {
       </template>
       <template v-else>
         <div class="not_bacth">
-          {{ t("message.not_batch_text") }}
+          {{ t('message.not_batch_text') }}
         </div>
       </template>
     </div>

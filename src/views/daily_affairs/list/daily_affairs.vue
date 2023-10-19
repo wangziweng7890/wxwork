@@ -7,241 +7,243 @@
  * Copyright: 2023 by Autumn.again, All Rights Reserved.
 -->
 <script setup name="daily_affairs" lang="tsx">
-import PendingList from "./C/pending_list.vue";
-import WorkerPopup from "./C/worker_popup.vue";
-import ExportPopup from "./C/export_popup.vue";
-import weekCalender from "./C/week_calender.vue";
-import SearchForm from "./C/searchForm.vue";
-import { useUserStore } from "@/stores/modules/user";
+import PendingList from './C/pending_list.vue'
+import WorkerPopup from './C/worker_popup.vue'
+import ExportPopup from './C/export_popup.vue'
+import weekCalender from './C/week_calender.vue'
+import SearchForm from './C/searchForm.vue'
+import { useUserStore } from '@/stores/modules/user'
 import {
   getTransactionTaskList,
   getTransactionUserList,
-  getRole,
-} from "@/api/daily_affairs";
-import { showToast } from "vant";
-import dayjs from "dayjs";
+  getRole
+} from '@/api/daily_affairs'
+import { showToast } from 'vant'
+import dayjs from 'dayjs'
 
-const { t, locale } = useI18n();
-const router = useRouter();
-const { setWorkmateList } = useUserStore() as any;
-const isMaster = ref(false);
-const showWeek_Candeler = ref(true);
+const { t, locale } = useI18n()
+const router = useRouter()
+const { setWorkmateList } = useUserStore() as any
+const isMaster = ref(false)
+const showWeek_Candeler = ref(true)
 // 定义搜索参数
 const filterData: filter_params = reactive({
-  customer_name: "",
-  user_id: "", // 香港同事
-  address: "", // 地点
-  task_status: "", // 状态:0待分配,1待办理,2已办理,3已领证
-  start_time: "", // 开始
-  end_time: "", // 结束
+  customer_name: '',
+  user_id: '', // 香港同事
+  address: '', // 地点
+  task_status: '', // 状态:0待分配,1待办理,2已办理,3已领证
+  start_time: '', // 开始
+  end_time: '', // 结束
   is_convert: 1, // 是否转换数据格式为按天统计：1转换,0不转换
   chinese_convert: 1,
-  hideWeekCandeler: 0, // 是否隐藏日历
-});
-const chooseDate = ref("");
+  hideWeekCandeler: 0 // 是否隐藏日历
+})
+const chooseDate = ref('')
 // 展开
-const showBottom = ref(false);
-const showAction = ref(false);
+const showBottom = ref(false)
+const showAction = ref(false)
 // 展示导出选择框
-const showExprot = ref(false);
+const showExprot = ref(false)
 
-const workmateList = ref([]);
-const listData = ref([]);
+const workmateList = ref([])
+const listData = ref([])
 // const date = ref([])
 onMounted(async () => {
-  const { data } = await getRole();
-  isMaster.value = data === "hk_transaction_master";
-  const res = (await getTransactionUserList()) as any;
-  setWorkmateList(res.data);
+  const { data } = await getRole()
+  isMaster.value = data === 'hk_transaction_master'
+  const res = (await getTransactionUserList()) as any
+  setWorkmateList(res.data)
   workmateList.value = [
     {
-      id: "",
-      wework_name: "全部",
+      id: '',
+      wework_name: '全部'
     },
-    ...res.data,
-  ];
-});
+    ...res.data
+  ]
+})
 
 // 记住位置
 const yScroll = ref(null)
 let scrollTop = ''
 onActivated(() => {
-    yScroll.value.scrollTop = scrollTop || 0
+  yScroll.value.scrollTop = scrollTop || 0
 })
 onBeforeRouteLeave((to, from, next) => {
-    scrollTop = yScroll.value.scrollTop
-    next()
+  scrollTop = yScroll.value.scrollTop
+  next()
 })
-
 
 // 点击搜索
 const searchClick = (value?: string | number) => {
   if (value) {
-    showBottom.value = !showBottom.value;
+    showBottom.value = !showBottom.value
   } else {
-    router.push("/daily_affairs/serch_list");
+    router.push('/daily_affairs/serch_list')
   }
-};
-const active = ref("0");
+}
+const active = ref('0')
 
 // 简体中英文繁体字切换
 const changeLang = () => {
-  locale.value = locale.value === "HK" ? "ZH" : "HK";
-  filterData.chinese_convert = locale.value === "HK" ? 1 : 0;
-  getTransactionList(1);
-};
+  locale.value = locale.value === 'HK' ? 'ZH' : 'HK'
+  filterData.chinese_convert = locale.value === 'HK' ? 1 : 0
+  getTransactionList(1)
+}
 
 const higLight = () => {
   const { customer_name, user_id, address, task_status, hideWeekCandeler } =
-    filterData;
+    filterData
   return (
     !!customer_name ||
     !!user_id ||
     !!address ||
-    task_status !== "" ||
+    task_status !== '' ||
     hideWeekCandeler
-  );
-};
+  )
+}
 
-let cacheList = {}; // 缓存数据
+let cacheList = {} // 缓存数据
 // 更新时间范围
 function updateTimeRange(timeRange) {
-  filterData.start_time = timeRange.start_time;
-  filterData.end_time = timeRange.end_time;
-  clearCache();
+  filterData.start_time = timeRange.start_time
+  filterData.end_time = timeRange.end_time
+  clearCache()
 }
 
 // 因为列表是根据搜索条件展示，而缓存又是根据时间缓存，当除了时间以外的参数变化时，需要清除缓存
 function clearCache() {
-  cacheList = {};
+  cacheList = {}
 }
 
 // 监听数值变化就调用接口
 const getTransactionList = async (clear) => {
-  clear && clearCache();
+  clear && clearCache()
   if (cacheList[chooseDate.value] && showWeek_Candeler.value) {
     // 只有没有在弹出层理筛选时间才走缓存
-    listData.value = cacheList[chooseDate.value];
+    listData.value = cacheList[chooseDate.value]
   } else {
-    const res = await getTransactionTaskList(filterData);
-    let i = filterData.start_time;
-    while (dayjs(i).isBefore(dayjs(filterData.end_time)) || dayjs(i).isSame(filterData.end_time)) {
-      cacheList[i] = res.data?.[i] ?? [];
-      i = dayjs(i).add(1, "day").format("YYYY-MM-DD");
+    const res = await getTransactionTaskList(filterData)
+    let i = filterData.start_time
+    while (
+      dayjs(i).isBefore(dayjs(filterData.end_time)) ||
+      dayjs(i).isSame(filterData.end_time)
+    ) {
+      cacheList[i] = res.data?.[i] ?? []
+      i = dayjs(i).add(1, 'day').format('YYYY-MM-DD')
     }
     listData.value = !showWeek_Candeler.value
       ? res.data
-      : cacheList[chooseDate.value];
+      : cacheList[chooseDate.value]
   }
-};
+}
 
 function updateDate(val) {
-  chooseDate.value = val;
-  getTransactionList();
+  chooseDate.value = val
+  getTransactionList()
 }
 
 const click_action = (type?: number) => {
   switch (type) {
     case 0:
     case 1:
-      searchClick(type);
-      break;
+      searchClick(type)
+      break
     default:
-      showAction.value = true;
-      break;
+      showAction.value = true
+      break
   }
-};
+}
 const localeText = computed(() =>
-  locale.value === "HK" ? t("message.hk_batch_check") : t("message.batch_check")
-);
+  locale.value === 'HK' ? t('message.hk_batch_check') : t('message.batch_check')
+)
 // 批量操作控制
-const canBatchAction = ref(false);
+const canBatchAction = ref(false)
 const action_content = computed(function () {
   return [
     {
-      label: t("message.batch_set"),
-      value: 0,
+      label: t('message.batch_set'),
+      value: 0
     },
     {
       label: localeText.value,
-      value: 1,
+      value: 1
     },
     {
-      label: t("message.batch_export"),
-      value: 2,
+      label: t('message.batch_export'),
+      value: 2
     },
     {
-      label: "取消",
-      value: 3,
-    },
-  ];
-});
+      label: '取消',
+      value: 3
+    }
+  ]
+})
 const handler_action = (index?: number) => {
   switch (index) {
     case 0:
       if (listData.value.length) {
-        canBatchAction.value = true;
+        canBatchAction.value = true
       } else {
-        showToast(t("message.not_batch_check_data"));
+        showToast(t('message.not_batch_check_data'))
       }
-      break;
+      break
     case 1:
-      changeLang();
-      break;
+      changeLang()
+      break
     case 2:
-      showExprot.value = true;
-      break;
+      showExprot.value = true
+      break
     default:
-      break;
+      break
   }
-  showAction.value = false;
-};
+  showAction.value = false
+}
 
 // 切换table栏
 const onClickTab = (res: any) => {
-  const { name } = res;
-  filterData.user_id = workmateList.value[name].id;
-  getTransactionList(1);
-};
+  const { name } = res
+  filterData.user_id = workmateList.value[name].id
+  getTransactionList(1)
+}
 
-provide("getTransactionList", getTransactionList);
+provide('getTransactionList', getTransactionList)
 
-const showWorker = ref(false);
+const showWorker = ref(false)
 
-const AllotIds = ref([]);
+const AllotIds = ref([])
 // 确认分配
 const batchAllotClick = () => {
-  AllotIds.value = [];
-  const arr = JSON.parse(JSON.stringify(listData.value));
+  AllotIds.value = []
+  const arr = JSON.parse(JSON.stringify(listData.value))
   arr.map((item) => {
     if (item.checked) {
-      AllotIds.value.push(item.id);
+      AllotIds.value.push(item.id)
     }
-  });
+  })
   if (!AllotIds.value.length) {
-    showToast(t("message.not_batch_set_data"));
-    return false;
+    showToast(t('message.not_batch_set_data'))
+    return false
   }
-  showWorker.value = true;
-};
+  showWorker.value = true
+}
 
-const weekCalenderRef = ref(null);
+const weekCalenderRef = ref(null)
 function showWeekCandeler(val) {
-  showWeek_Candeler.value = val;
+  showWeek_Candeler.value = val
   if (!val) {
-    getTransactionList(1);
+    getTransactionList(1)
   } else {
     nextTick(() => {
-      weekCalenderRef.value.backToday(1);
-    });
+      weekCalenderRef.value.backToday(1)
+    })
   }
-  showBottom.value = false;
+  showBottom.value = false
 }
 </script>
 
 <template>
   <div class="daily x-flex" :class="{ suspend: canBatchAction }">
-    <div class="flex sticky" >
+    <div class="flex sticky">
       <van-tabs
         v-model:active="active"
         class="tables"
@@ -278,7 +280,7 @@ function showWeekCandeler(val) {
       />
       <template v-if="!showWeek_Candeler">
         <div v-for="(item, index) in Object.keys(listData)" :key="index">
-          <div class="listData_title" :class="{'mt-20': index === 0}">
+          <div class="listData_title" :class="{ 'mt-20': index === 0 }">
             {{ item }}
           </div>
           <PendingList
@@ -359,7 +361,7 @@ function showWeekCandeler(val) {
 .y-scroll {
   flex: 1;
   height: 0;
-//   overflow-y: auto;
+  //   overflow-y: auto;
 }
 .x-flex {
   display: flex;
@@ -372,10 +374,10 @@ function showWeekCandeler(val) {
   background: #f8f8f8;
 }
 .sticky {
-    position: sticky;
-    top: 0;
-    z-index: 9999;
-    background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+  background: #fff;
 }
 .flex {
   display: flex;
@@ -443,7 +445,7 @@ function showWeekCandeler(val) {
   }
 }
 .mt-32 {
-  margin-top: 32px
+  margin-top: 32px;
 }
 .hiddenTab {
   // 通过class样式隐藏tab栏
@@ -466,7 +468,7 @@ function showWeekCandeler(val) {
   :deep(.van-tabs__wrap)::before,
   :deep(.calender)::before {
     position: absolute;
-    content: "";
+    content: '';
     width: 100%;
     height: 100%;
     background: rgba(255, 255, 255, 0.2);

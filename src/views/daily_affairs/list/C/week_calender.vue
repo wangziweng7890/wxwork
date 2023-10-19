@@ -210,6 +210,16 @@ function clickWeek(item) {
   scrollToActive()
 }
 
+// 页面返回时通过因为滚动条并不是原来的位置，所以记录一下，通过scrollleft值，如果用scrollToActive会有动画，会闪一下
+let left = 0
+onActivated(() => {
+  document.querySelector('.calender-container').scrollLeft = left
+})
+
+onBeforeRouteLeave(() => {
+  left = document.querySelector('.calender-container').scrollLeft
+})
+
 function updateTimeRange() {
   emit('updateTimeRange', {
     start_time: startDate,

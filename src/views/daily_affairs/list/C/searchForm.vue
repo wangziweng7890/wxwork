@@ -1,171 +1,169 @@
 <script lang="ts" setup>
-import WorkerPopup from "./worker_popup.vue";
-import CalendarPopup from "./calender_popup.vue";
-import { useUserStore } from "@/stores/modules/user";
-const { workmateList } = useUserStore() as any;
-const { t } = useI18n();
+import WorkerPopup from './worker_popup.vue'
+import CalendarPopup from './calender_popup.vue'
+import { useUserStore } from '@/stores/modules/user'
+const { workmateList } = useUserStore() as any
+const { t } = useI18n()
 const props = defineProps({
   filterData: Object,
-  role_key: Boolean,
+  role_key: Boolean
   // loaclDate: String
-});
+})
 const emit = defineEmits([
-  "update:filterData",
-  "getTransactionList",
-  "showWeekCandeler",
-]);
+  'update:filterData',
+  'getTransactionList',
+  'showWeekCandeler'
+])
 const formData = computed({
   get: () => props.filterData,
   set: (value) => {
-    emit("update:filterData", value);
-  },
-});
-const showPicker = ref(false);
+    emit('update:filterData', value)
+  }
+})
+const showPicker = ref(false)
 // 展示同事弹窗
-const showWorker = ref(false);
+const showWorker = ref(false)
 const columns = computed(function () {
   return [
     {
-      label: t("message.address_1"),
-      value: "",
+      label: t('message.address_1'),
+      value: ''
     },
     {
-      label: t("message.address_2"),
-      value: "港岛办事处(湾仔)",
+      label: t('message.address_2'),
+      value: '港岛办事处(湾仔)'
     },
     {
-      label: t("message.address_3"),
-      value: "火炭办事处(火炭)",
+      label: t('message.address_3'),
+      value: '火炭办事处(火炭)'
     },
     {
-      label: t("message.address_4"),
-      value: "屯门办事处(屯门)",
+      label: t('message.address_4'),
+      value: '屯门办事处(屯门)'
     },
     {
-      label: t("message.address_5"),
-      value: "元朗办事处(元朗)",
+      label: t('message.address_5'),
+      value: '元朗办事处(元朗)'
     },
     {
-      label: t("message.address_6"),
-      value: "九龙办事处(长沙湾)",
+      label: t('message.address_6'),
+      value: '九龙办事处(长沙湾)'
     },
     {
-      label: t("message.address_7"),
-      value: "观塘办事处(观塘)",
-    },
-  ];
-});
+      label: t('message.address_7'),
+      value: '观塘办事处(观塘)'
+    }
+  ]
+})
 const stastusList = computed(function () {
   return [
     {
-      label: t("message.waitDistributed"),
-      value: 0,
+      label: t('message.waitDistributed'),
+      value: 0
     },
     {
-      label: t("message.waitProcessed"),
-      value: 1,
+      label: t('message.waitProcessed'),
+      value: 1
     },
     {
-      label: t("message.processed"),
-      value: 2,
+      label: t('message.processed'),
+      value: 2
     },
     {
-      label: t("message.licensed"),
-      value: 3,
-    },
-  ];
-});
+      label: t('message.licensed'),
+      value: 3
+    }
+  ]
+})
 const customFieldName = ref({
-  text: "label",
-  value: "value",
-});
+  text: 'label',
+  value: 'value'
+})
 // 打开弹出层的类型
-const picker_type = ref("");
+const picker_type = ref('')
 // 打开弹出层
 const openPicker = (type?: string) => {
   // type = ''/时间选择，user_id/同事选择，address/地点选择，task_status/状态选择
-  picker_type.value = type;
-  if (type === "user_id") {
-    showWorker.value = true;
+  picker_type.value = type
+  if (type === 'user_id') {
+    showWorker.value = true
   } else {
-    showPicker.value = true;
+    showPicker.value = true
   }
-};
+}
 // 过滤展示标题
 const picker_title = computed(() => {
   switch (picker_type.value) {
-    case "user_id":
-      return t("message.choose_worker");
-    case "address":
-      return t("message.address");
-    case "task_status":
-      return t("message.choose_status");
+    case 'user_id':
+      return t('message.choose_worker')
+    case 'address':
+      return t('message.address')
+    case 'task_status':
+      return t('message.choose_status')
     default:
-      break;
+      break
   }
-});
+})
 
 // 过滤时间/状态
 const fliterValue = () => {
   const user = workmateList.find(
     (item: any) => item.id === formData.value.user_id
-  ) as any;
+  ) as any
   const status = stastusList.value.find(
     (item: any) => item.value === formData.value.task_status
-  ) as any;
+  ) as any
   const address = columns.value.find(
     (item: any) => item.value === formData.value.address
-  ) as any;
+  ) as any
   return {
-    user_name: user ? user.wework_name : "",
-    status_name: status ? status.label : "",
-    address_name: address ? address.label : "",
-  };
-};
+    user_name: user ? user.wework_name : '',
+    status_name: status ? status.label : '',
+    address_name: address ? address.label : ''
+  }
+}
 // popup弹出层确认
 const onConfirm = (values) => {
-  const { selectedOptions } = values;
-  console.log(picker_type.value, selectedOptions[0]?.value);
-  formData.value[picker_type.value] = selectedOptions[0]?.value;
+  const { selectedOptions } = values
+  console.log(picker_type.value, selectedOptions[0]?.value)
+  formData.value[picker_type.value] = selectedOptions[0]?.value
   // if (picker_type.value === 'address' && selectedOptions[0]?.value === '入境无要求') {
   //     formData.value[picker_type.value] = ''
   // }
-  showPicker.value = false;
+  showPicker.value = false
   if (!!formData.value.user_id || !!formData.value.task_status) {
-    fliterValue();
+    fliterValue()
   }
-};
+}
 const new_date = () => {
-  const newDate = new Date();
+  const newDate = new Date()
   return (
     newDate.getFullYear() +
-    "-" +
+    '-' +
     (newDate.getMonth() + 1) +
-    "-" +
+    '-' +
     newDate.getDate()
-  );
-};
-const calendar = ref(null);
+  )
+}
+const calendar = ref(null)
 // 确定搜索或重置
 const search = (type?: string) => {
   if (type) {
     // 重置表单
     Object.keys(formData.value).map((item: string) => {
-        !['chinese_convert', 'is_convert'].includes(item) && (formData.value[item] = "");
-    });
-    calendar.value.time_text = "";
+      !['chinese_convert', 'is_convert'].includes(item) &&
+        (formData.value[item] = '')
+    })
+    calendar.value.time_text = ''
   } else {
-    emit(
-      "showWeekCandeler", 
-      !formData.value.hideWeekCandeler
-    );
+    emit('showWeekCandeler', !formData.value.hideWeekCandeler)
   }
-};
+}
 </script>
 <template>
   <div class="search">
     <div class="search_title fw-500">
-      {{ t("message.flter_text") }}
+      {{ t('message.flter_text') }}
     </div>
     <!-- <van-form @submit="onSubmit"> -->
     <van-cell-group inset>
@@ -250,7 +248,7 @@ const search = (type?: string) => {
     align-items: center;
 
     &::after {
-      content: "";
+      content: '';
       position: absolute;
       height: 1px;
       width: calc(100% - 84px);
@@ -273,7 +271,7 @@ const search = (type?: string) => {
   position: relative;
   &::after {
     position: absolute;
-    content: "";
+    content: '';
     width: calc(100% - 64px);
     height: 1px;
     background: #f0f0f0;

@@ -70,22 +70,22 @@
         "rules": {
             "jsonc/indent": [
                 "error",
-                4
+                2
             ],
             "yml/indent": [
                 "error",
-                4
+                2
             ],
             "import/no-mutable-exports": [
                 "error"
             ],
             "vue/html-indent": [
                 "error",
-                4,
+                2,
                 {
                     "attribute": 1,
                     "baseIndent": 1,
-                    "closeBracket": 0,
+                    "closeBracket": 1,
                     "alignAttributesVertically": true,
                     "ignores": []
                 }
@@ -113,7 +113,7 @@
             ],
             "indent": [
                 "error",
-                4
+                2
             ],
             "no-console": "off",
             "eol-last": 0,

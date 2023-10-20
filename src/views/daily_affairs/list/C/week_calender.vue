@@ -158,7 +158,7 @@ async function scrollToActive() {
 async function calWeekInfo() {
   const obj = new Set()
   dateList.value.map((item) => {
-    obj.add(item.year + '-' + item.month + '-01')
+    item.dateTime && obj.add(item.dateTime.slice(0, 7))
   })
   await Promise.all(
     Array.from(obj).map(async (key) => {
@@ -166,7 +166,7 @@ async function calWeekInfo() {
     })
   )
   dateList.value = dateList.value.map((item) => {
-    const day = item.year + '-' + item.month
+    const day = item.dateTime.slice(0, 7)
     return {
       ...item,
       info: dateInfo.value?.[day]?.[item.date - 1]

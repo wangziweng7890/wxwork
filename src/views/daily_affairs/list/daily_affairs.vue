@@ -376,7 +376,7 @@ function showWeekCandeler(val) {
 .sticky {
   position: sticky;
   top: 0;
-  z-index: 9999;
+  z-index: 99;
   background: #fff;
 }
 .flex {

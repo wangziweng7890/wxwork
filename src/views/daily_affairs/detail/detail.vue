@@ -186,7 +186,9 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .detailPage {
+  min-height: 100vh;
   font-size: 28px;
+  background-color: #fff;
 
   .mb-32 {
     margin-bottom: 32px;

@@ -28,8 +28,8 @@
               <div style="word-break: break-all">
                 {{ $t('message.liveCountry') }}:
                 {{
-                  `${detailList.live_country?.area.join('')}${
-                    detailList.live_country?.details
+                  `${detailList.live_country?.area?.join('') ?? ''}${
+                    detailList.live_country?.details ?? ''
                   }`
                 }}
               </div>

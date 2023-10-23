@@ -295,6 +295,7 @@ function showWeekCandeler(val) {
         >
           暂无搜索数据
         </div>
+        <div v-else class="not_more flex-center-center">没有更多了</div>
       </template>
       <template v-else>
         <PendingList
@@ -302,6 +303,7 @@ function showWeekCandeler(val) {
           :canBatchAction="canBatchAction"
           :role_key="isMaster"
         />
+        <div v-if="listData.length" class="not_more flex-center-center">没有更多了</div>
       </template>
     </div>
     <div
@@ -461,6 +463,11 @@ function showWeekCandeler(val) {
 .not_data {
   font-size: 28px;
   padding-top: 50px;
+  color: #999;
+}
+.not_more {
+  font-size: 28px;
+  padding-bottom: 24px;
   color: #999;
 }
 // 批量操作的之后中止其他操作

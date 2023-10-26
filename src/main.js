@@ -9,7 +9,7 @@
 import './assets/base.css'
 import init from '@/config/init'
 import { createApp } from 'vue'
-
+import { initSentry } from './sentry';
 import App from './App.vue'
 import router from './router'
 import 'vant/es/toast/style'
@@ -24,6 +24,7 @@ const setupAll = async () => {
   const app = createApp(App);
   await setupStore(app);
   app.use(router).use(i18n);
+  initSentry(app, router)
   app.mount("#app");
 };
 

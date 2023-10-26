@@ -16,6 +16,7 @@ import { VantResolver } from "unplugin-vue-components/resolvers";
 import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
 import iconfontLoader, { FileSystemIconLoader } from '@galaxy-fe/vite-plugin-unocss-iconfont'
+import { sentryVitePlugin } from '@sentry/vite-plugin'
 
 export default ({ mode }) => {
   const env = loadEnv(mode, process.cwd()); // 获取.env文件里定义的环境变量
@@ -91,6 +92,24 @@ export default ({ mode }) => {
         ],
         vueTemplate: true,
     }),
+    sentryVitePlugin({
+        org: 'sentry',
+        project: 'workwexin-h5-siderbar',
+        url: 'https://dev-sentry.galaxy-immi.com/',
+
+        // Auth tokens can be obtained from https://sentry.io/settings/account/api/auth-tokens/
+        // and need `project:releases` and `org:read` scopes
+        authToken: 'd2febfa7b445484e8f8475b3b6883f3c26e704bac2e5453b8e6fdfde7a646af4',
+        release: {
+            cleanArtifacts: true,
+            name: '0.0.0',
+            uploadLegacySourcemaps: {
+                paths: [mode === 'prod' ? './main' :'./test'],
+                // urlPrefix: '~/assets',
+                ignore: ['./node_modules'],
+            },
+        },
+    })
     ],
     resolve: {
       alias: {
@@ -108,6 +127,7 @@ export default ({ mode }) => {
     },
     build: {
       outDir: env.VITE_OUT_DIR || "dist",
+      sourcemap: true,
       cssCodeSplit: false, //默认ture,将css分割提取到css文件中，false将全部css提取到一个文件里
     },
     server: {

@@ -11,6 +11,10 @@
         "eslint": "eslint . --fix"
     },
     "dependencies": {
+        "@sentry/integrations": "^7.75.1",
+        "@sentry/tracing": "^7.75.1",
+        "@sentry/vite-plugin": "^2.9.0",
+        "@sentry/vue": "^7.75.1",
         "@wecom/jssdk": "^1.4.3",
         "ali-oss": "^6.18.1",
         "axios": "^1.4.0",

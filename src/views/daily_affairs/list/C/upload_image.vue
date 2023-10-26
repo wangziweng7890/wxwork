@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { previewOss } from '@/api/common/index'
+import { previewOss, uploadFile } from '@/api/common/index'
 import { getRecognition } from '@/api/daily_affairs/index'
 import { showImagePreview } from 'vant'
-import { uploadFile } from '@/utils/crm-oss'
+// import { uploadFile } from '@/utils/crm-oss'
 import { showToast } from 'vant'
 
 const props = defineProps({
@@ -61,8 +61,11 @@ const previewImage = async (res: string, save?: Boolean) => {
 }
 // 上传之后的回调
 const afteruploader = async (file: any) => {
-  const { url }: imageInfo = await uploadFile(file.file) // 用crm上传,否则后端同步到crm中后,crm中会用不了dwp上传的oss
-  previewImage(url)
+  console.time('埋点上传时间')
+  const res = await uploadFile(file.file) // 香港网络上传oss客户反馈经常报失败，使用后端代理上传
+  console.timeEnd('埋点上传时间')
+  // const { url }: imageInfo = await uploadFile(file.file) // 用crm上传,否则后端同步到crm中后,crm中会用不了dwp上传的oss
+  previewImage(res.data.file_url)
 }
 
 onMounted(() => {

@@ -25,7 +25,7 @@ export const previewOss = params => http.get(`/service-acceleration/push/storage
 // 换取dwptoken
 export const getDwptoken = token => {
     const userStore = useUserStore();
-    return http.get(`/customer-service/transaction/dwp-token`, { params: {}, 
+    return http.get(`/customer-service/transaction/dwp-token`, { params: {},
         headers: { 'Token': token }
      })
 }
@@ -35,3 +35,13 @@ export const workWechatOauth = params => api.get(`/frontend/work-wechat/oauth`, 
 
 // 获取签名
 export const getWorkWechatConfig = params => api.get(`/frontend/work-wechat/config`, { params })
+
+// 后端中转上传
+export const uploadFile = params => {
+  const formData = new FormData();
+  formData.append('file', params);
+  return api.post(`/api/customer-service/transaction/upload`, formData ,{ headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}

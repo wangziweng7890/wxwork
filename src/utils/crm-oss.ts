@@ -15,7 +15,9 @@ export const fetchOss = async () => {
         const md5_encrypt = cryptoAES.MD5(md5_key).substring(8, 24)
         const decryptData = cryptoAES.decrypt(res, md5_encrypt)
         // console.log(OSS, 'oss2', new OSS(JSON.parse(decryptData)))
-        oss = new OSS(JSON.parse(decryptData))
+        const data = JSON.parse(decryptData)
+        data.region = 'oss-accelerate' // 走香港
+        oss = new OSS(data)
         return oss
     })
 }

@@ -67,8 +67,8 @@ const afteruploader = async (file: any) => {
     // const res = await uploadFile(file.file) // 香港网络上传oss客户反馈经常报失败，使用后端代理上传
     const timeEnd: any = new Date()
     const { url }: imageInfo = await uploadFile(file.file) // 用crm上传,否则后端同步到crm中后,crm中会用不了dwp上传的oss
-    log(`${timeEnd - timeStart}：size ${file.size}`, 'time-upload')
     previewImage(url)
+    log(`${timeEnd - timeStart}：size ${(file.file?.size || 0) / 1024}`, 'time-upload')
   } catch (error) {
     log(`上传失败`, 'time-upload')
     throw error

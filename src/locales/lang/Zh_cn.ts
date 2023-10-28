@@ -107,6 +107,8 @@ const Zh_message = {
             get_visa_text: '是否代领',
             dateSelect: '日期选择',
             searchPlaceholder: '输入客户姓名',
+            batchAllocation:'确定是否批量转为"待分配"状态',
+            allocation:'确定是否转为"待分配"状态'
         }
     }
 }

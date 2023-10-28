@@ -352,6 +352,7 @@ function showWeekCandeler(val) {
     </van-popup>
     <WorkerPopup
       v-model:showWorker="showWorker"
+      :canBatchAction="canBatchAction"
       :formData="null"
       :ids="AllotIds"
     />

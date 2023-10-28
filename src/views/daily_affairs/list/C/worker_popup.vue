@@ -15,7 +15,8 @@ const { t } = useI18n()
 const props = defineProps({
   showWorker: Boolean,
   formData: Object,
-  ids: Array
+  ids: Array,
+  canBatchAction:Boolean
 })
 const emit = defineEmits([
   'update:showWorker',
@@ -23,7 +24,10 @@ const emit = defineEmits([
   'getTransactionList'
 ])
 const _visible = computed({
-  get: () => props.showWorker,
+  get: () => {
+    props.showWorker && onAddData()
+    return props.showWorker
+  },
   set: (value) => {
     emit('update:showWorker', value)
   }
@@ -35,7 +39,7 @@ const fliterData = computed({
   }
 })
 
-const { workmateList } = useUserStore() as any
+let { workmateList } = useUserStore() as any
 
 const customFieldName = ref({
   text: 'wework_name',
@@ -51,6 +55,11 @@ const onConfirm = (values) => {
   // formData.value[picker_type.value] = selectedOptions[0]?.value
   _visible.value = false
   user_info.value = selectedOptions[0]
+  // id 为0时 转为待分配
+  if (selectedOptions[0].id === 0) {
+    canTransmit.value = true
+    return
+  }
   if (!!fliterData.value) {
     fliterData.value.user_id = selectedOptions[0]?.id || ''
   } else {
@@ -68,7 +77,7 @@ const confirm = () => {
   PostalloTtask(params)
     .then((res: any) => {
       if (res.code === 200) {
-        showToast('转交任务成功')
+        user_info.value.id === 0 ? showToast(`已${props.canBatchAction ? '批量' : ''}转为待分配`) : showToast('转交任务成功')
         if (getTransactionList) {
           getTransactionList(1)
         }
@@ -77,6 +86,15 @@ const confirm = () => {
     .finally(() => {
       canTransmit.value = false
     })
+}
+// 给workmateList首项添加数据
+const newWorkmateList = ref([])
+function onAddData() {
+  if (props.canBatchAction) {
+    newWorkmateList.value = [{ id: 0, wework_name: '批量转为待分配状态' },...workmateList]
+  } else {
+    newWorkmateList.value = [{ id: 0, wework_name: '转为待分配状态' },...workmateList]
+  }
 }
 </script>
 <template>
@@ -88,7 +106,7 @@ const confirm = () => {
       :confirmButtonext="t('message.confirm_text')"
     >
       <van-picker
-        :columns="workmateList"
+        :columns="newWorkmateList"
         @confirm="onConfirm"
         @cancel="_visible = false"
         :columns-field-names="customFieldName"
@@ -108,8 +126,13 @@ const confirm = () => {
       closeOnClickOverlay
     >
       <div class="title">
-        {{ t('message.set_warning_text') }} "{{ user_info.wework_name || '-' }}"
-        ？
+        <span v-if="user_info.id === 0">
+          {{ props.canBatchAction ? t('message.batchAllocation') : t('message.allocation')}}"？
+        </span>
+        <span v-else>
+          {{ t('message.set_warning_text') }} "{{ user_info.wework_name || '-' }}"？
+        </span>
+
       </div>
       <div class="buttones d-flex flex-jusify-between">
         <div class="flex-center-center flex-1" @click="canTransmit = false">

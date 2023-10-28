@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { previewOss, uploadFile } from '@/api/common/index'
+import { previewOss } from '@/api/common/index'
 import { getRecognition } from '@/api/daily_affairs/index'
 import { showImagePreview } from 'vant'
-// import { uploadFile } from '@/utils/crm-oss'
+import { uploadFile } from '@/utils/crm-oss'
 import { showToast } from 'vant'
 import { log } from '@/log'
 
@@ -64,11 +64,11 @@ const previewImage = async (res: string, save?: Boolean) => {
 const afteruploader = async (file: any) => {
   const timeStart: any = new Date()
   try {
-    const res = await uploadFile(file.file) // 香港网络上传oss客户反馈经常报失败，使用后端代理上传
+    // const res = await uploadFile(file.file) // 香港网络上传oss客户反馈经常报失败，使用后端代理上传
     const timeEnd: any = new Date()
-    log(`${timeEnd - timeStart}`, 'time-upload')
-    // const { url }: imageInfo = await uploadFile(file.file) // 用crm上传,否则后端同步到crm中后,crm中会用不了dwp上传的oss
-    previewImage(res.data.file_url)
+    const { url }: imageInfo = await uploadFile(file.file) // 用crm上传,否则后端同步到crm中后,crm中会用不了dwp上传的oss
+    previewImage(url)
+    log(`${timeEnd - timeStart}：size ${(file.file?.size || 0) / 1024}`, 'time-upload')
   } catch (error) {
     log(`上传失败`, 'time-upload')
     throw error

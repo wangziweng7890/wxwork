@@ -244,118 +244,56 @@ function showWeekCandeler(val) {
 <template>
   <div class="daily x-flex" :class="{ suspend: canBatchAction }">
     <div class="flex sticky">
-      <van-tabs
-        v-model:active="active"
-        class="tables"
-        :class="{ hiddenTab: !isMaster }"
-        @click-tab="onClickTab"
-      >
-        <van-tab
-          :title="item.wework_name || '-'"
-          v-for="(item, index) in workmateList"
-          :key="index"
-          class="table_items"
-        >
+      <van-tabs v-model:active="active" class="tables" :class="{ hiddenTab: !isMaster }" @click-tab="onClickTab">
+        <van-tab :title="item.wework_name || '-'" v-for="(item, index) in workmateList" :key="index" class="table_items">
         </van-tab>
       </van-tabs>
       <div class="title_action" v-if="isMaster">
         <i class="iconfont icon-icon_sousuo" @click="searchClick()"></i>
-        <i
-          class="iconfont icon-icon_luodou"
-          @click="searchClick('fliter')"
-          :class="{ highLight: higLight() }"
-        ></i>
+        <i class="iconfont icon-icon_luodou" @click="searchClick('fliter')" :class="{ highLight: higLight() }"></i>
       </div>
     </div>
     <div class="y-scroll" ref="yScroll">
-      <weekCalender
-        @updateDate="updateDate"
-        :role_key="isMaster"
-        :highLight="higLight()"
-        :language="locale"
-        @click_action="click_action"
-        @updateTimeRange="updateTimeRange"
-        ref="weekCalenderRef"
-        v-if="showWeek_Candeler"
-      />
+      <weekCalender @updateDate="updateDate" :role_key="isMaster" :highLight="higLight()" :language="locale"
+        @click_action="click_action" @updateTimeRange="updateTimeRange" ref="weekCalenderRef" v-if="showWeek_Candeler" />
       <template v-if="!showWeek_Candeler">
         <div v-for="(item, index) in Object.keys(listData)" :key="index">
           <div class="listData_title" :class="{ 'mt-20': index === 0 }">
             {{ item }}
           </div>
-          <PendingList
-            :listData="listData[item]"
-            :canBatchAction="canBatchAction"
-            :role_key="isMaster"
-          />
+          <PendingList :listData="listData[item]" :canBatchAction="canBatchAction" :role_key="isMaster" />
         </div>
-        <div
-          v-if="!Object.keys(listData).length"
-          class="not_data flex-center-center"
-        >
+        <div v-if="!Object.keys(listData).length" class="not_data flex-center-center">
           暂无搜索数据
         </div>
         <div v-else class="not_more flex-center-center">没有更多了</div>
       </template>
       <template v-else>
-        <PendingList
-          :listData="listData"
-          :canBatchAction="canBatchAction"
-          :role_key="isMaster"
-        />
+        <PendingList :listData="listData" :canBatchAction="canBatchAction" :role_key="isMaster" />
         <div v-if="listData.length" class="not_more flex-center-center">没有更多了</div>
       </template>
     </div>
-    <div
-      class="batch_buttones flex-jusify-between d-flex"
-      v-if="canBatchAction"
-    >
+    <div class="batch_buttones flex-jusify-between d-flex" v-if="canBatchAction">
       <div class="flex-center-center" @click="canBatchAction = false">取消</div>
       <div class="flex-center-center" @click="batchAllotClick">分配</div>
     </div>
-    <van-popup
-      v-model:show="showBottom"
-      round
-      position="bottom"
-      :style="{ maxHeight: '80%', minHeight: '30%' }"
-      close-icon="close"
-      closeable
-    >
-      <SearchForm
-        v-model:filterData="filterData"
-        :role_key="isMaster"
-        @getTransactionList="getTransactionList"
-        @showWeekCandeler="showWeekCandeler"
-      />
+    <van-popup v-model:show="showBottom" round position="bottom" :style="{ maxHeight: '80%', minHeight: '30%' }"
+      close-icon="close" closeable>
+      <SearchForm v-model:filterData="filterData" :role_key="isMaster" @getTransactionList="getTransactionList"
+        @showWeekCandeler="showWeekCandeler" />
     </van-popup>
-    <van-popup
-      v-model:show="showAction"
-      round
-      position="bottom"
-      :style="{ maxHeight: '80%', minHeight: '30%' }"
-      close-icon="close"
-      closeable
-    >
+    <van-popup v-model:show="showAction" round position="bottom" :style="{ maxHeight: '80%', minHeight: '30%' }"
+      close-icon="close" closeable>
       <div class="actiones">
         <div class="actiones_title fw-500">更多操作</div>
-        <div
-          v-for="(item, index) in isMaster
-            ? action_content
-            : action_content.slice(1)"
-          :key="index"
-          class="actiones_button"
-          @click="handler_action(item.value)"
-        >
+        <div v-for="(item, index) in isMaster
+          ? action_content
+          : action_content.slice(1)" :key="index" class="actiones_button" @click="handler_action(item.value)">
           {{ item.label }}
         </div>
       </div>
     </van-popup>
-    <WorkerPopup
-      v-model:showWorker="showWorker"
-      :canBatchAction="canBatchAction"
-      :formData="null"
-      :ids="AllotIds"
-    />
+    <WorkerPopup v-model:showWorker="showWorker" :canBatchAction="canBatchAction" :formData="null" :ids="AllotIds" />
     <ExportPopup v-model:showExprot="showExprot" />
   </div>
 </template>
@@ -366,26 +304,31 @@ function showWeekCandeler(val) {
   height: 0;
   //   overflow-y: auto;
 }
+
 .x-flex {
   display: flex;
   flex-direction: column;
 }
+
 .daily {
   position: relative;
   font-size: 28px;
   min-height: 100%;
   background: #f8f8f8;
 }
+
 .sticky {
   position: sticky;
   top: 0;
   z-index: 99;
   background: #fff;
 }
+
 .flex {
   display: flex;
   align-items: center;
 }
+
 .title_action {
   display: flex;
   justify-content: space-between;
@@ -395,45 +338,57 @@ function showWeekCandeler(val) {
   background: #fff;
   padding: 0 32px 0 22px;
   border-bottom: 1px solid #f0f0f0;
+
   .iconfont {
     font-size: 42px;
   }
+
   .highLight {
     color: #198cff;
   }
+
   // background: linear-gradient(to right, transparent 0%, #fff 25%);
   // background: linear-gradient(270deg, #FFF 0%, #FFF 81.31%, rgba(255, 255, 255, 0.00) 100%);
 }
+
 .tables {
   flex: 1;
   width: 0;
+
   :deep(.van-tabs__content) {
     flex: 1;
   }
+
   :deep(.van-tab__text) {
     font-size: 34px;
     color: #888f98;
     flex: 1;
   }
+
   :deep(.van-tab--active) {
     .van-tab__text {
       color: #198cff;
       font-weight: 600;
     }
   }
+
   :deep(.van-tabs__line) {
     width: 34px;
   }
 }
+
 :deep(.van-tabs__nav--complete) {
   padding-left: 0;
 }
+
 .actiones {
   padding: 32px 42px 0;
+
   &_title {
     font-size: 34px;
     padding-bottom: 32px;
   }
+
   &_button {
     color: #222222;
     height: 104px;
@@ -442,20 +397,25 @@ function showWeekCandeler(val) {
     justify-content: center;
     align-items: center;
     border-top: 1px solid #f0f0f0;
+
     &:last-of-type {
       color: #909090;
     }
   }
 }
+
 .mt-32 {
   margin-top: 32px;
 }
+
 .hiddenTab {
+
   // 通过class样式隐藏tab栏
   :deep(.van-tabs__wrap) {
     display: none;
   }
 }
+
 .listData_title {
   color: #888f98;
   padding-left: 40px;
@@ -466,13 +426,16 @@ function showWeekCandeler(val) {
   padding-top: 50px;
   color: #999;
 }
+
 .not_more {
   font-size: 28px;
   padding-bottom: 24px;
   color: #999;
 }
+
 // 批量操作的之后中止其他操作
 .suspend {
+
   :deep(.van-tabs__wrap)::before,
   :deep(.calender)::before {
     position: absolute;
@@ -483,13 +446,16 @@ function showWeekCandeler(val) {
     z-index: 999;
   }
 }
+
 :deep(.van-tabs__wrap),
 :deep(.calender) {
   position: relative;
 }
+
 :deep(.van-tabs__wrap) {
   border-bottom: 1px solid #f0f0f0;
 }
+
 .batch_buttones {
   position: sticky;
   bottom: 0;
@@ -501,11 +467,13 @@ function showWeekCandeler(val) {
   border-top: 1px solid #f0f0f0;
   padding: 0 32px;
   width: 100%;
+
   div {
     height: 96px;
     width: 330px;
     border-radius: 16px;
     background: #f8f9fc;
+
     &:last-of-type {
       background-color: #198cff;
       color: #fff;

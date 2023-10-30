@@ -16,7 +16,7 @@ const props = defineProps({
   showWorker: Boolean,
   formData: Object,
   ids: Array,
-  canBatchAction:Boolean
+  canBatchAction: Boolean
 })
 const emit = defineEmits([
   'update:showWorker',
@@ -91,26 +91,17 @@ const confirm = () => {
 const newWorkmateList = ref([])
 function onAddData() {
   if (props.canBatchAction) {
-    newWorkmateList.value = [{ id: 0, wework_name: '批量转为待分配状态' },...workmateList]
+    newWorkmateList.value = [{ id: 0, wework_name: '批量转为待分配状态' }, ...workmateList]
   } else {
-    newWorkmateList.value = [{ id: 0, wework_name: '转为待分配状态' },...workmateList]
+    newWorkmateList.value = [{ id: 0, wework_name: '转为待分配状态' }, ...workmateList]
   }
 }
 </script>
 <template>
   <div>
-    <van-popup
-      v-model:show="_visible"
-      position="bottom"
-      round
-      :confirmButtonext="t('message.confirm_text')"
-    >
-      <van-picker
-        :columns="newWorkmateList"
-        @confirm="onConfirm"
-        @cancel="_visible = false"
-        :columns-field-names="customFieldName"
-      >
+    <van-popup v-model:show="_visible" position="bottom" round :confirmButtonext="t('message.confirm_text')">
+      <van-picker :columns="newWorkmateList" @confirm="onConfirm" @cancel="_visible = false"
+        :columns-field-names="customFieldName">
         <template #title>
           <div class="popup_title">
             {{ t('message.choose_worker') }}
@@ -118,16 +109,11 @@ function onAddData() {
         </template>
       </van-picker>
     </van-popup>
-    <van-dialog
-      v-model:show="canTransmit"
-      title=""
-      :show-confirm-button="false"
-      class="dialog_worker"
-      closeOnClickOverlay
-    >
+    <van-dialog v-model:show="canTransmit" title="" :show-confirm-button="false" class="dialog_worker"
+      closeOnClickOverlay>
       <div class="title">
         <span v-if="user_info.id === 0">
-          {{ props.canBatchAction ? t('message.batchAllocation') : t('message.allocation')}}"？
+          {{ props.canBatchAction ? t('message.batchAllocation') : t('message.allocation') }}"？
         </span>
         <span v-else>
           {{ t('message.set_warning_text') }} "{{ user_info.wework_name || '-' }}"？
@@ -151,19 +137,23 @@ function onAddData() {
 .popup_title {
   font-size: 34px;
 }
+
 .w-20px {
   width: 20px;
 }
+
 :deep(.dialog_worker) {
   height: 322px;
   border-radius: 24px;
   background: #fff;
   padding: 62px 32px 32px;
   font-size: 32px;
+
   .title {
     padding: 0 12px;
     height: 132px;
   }
+
   .buttones {
     font-size: 28px;
     font-weight: 500;
@@ -174,6 +164,7 @@ function onAddData() {
       border-radius: 16px;
       background: #198cff;
       color: #fff;
+
       &:first-of-type {
         background: #fff;
         color: #198cff;

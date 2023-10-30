@@ -107,6 +107,8 @@ const HK_message = {
             get_visa_text: '是否代領',
             dateSelect: '日期選擇',
             searchPlaceholder: '輸入客戶姓名',
+            batchAllocation: '確定是否批量轉為"待分配"狀態',
+            allocation: '確定是否轉為"待分配"狀態'
         }
     }
 }

@@ -15,7 +15,8 @@ const { t } = useI18n()
 const props = defineProps({
   showWorker: Boolean,
   formData: Object,
-  ids: Array
+  ids: Array,
+  canBatchAction: Boolean
 })
 const emit = defineEmits([
   'update:showWorker',
@@ -23,7 +24,10 @@ const emit = defineEmits([
   'getTransactionList'
 ])
 const _visible = computed({
-  get: () => props.showWorker,
+  get: () => {
+    props.showWorker && onAddData()
+    return props.showWorker
+  },
   set: (value) => {
     emit('update:showWorker', value)
   }
@@ -35,7 +39,7 @@ const fliterData = computed({
   }
 })
 
-const { workmateList } = useUserStore() as any
+let { workmateList } = useUserStore() as any
 
 const customFieldName = ref({
   text: 'wework_name',
@@ -51,6 +55,11 @@ const onConfirm = (values) => {
   // formData.value[picker_type.value] = selectedOptions[0]?.value
   _visible.value = false
   user_info.value = selectedOptions[0]
+  // id 为0时 转为待分配
+  if (selectedOptions[0].id === 0) {
+    canTransmit.value = true
+    return
+  }
   if (!!fliterData.value) {
     fliterData.value.user_id = selectedOptions[0]?.id || ''
   } else {
@@ -68,7 +77,7 @@ const confirm = () => {
   PostalloTtask(params)
     .then((res: any) => {
       if (res.code === 200) {
-        showToast('转交任务成功')
+        user_info.value.id === 0 ? showToast(`已${props.canBatchAction ? '批量' : ''}转为待分配`) : showToast('转交任务成功')
         if (getTransactionList) {
           getTransactionList(1)
         }
@@ -78,21 +87,21 @@ const confirm = () => {
       canTransmit.value = false
     })
 }
+// 给workmateList首项添加数据
+const newWorkmateList = ref([])
+function onAddData() {
+  if (props.canBatchAction) {
+    newWorkmateList.value = [{ id: 0, wework_name: '批量转为待分配状态' }, ...workmateList]
+  } else {
+    newWorkmateList.value = [{ id: 0, wework_name: '转为待分配状态' }, ...workmateList]
+  }
+}
 </script>
 <template>
   <div>
-    <van-popup
-      v-model:show="_visible"
-      position="bottom"
-      round
-      :confirmButtonext="t('message.confirm_text')"
-    >
-      <van-picker
-        :columns="workmateList"
-        @confirm="onConfirm"
-        @cancel="_visible = false"
-        :columns-field-names="customFieldName"
-      >
+    <van-popup v-model:show="_visible" position="bottom" round :confirmButtonext="t('message.confirm_text')">
+      <van-picker :columns="newWorkmateList" @confirm="onConfirm" @cancel="_visible = false"
+        :columns-field-names="customFieldName">
         <template #title>
           <div class="popup_title">
             {{ t('message.choose_worker') }}
@@ -100,16 +109,16 @@ const confirm = () => {
         </template>
       </van-picker>
     </van-popup>
-    <van-dialog
-      v-model:show="canTransmit"
-      title=""
-      :show-confirm-button="false"
-      class="dialog_worker"
-      closeOnClickOverlay
-    >
+    <van-dialog v-model:show="canTransmit" title="" :show-confirm-button="false" class="dialog_worker"
+      closeOnClickOverlay>
       <div class="title">
-        {{ t('message.set_warning_text') }} "{{ user_info.wework_name || '-' }}"
-        ？
+        <span v-if="user_info.id === 0">
+          {{ props.canBatchAction ? t('message.batchAllocation') : t('message.allocation') }}"？
+        </span>
+        <span v-else>
+          {{ t('message.set_warning_text') }} "{{ user_info.wework_name || '-' }}"？
+        </span>
+
       </div>
       <div class="buttones d-flex flex-jusify-between">
         <div class="flex-center-center flex-1" @click="canTransmit = false">
@@ -128,19 +137,23 @@ const confirm = () => {
 .popup_title {
   font-size: 34px;
 }
+
 .w-20px {
   width: 20px;
 }
+
 :deep(.dialog_worker) {
   height: 322px;
   border-radius: 24px;
   background: #fff;
   padding: 62px 32px 32px;
   font-size: 32px;
+
   .title {
     padding: 0 12px;
     height: 132px;
   }
+
   .buttones {
     font-size: 28px;
     font-weight: 500;
@@ -151,6 +164,7 @@ const confirm = () => {
       border-radius: 16px;
       background: #198cff;
       color: #fff;
+
       &:first-of-type {
         background: #fff;
         color: #198cff;

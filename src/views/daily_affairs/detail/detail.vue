@@ -57,7 +57,7 @@
               class="proof"
               :class="[
                 'proof',
-                detailList.receipts?.length < 1 ? 'disable' : ''
+                detailList.receipts?.length > 0 ? '' : 'disable'
               ]"
               @click="proofImage"
             >

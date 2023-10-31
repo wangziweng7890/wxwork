@@ -14,6 +14,7 @@ import * as wx from '@wecom/jssdk'
 // 企业微信jsdk授权
 export const agentConfig = (jsApiList) => {
     return new Promise(async (resolve, reject) => {
+        console.time('SDK授权时间')
         const agentId = getAgentid()
         wx.register({
             corpId: import.meta.env.VITE_APPID, // 必填，企业微信的corpid，必须与当前登录的企业一致
@@ -29,7 +30,7 @@ export const agentConfig = (jsApiList) => {
             },
             onAgentConfigSuccess: (res) => {
                 // 授权jsdk成功
-                console.log('授权jsdk成功:', res)
+                console.timeEnd('SDK授权时间')
                 resolve()
             },
             onAgentConfigFail: (res) => {
@@ -39,7 +40,7 @@ export const agentConfig = (jsApiList) => {
                 if (res.errMsg.indexOf("function not exist") > -1) {
                     alert("版本过低请升级")
                 }
-            }
+            },
         })
     })
 }

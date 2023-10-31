@@ -5,6 +5,7 @@ import { showImagePreview } from 'vant'
 import { uploadFile } from '@/utils/crm-oss'
 import { showToast } from 'vant'
 import { log } from '@/log'
+import { h5CompressImage } from '@/utils/imageCompress'
 
 const props = defineProps({
   ossService: Object,
@@ -61,14 +62,25 @@ const previewImage = async (res: string, save?: Boolean) => {
   // })
 }
 // 上传之后的回调
-const afteruploader = async (file: any) => {
+const afteruploader = async (fileObj: any) => {
+  let file = fileObj.file
+  console.log('文件类型：' + file.type)
+  try {
+    // 先压缩，如果压缩失败，则上传原件
+    console.log('压缩前大小：' + parseInt(file.size / 1024))
+    const res = await h5CompressImage(file)
+    file = res.file
+    console.log('压缩后大小：' + parseInt(file.size / 1024))
+  } catch (error) {
+    console.log('压缩图片失败:' + error)
+  }
+
   const timeStart: any = new Date()
   try {
-    // const res = await uploadFile(file.file) // 香港网络上传oss客户反馈经常报失败，使用后端代理上传
-    const { url }: imageInfo = await uploadFile(file.file) // 用crm上传,否则后端同步到crm中后,crm中会用不了dwp上传的oss
+    const { url }: imageInfo = await uploadFile(file) // 用crm上传,否则后端同步到crm中后,crm中会用不了dwp上传的oss
     previewImage(url)
     const timeEnd: any = new Date()
-    log(`${timeEnd - timeStart}：size ${(file.file?.size || 0) / 1024}`, 'time-upload')
+    log(`${timeEnd - timeStart}：size ${parseInt(file.size / 1024)}`, 'time-upload')
   } catch (error) {
     log(`上传失败`, 'time-upload')
     throw error

@@ -23,7 +23,7 @@ const getInfo = async (userId) => {
             getOrderList()
         }
     } catch (error) {
-        
+
     }
 }
 
@@ -38,7 +38,7 @@ const getOrderList = async () => {
             }
         }
     } catch (error) {
-        
+
     }
 }
 
@@ -53,8 +53,15 @@ const toCrm = async (item) => {
 
 // 获取的企业微信授权初始化jsdk
 const getWxConfig = async () => {
+  try {
     const res = await wx.getCurExternalContact()
     getInfo(res.userId)
+  } catch (error) {
+    setTimeout(async () => {
+      const res = await wx.getCurExternalContact()
+      getInfo(res.userId)
+    }, 1000)
+  }
 }
 
 getWxConfig()

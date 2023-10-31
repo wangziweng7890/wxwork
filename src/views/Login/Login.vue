@@ -62,8 +62,11 @@ function listenerBack() {
         }
     })
 }
-
-!route.query.hasCode ? getWorkCode() : login()
+if (!userStore.getDwpToken || !userStore.getToken) {
+  !route.query.hasCode ? getWorkCode() : login()
+} else {
+  router.replace(decodeURIComponent(route.query.redirect_uri))
+}
 </script>
 
 <template>

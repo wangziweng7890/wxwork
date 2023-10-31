@@ -26,5 +26,5 @@ router.afterEach((to) => {
 
 // 为当前页面设置企微调用权限
 router.afterEach(async (to, from) => {
-	to.meta.jsApiList &&  await agentConfig(to.meta.jsApiList)
+	to.meta.jsApiList && agentConfig(to.meta.jsApiList) // 移除await, 香港那边网络慢，会有空白
 })

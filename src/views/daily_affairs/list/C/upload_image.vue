@@ -6,6 +6,7 @@ import { uploadFile } from '@/utils/crm-oss'
 import { showToast } from 'vant'
 import { log } from '@/log'
 import { h5CompressImage } from '@/utils/imageCompress'
+import { getNetwork } from '@/utils'
 
 const props = defineProps({
   ossService: Object,
@@ -80,7 +81,7 @@ const afteruploader = async (fileObj: any) => {
     const { url }: imageInfo = await uploadFile(file) // 用crm上传,否则后端同步到crm中后,crm中会用不了dwp上传的oss
     previewImage(url)
     const timeEnd: any = new Date()
-    log(`${timeEnd - timeStart}：size ${parseInt(file.size / 1024)}`, 'time-upload')
+    log(`${timeEnd - timeStart}：size ${parseInt(file.size / 1024)} : network ${getNetwork()}`, 'time-upload')
   } catch (error) {
     log(`上传失败` + error.message, 'time-upload')
     throw error

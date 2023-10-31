@@ -9,3 +9,9 @@ export const getSuffixName = (fileUrl: string) => {
     const fileType = fileUrl.substring(startIndex, fileUrl.length)
     return fileType.toLowerCase()
 }
+
+// 获取网络连接类型
+export function getNetwork() {
+  const networkStr = navigator.userAgent.match(/NetType\/\w+/) ? ua.match(/NetType\/\w+/)[0] : 'NetType/other';
+  return networkStr.toLowerCase().replace('nettype/', '');
+}

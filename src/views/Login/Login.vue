@@ -39,10 +39,10 @@ const getWorkCode = async () => {
 const login = async () => {
     try {
         const { data } = await workWechatOauth({ code: route.query.code, agent_id: getAgentid() })
-        userStore.setToken(data.token)
-        userStore.setUserInfo(data.corp_user_info || {})
         const res = await getDwptoken(data.token)
         userStore.setDwpToken(res.data.token)
+        userStore.setToken(data.token)
+        userStore.setUserInfo(data.corp_user_info || {})
         router.replace(decodeURIComponent(route.query.redirect_uri))
     } catch (error) {
         console.error('login-error：', error)

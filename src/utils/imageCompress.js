@@ -4,7 +4,7 @@ import EXIF from 'exif-js';
 export async function h5CompressImage(
   file,
   options = {
-    ratio: 0.8, // 压缩比
+    ratio: 1, // 压缩比
   }
 ) {
   let myResolve;
@@ -45,13 +45,13 @@ export async function h5CompressImage(
     canvas.height = img.height; // 目标尺寸
     let targetWidth = imgWidth;
     let targetHeight = imgHeight; // 满足条件不需要压缩
-    if (isLt2M && imgWidth < 960 && imgHeight < 960) {
+    if (isLt2M) {
       return myResolve({
         preview: src,
         file: base64toFile(src, file),
       }); // 把上传的图片base64转化jpg格式为文件流
-    } // 大于2MB 、img宽高 > 960 则进行压缩
-    if (!isLt2M || imgWidth >= 960 || imgHeight >= 960) {
+    } // 大于2MB
+    if (!isLt2M) {
       // 最大尺寸
       let maxWidth = 960;
       let maxHeight = 960; // 图片尺寸超过 960 X 960 的限制

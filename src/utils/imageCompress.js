@@ -21,12 +21,12 @@ export async function h5CompressImage(
     new Promise(resolve => {
       // 通过 EXIF 获取旋转角度 1 为正常  3 为 180°  6 顺时针90°  9 为 逆时针90°
       EXIF.getData(file, function () {
-        EXIF.getAllTags(this);
+        // EXIF.getAllTags(this);
         Orientation = EXIF.getTag(this, 'Orientation');
         resolve();
       });
     });
-  await getOrientation(); // 确保获取到旋转值
+  // await getOrientation(); // 确保获取到旋转值
   const fileReaderOnload = () =>
     new Promise(resolve => {
       // 文件读取 成功执行
@@ -81,22 +81,22 @@ export async function h5CompressImage(
       isOldiOSVersion = ver?.[1].replace(/_/g, '.') < '13.4'; // 判断ios是否大于13.4
     } // android
     let imgSrc = canvas.toDataURL(file.type, options.ratio || 1);
-    if (isAndroid || isOldiOSVersion) {
-      // 拍照旋转 需矫正图片
-      if (Orientation && +Orientation !== 1) {
-        // 根据获取到的值旋转
-        if (+Orientation == 6) {
-          // 旋转90度
-          imgSrc = await rotateBase64Img(imgSrc, 90, file.type);
-        } else if (+Orientation == 3) {
-          // 旋转180度
-          imgSrc = await rotateBase64Img(imgSrc, 180, file.type);
-        } else if (+Orientation == 8) {
-          // 旋转270度
-          imgSrc = await rotateBase64Img(imgSrc, 270, file.type);
-        }
-      }
-    }
+    // if (isAndroid || isOldiOSVersion) {
+    //   // 拍照旋转 需矫正图片
+    //   if (Orientation && +Orientation !== 1) {
+    //     // 根据获取到的值旋转
+    //     if (+Orientation == 6) {
+    //       // 旋转90度
+    //       imgSrc = await rotateBase64Img(imgSrc, 90, file.type);
+    //     } else if (+Orientation == 3) {
+    //       // 旋转180度
+    //       imgSrc = await rotateBase64Img(imgSrc, 180, file.type);
+    //     } else if (+Orientation == 8) {
+    //       // 旋转270度
+    //       imgSrc = await rotateBase64Img(imgSrc, 270, file.type);
+    //     }
+    //   }
+    // }
     myResolve({
       preview: imgSrc,
       file: base64toFile(imgSrc, file),

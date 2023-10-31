@@ -4,7 +4,7 @@ import EXIF from 'exif-js';
 export async function h5CompressImage(
   file,
   options = {
-    ratio: 1, // 压缩比
+    ratio: 0.6, // 压缩比
   }
 ) {
   let myResolve;
@@ -52,22 +52,23 @@ export async function h5CompressImage(
       }); // 把上传的图片base64转化jpg格式为文件流
     } // 大于2MB
     if (!isLt2M) {
-      // 最大尺寸
-      let maxWidth = 960;
-      let maxHeight = 960; // 图片尺寸超过 960 X 960 的限制
-      if (imgWidth > maxWidth || imgHeight > maxHeight) {
-        if (imgWidth / imgHeight > maxWidth / maxHeight) {
-          // 更宽，按照宽度限定尺寸
-          targetWidth = maxWidth;
-          targetHeight = Math.round(maxWidth * (imgHeight / imgWidth));
-        } else {
-          targetHeight = maxHeight;
-          targetWidth = Math.round(maxHeight * (imgWidth / imgHeight));
-          if (targetWidth < 500) {
-            targetWidth = 500;
-          }
-        }
-      } // canvas对图片进行缩放
+      // // 最大尺寸
+      // let maxWidth = 960;
+      // let maxHeight = 960; // 图片尺寸超过 960 X 960 的限制
+      // if (imgWidth > maxWidth || imgHeight > maxHeight) {
+      //   if (imgWidth / imgHeight > maxWidth / maxHeight) {
+      //     // 更宽，按照宽度限定尺寸
+      //     targetWidth = maxWidth;
+      //     targetHeight = Math.round(maxWidth * (imgHeight / imgWidth));
+      //   } else {
+      //     targetHeight = maxHeight;
+      //     targetWidth = Math.round(maxHeight * (imgWidth / imgHeight));
+      //     if (targetWidth < 500) {
+      //       targetWidth = 500;
+      //     }
+      //   }
+      // }
+      // canvas对图片进行缩放
       canvas.width = targetWidth;
       canvas.height = targetHeight;
       ctx.drawImage(img, 0, 0, targetWidth, targetHeight);

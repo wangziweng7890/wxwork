@@ -17,6 +17,7 @@ export const useUserStore = defineStore('user', {
             token: '',
             userInfo: {},
             dwpToken: '',
+            expired: '',
             workmateList: [],
         }
     },
@@ -32,6 +33,9 @@ export const useUserStore = defineStore('user', {
         },
         getWorkmateList() {
             return this.workmateList
+        },
+        getDwpExpired() {
+          return this.expired
         }
     },
     actions: {
@@ -41,6 +45,9 @@ export const useUserStore = defineStore('user', {
         },
         setDwpToken(token) {
             this.dwpToken = token
+        },
+        setDwpExpired(expired) {
+            this.expired = expired
         },
         // set用户信息
         setUserInfo(data) {

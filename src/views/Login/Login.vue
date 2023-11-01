@@ -13,7 +13,7 @@ import { useUserStore } from '@/stores/modules/user'
 import { getAgentid } from '@/config/app'
 import * as wx from '@wecom/jssdk'
 import { agentConfig } from '@/config/wxconfig'
-
+import dayjs from 'dayjs'
 // 登录流程分为三步
 // 1. 进入当前页面通过重定向的方式获取code
 // 2. 重定向回当前页面在用code调后端接口获取token
@@ -29,7 +29,7 @@ const getWorkCode = async () => {
     const appid = import.meta.env.VITE_APPID
     const agentid = getAgentid()
     const redirect_uri = route.query.redirect_uri
-    const redirectUri = encodeURIComponent(`${import.meta.env.VITE_REDIRECT_URI}/login?redirect_uri=${route.query.redirect_uri}&hasCode=1`)
+    const redirectUri = encodeURIComponent(`${location.origin}/login?redirect_uri=${route.query.redirect_uri}&hasCode=1`)
     const url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirectUri}&response_type=code&scope=snsapi_base&state=STATE&agentid=${agentid}#wechat_redirect`
     listenerBack()
     window.location.replace(url)
@@ -41,6 +41,7 @@ const login = async () => {
         const { data } = await workWechatOauth({ code: route.query.code, agent_id: getAgentid() })
         const res = await getDwptoken(data.token)
         userStore.setDwpToken(res.data.token)
+        userStore.setDwpExpired(res.data.expired)
         userStore.setToken(data.token)
         userStore.setUserInfo(data.corp_user_info || {})
         router.replace(decodeURIComponent(route.query.redirect_uri))
@@ -62,11 +63,14 @@ function listenerBack() {
         }
     })
 }
-if (!userStore.getDwpToken || !userStore.getToken) {
+
+
+if (!userStore.getDwpToken || !userStore.getToken || !userStore.getDwpExpired || dayjs(parseInt(userStore.getDwpExpired + '000')).isBefore(dayjs())) {
   !route.query.hasCode ? getWorkCode() : login()
 } else {
   router.replace(decodeURIComponent(route.query.redirect_uri))
 }
+
 </script>
 
 <template>

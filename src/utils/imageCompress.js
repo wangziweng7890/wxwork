@@ -202,5 +202,8 @@ function base64toFile(dataurl, file) {
   const newFile = new File([u8arr], file.name, {
     type: file.type,
   })
+  if (newFile.size === 0) {
+    return file
+  }
   return newFile.size > file.size ? file : newFile;
 }

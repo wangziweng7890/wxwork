@@ -40,7 +40,8 @@ function requestHook(config, isDwp) {
     // 缓存取token
     const userStore = useUserStore();
     config.headers["App"] = 'galaxy-admin'
-    config.headers["Token"] = config.headers["Token"] || (isDwp ? userStore.getDwpToken : userStore.getToken);
+    const dwpToken = userStore.getDwpToken || JSON.parse(localStorage.getItem('user') || '{}')?.dwpToken
+    config.headers["Token"] = config.headers["Token"] || (isDwp ? dwpToken : userStore.getToken);
     // post，put请求前处理
     if (
         (config.method.toLowerCase() === "post" ||

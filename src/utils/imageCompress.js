@@ -4,20 +4,21 @@ import EXIF from 'exif-js';
 export async function h5CompressImage(
   file
 ) {
-  const type = file.type;
-  let ratio = 0.6
-  if (type >= 5 * 1024 * 1024) {
-    ratio = 0.3
-  } else if (type >= 4 * 1024 * 1024) {
-    ratio = 0.4
-  } else if (type >= 3 * 1024 * 1024) {
-    ratio = 0.5
-  } else if (type >= 2 * 1024 * 1024) {
-    ratio = 0.6
-  } else if (type >= 1 * 1024 * 1024) {
-    ratio = 0.7
+  const size = file.size;
+  let ratio = 0.5
+  if (size >= 5 * 1024 * 1024) {
+    ratio = 0.15
+  } else if (size >= 4 * 1024 * 1024) {
+    ratio = 0.25
+  } else if (size >= 3 * 1024 * 1024) {
+    ratio = 0.35
+  } else if (size >= 2 * 1024 * 1024) {
+    ratio = 0.45
+  } else if (size >= 1 * 1024 * 1024) {
+    ratio = 0.55
   }
 
+  console.log('压缩比：', ratio)
   let myResolve;
   let myReject;
   let fileReader = new FileReader();

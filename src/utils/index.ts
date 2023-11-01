@@ -12,6 +12,6 @@ export const getSuffixName = (fileUrl: string) => {
 
 // 获取网络连接类型
 export function getNetwork() {
-  const networkStr = navigator.userAgent.match(/NetType\/\w+/) ? ua.match(/NetType\/\w+/)[0] : 'NetType/other';
-  return networkStr.toLowerCase().replace('nettype/', '');
+  var connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+  return connection?.effectiveType;
 }

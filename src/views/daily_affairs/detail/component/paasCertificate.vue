@@ -6,9 +6,9 @@
           {{ titleMap[item.relation] }}：{{ item.applicant_name }}
         </div>
         <div class="content">
-          <div class="item" v-for="(it, idx) in item.file_list" :key="idx">
+          <div class="item" v-for="(it, idx) in item.file_list" :key="idx" @click="showPreview(index, idx)">
             <div class="label">{{ it.file_name }}</div>
-            <div class="value" @click="showPreview(index, idx)">查看</div>
+            <div class="value" >查看</div>
           </div>
         </div>
       </div>

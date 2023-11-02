@@ -292,8 +292,9 @@ function openChat(id) {
                 {{ type_list[res.task_status].label }}
               </div>
             </div>
-            <div class="title_manage" :class="{ warning: !res.task_user_name }">
-              接待人：{{ res.task_user_name || t('message.waitDistributed') }}
+            <div class="title_manage" >
+          <div :class="{ warning: !res.task_user_name }">    接待人：{{ res.task_user_name || t('message.waitDistributed') }}</div>
+          <div>{{  t('message.address')}}:{{ res.immigration_office }}</div>
             </div>
             <van-checkbox
               :name="res.id"
@@ -532,8 +533,12 @@ function openChat(id) {
         }
       }
       .title_manage {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         font-size: 26px;
         color: #888f98;
+        padding-right:55px;
       }
       .warning {
         color: #ff5c00;

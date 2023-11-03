@@ -5,7 +5,7 @@
     "scripts": {
         "dev": "vite --mode dev",
         "test": "vite build --mode test",
-        "build": "vite build --mode production",
+        "build": "vite build --mode production && rm -rf production/assets/*.map",
         "preview": "vite preview --mode test",
         "lint": "eslint .",
         "eslint": "eslint . --fix"

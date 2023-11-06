@@ -62,28 +62,31 @@ const getImageUrl = async () => {
   imgUrl.value = src
 }
 
-// 下载图片
 const down = async () => {
   btnLoading.value = true
-  try {
-    const fileName = `二维码${Date.now() * 1}`
-    const blobInfo = await fetch(imgUrl.value)
-    const blob = await blobInfo.blob()
-    // 创建一个临时链接
-    const url = window.URL.createObjectURL(blob)
-    // 创建一个隐藏的 <a> 标签并设置其属性
-    const link = document.createElement('a')
-    link.href = url
-    link.download = fileName
-    // 模拟点击下载链接
-    link.click()
-    // 释放临时链接的资源
-    window.URL.revokeObjectURL(url)
-    btnLoading.value = false
-  } catch (error) {
-    showToast('下载失败!')
-    btnLoading.value = false
-  }
+  // try {
+  const fileName = `二维码${Date.now() * 1}`
+  // const blobInfo = await fetch(imgUrl.value)
+  // const blob = await blobInfo.blob()
+  // // 创建一个临时链接
+  // const url = window.URL.createObjectURL(blob)
+  // // 创建一个隐藏的 <a> 标签并设置其属性
+  // const link = document.createElement('a')
+  // link.href = url
+  // link.download = fileName
+  // // 模拟点击下载链接
+  // link.click()
+  // // 释放临时链接的资源
+  // window.URL.revokeObjectURL(url)
+  wx.openDefaultBrowser({
+    url: imgUrl.value + '&action=download'
+  })
+
+  btnLoading.value = false
+  // } catch (error) {
+  //   showToast('下载失败!')
+  //   btnLoading.value = false
+  // }
 }
 
 // 图片复制

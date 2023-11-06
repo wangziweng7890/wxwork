@@ -136,3 +136,4 @@ function createHttp(baseURL, isDwp) {
 export default createHttp(import.meta.env.VITE_API_BASEPATH);  // 仅仅用来授权
 
 export const http = createHttp(import.meta.env.VITE_DWP_URL, true); // 用来业务
+export const crmHttp = createHttp(import.meta.env.VITE_CRM_URL); // 用来业务

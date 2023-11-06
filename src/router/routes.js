@@ -50,18 +50,27 @@ export default [
         component: () => import("@/views/daily_affairs/detail/detail.vue"),
         meta: {
           title: "客户信息",
-           jsApiList: ["previewFile", "openDefaultBrowser"],
+          jsApiList: ["previewFile", "openDefaultBrowser"],
         },
       },
       {
         path: 'serch_list',
         name: 'serch_list',
-        component:() => import("@/views/daily_affairs/list/serch_list.vue"),
+        component: () => import("@/views/daily_affairs/list/serch_list.vue"),
         title: "客户信息",
         meta: {
-            jsApiList: ['shareAppMessage', 'openEnterpriseChat'],
+          jsApiList: ['shareAppMessage', 'openEnterpriseChat'],
         },
-    }
+      }
     ],
+  },
+  {
+    path: "/reintroduce_code",
+    name: "ReintroduceCode",
+    component: () => import("@/views/ReintroduceCode/ReintroduceCode.vue"),
+    meta: {
+      title: "转介绍二维码",
+      jsApiList: ["sendChatMessage", "getCurExternalContact", "previewImage"],
+    },
   },
 ];

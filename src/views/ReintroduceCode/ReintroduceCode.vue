@@ -15,48 +15,36 @@ const btnLoading = ref(false)
 const IS_MOBILE = isMobile()
 
 // 获取客户信息
-const getCodeInfo = async (userId) => {
+const getUserInfo = async (userId) => {
+  const { data } = await getReintroduceInfo({
+    wecom_external_user_id: userId || ''
+  })
+  imgData.value = data || {}
   getImageUrl()
-  // try {
-  //   const { code, data } = await getReintroduceInfo({
-  //     wecom_external_user_id: userId || ''
-  //   })
-  //   console.log(code, data, 'res============')
-  //   if (code === 200) {
-  //   }
-  // } catch (error) {}
 }
 
-// 获取的企业微信授权初始化jsdk
-const getWxConfig = async () => {
+// 获取外部联系人
+const getExternalInfo = async () => {
   try {
     const res = await wx.getCurExternalContact()
-    getCodeInfo(res.userId)
+    getUserInfo(res.userId)
   } catch (error) {
     setTimeout(async () => {
       const res = await wx.getCurExternalContact()
-      getCodeInfo(res.userId)
+      getUserInfo(res.userId)
     }, 1000)
   }
 }
 
 // 生成图片
 const getImageUrl = async () => {
-  const data = {
-    avatar_url:
-      'https://upload.cdn.galaxy-immi.com/crm/test/files/_1681956828984.jpg',
-    nickname: '',
-    evaluation_wx_url:
-      'https://upload.cdn.galaxy-immi.com/wechat/questionnaire/customer/551118-1239.png',
-    counselor_name: 'baiyu2'
-  }
   const {
     avatar_url = '',
     nickname = '',
     evaluation_wx_url: url,
     counselor_name = '',
     big_code = ''
-  } = data
+  } = imgData.value
   const defaultSrc =
     import.meta.env.VITE_APP_ENV === 'production'
       ? 'https://picture-create.galaxy-immi.com'
@@ -111,16 +99,13 @@ const copyImage = () => {
   }
 }
 
-getWxConfig()
+getExternalInfo()
 </script>
 
 <template>
   <div class="img-wrap">
-    <span v-if="IS_MOBILE" class="text">请长按图片进行操作</span>
     <van-image
-      class="img"
       :src="imgUrl"
-      @dblclick="copyImage"
       id="my-image"
       @load="btnShow = true"
       @error="btnShow = false"
@@ -130,14 +115,18 @@ getWxConfig()
       </template>
       <template v-slot:error>加载失败</template>
     </van-image>
-    <van-button
-      v-if="btnShow && !IS_MOBILE"
-      type="primary"
-      :loading="btnLoading"
-      loading-text="下载中..."
-      @click="down('down')"
-      >二维码下载</van-button
-    >
+    <div v-if="btnShow && !IS_MOBILE">
+      <van-button type="primary" @click="copyImage">复 制</van-button>
+      <van-button
+        type="primary"
+        :loading="btnLoading"
+        loading-text="下载中..."
+        @click="down('down')"
+        >下 载</van-button
+      >
+    </div>
+
+    <span v-if="IS_MOBILE" class="text">请长按图片进行操作</span>
   </div>
 </template>
 
@@ -149,16 +138,19 @@ getWxConfig()
   align-items: center;
   flex-direction: column;
   .text {
-    margin-bottom: 16px;
     color: #666;
+    font-size: 16px;
   }
-  .img {
+  #my-image {
     width: 650px;
     height: 1072px;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
   }
   .van-button {
-    width: 300px;
+    width: 288px;
+    + .van-button {
+      margin-left: 32px;
+    }
   }
 }
 </style>

@@ -1,6 +1,6 @@
 
-import { crmHttp } from '@/utils/request'
+import http from '@/utils/request'
 
 // 转介绍码信息
-export const getReintroduceInfo = params => crmHttp.get(`/presale/evaluation-url/wx-detail`, { params })
+export const getReintroduceInfo = params => http.get(`/frontend/education/mini-code`, { params })
 

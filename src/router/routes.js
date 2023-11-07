@@ -70,7 +70,7 @@ export default [
     component: () => import("@/views/ReintroduceCode/ReintroduceCode.vue"),
     meta: {
       title: "转介绍二维码",
-      jsApiList: ["sendChatMessage", "getCurExternalContact", "openDefaultBrowser"],
+      jsApiList: ["sendChatMessage", "getCurExternalContact",],
     },
   },
 ];

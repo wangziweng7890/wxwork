@@ -126,7 +126,7 @@ getExternalInfo()
       >
     </div>
 
-    <span v-if="IS_MOBILE" class="text">请长按图片进行操作</span>
+    <span v-if="IS_MOBILE" class="text">长按图片进行操作</span>
   </div>
 </template>
 
@@ -139,7 +139,7 @@ getExternalInfo()
   flex-direction: column;
   .text {
     color: #666;
-    font-size: 16px;
+    font-size: 30px;
   }
   #my-image {
     width: 650px;

@@ -16,11 +16,16 @@ const IS_MOBILE = isMobile()
 
 // 获取客户信息
 const getUserInfo = async (userId) => {
-  const { data } = await getReintroduceInfo({
-    wecom_external_user_id: userId || ''
-  })
-  imgData.value = data || {}
-  getImageUrl()
+  try {
+    const { data } = await getReintroduceInfo({
+      wecom_external_user_id: userId || ''
+    })
+    imgData.value = data || {}
+    getImageUrl()
+  } catch (error) {
+    // 获取客户信息失败，赋值错误链接
+    imgUrl.value = '/'
+  }
 }
 
 // 获取外部联系人
@@ -113,7 +118,12 @@ getExternalInfo()
       <template #loading>
         <van-loading type="spinner" size="20" />
       </template>
-      <template v-slot:error>加载失败</template>
+      <template v-slot:error>
+        <i
+          class="van-badge__wrapper van-icon van-icon-photo-fail van-image__error-icon"
+        />
+        测评码生成失败
+      </template>
     </van-image>
     <div v-if="btnShow && !IS_MOBILE">
       <van-button type="primary" @click="copyImage">复 制</van-button>
@@ -151,6 +161,9 @@ getExternalInfo()
     + .van-button {
       margin-left: 32px;
     }
+  }
+  .van-icon-photo-fail {
+    font-size: 220px;
   }
 }
 </style>

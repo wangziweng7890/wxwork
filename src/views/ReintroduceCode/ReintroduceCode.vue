@@ -136,7 +136,7 @@ getExternalInfo()
       >
     </div>
 
-    <span v-if="IS_MOBILE" class="text">长按图片进行操作</span>
+    <span v-if="IS_MOBILE && btnShow" class="text">长按图片进行操作</span>
   </div>
 </template>
 

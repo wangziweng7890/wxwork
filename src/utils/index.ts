@@ -15,3 +15,23 @@ export function getNetwork() {
   var connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
   return connection?.effectiveType;
 }
+
+// 判断是否移动端
+export function isMobile() {
+  const userAgent = window.navigator.userAgent
+  if (
+    userAgent.match(/Android/i) ||
+    userAgent.match(/webOS/i) ||
+    userAgent.match(/iPhone/i) ||
+    userAgent.match(/iPad/i) ||
+    userAgent.match(/iPod/i) ||
+    userAgent.match(/BlackBerry/i) ||
+    userAgent.match(/Windows Phone/i)
+  ) {
+    // 移动端
+    return true
+  } else {
+    // PC端
+    return false
+  }
+}

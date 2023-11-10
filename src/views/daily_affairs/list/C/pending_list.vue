@@ -837,6 +837,13 @@ const onCollapseChange = (e) => {
   padding: 120px 28px;
 }
 :deep(.historyDemand .row .content) {
-  padding-bottom: 0;
+  padding-bottom: 0 !important;
+  flex: 1;
+
+  .demand {
+    margin-left: -45px;
+    word-break: break-all;
+  }
+
 }
 </style>

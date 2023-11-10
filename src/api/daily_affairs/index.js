@@ -56,3 +56,6 @@ export const getRole = () => api.get('/api/customer-service/transaction/get-role
 // 能否识别收据
 export const getRecognition = (params) => api.get('/api/customer-service/transaction/recognition', { params })
 
+// 获取详情 没有loading
+export const getDetailList = (params) => api.get(`/api/customer-service/transaction/customer-info`, { params, hideLoading: true, hideError: true });
+

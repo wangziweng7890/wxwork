@@ -15,7 +15,7 @@ const fold = ref(null)
 // 下一天的loading
 const next_loading = ref(false)
 // 折叠面板
-const collArray = ref(['1'])
+const collArray = ref([])
 // 上传详情id
 const uploaderId = ref(0)
 
@@ -28,8 +28,7 @@ const props = defineProps<{
 const emit = defineEmits(['update:listData'])
 const list = computed({
   get: () => {
-    console.log('改变')
-    collArray.value = ['1']
+    onCollapseChange(collArray.value)
     return props.listData
   },
   set: (value) => {
@@ -98,7 +97,7 @@ const submitMessage = (res: any, index: number, type: string) => {
       if (rel.code === 200) {
         res.message = ''
         showToast('保存意向需求成功')
-        onGetHistoryList(res.id, index)
+        onGetHistoryList(res.id)
       }
     })
   } else {
@@ -258,25 +257,29 @@ function openChat(id) {
         console.log(err)
       })
 }
-async function onGetHistoryList(id, index) {
+async function onGetHistoryList(id) {
   const res = (await getDetailList({
     id,
     chinese_convert: locale.value === 'HK' ? 1 : 0
   })) as any
+  console.log(res,'-=-=-=-=-')
   if (res.code === 200) {
     const demand = res.data.tag_info.demand[0]
       ? [{ ...res.data.tag_info.demand[0] }]
       : []
-    list.value[index].demand = demand
+      const obj = list.value.find(item => item.id === id)
+      obj.demand = demand
   }
 }
-const onCollapseChange = (e) => {
-  if (e.length >= 2) {
-    const index = e.at(-1) - 1 || 0
-    const id = list.value[index].id || ''
-    onGetHistoryList(id, index)
-  }
+const onCollapseChange = async (arr) => {
+  await nextTick()
+  arr.forEach(id => {
+    const obj = list.value.find(item => item.id === id)
+    if (!obj || obj.demand) return
+    onGetHistoryList(id)
+  });
 }
+
 </script>
 <template>
   <div class="pending_list" v-if="props.listData && props.listData.length">
@@ -287,7 +290,7 @@ const onCollapseChange = (e) => {
       @change="onCollapseChange"
     >
       <van-collapse-item
-        :name="collIndex + 1"
+        :name="res.id"
         v-for="(res, collIndex) in list"
         :key="res.id"
         class="fold_item"

@@ -2,11 +2,12 @@
 import { showToast } from 'vant'
 import uploaderPopup from './uploader_popup.vue'
 import Tag from '@/components/tag/tag.vue'
-import { saveDemand } from '@/api/daily_affairs'
+import { saveDemand, getDetailList } from '@/api/daily_affairs'
 import WorkerPopup from './worker_popup.vue'
 import * as wx from '@wecom/jssdk'
+import HistoryDemand from '@/components/HistoryDemand/HistoryDemand.vue'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 // import HistoryDemand from '@/components/historyDemand/historyDemand.vue'
 const router = useRouter()
 // 获取DOM值
@@ -26,7 +27,11 @@ const props = defineProps<{
 
 const emit = defineEmits(['update:listData'])
 const list = computed({
-  get: () => props.listData,
+  get: () => {
+    console.log('改变')
+    collArray.value = ['1']
+    return props.listData
+  },
   set: (value) => {
     emit('update:listData', value)
   }
@@ -80,11 +85,11 @@ onUnmounted(() => {
 })
 
 // 保存或者清除
-const submitMessage = (res?: any, index?: number) => {
+const submitMessage = (res: any, index: number, type: string) => {
   if (!res.message) {
     return false
   }
-  if (index === undefined) {
+  if (type === 'save') {
     // 提交
     saveDemand({
       content: res.message,
@@ -93,6 +98,7 @@ const submitMessage = (res?: any, index?: number) => {
       if (rel.code === 200) {
         res.message = ''
         showToast('保存意向需求成功')
+        onGetHistoryList(res.id, index)
       }
     })
   } else {
@@ -252,10 +258,34 @@ function openChat(id) {
         console.log(err)
       })
 }
+async function onGetHistoryList(id, index) {
+  const res = (await getDetailList({
+    id,
+    chinese_convert: locale.value === 'HK' ? 1 : 0
+  })) as any
+  if (res.code === 200) {
+    const demand = res.data.tag_info.demand[0]
+      ? [{ ...res.data.tag_info.demand[0] }]
+      : []
+    list.value[index].demand = demand
+  }
+}
+const onCollapseChange = (e) => {
+  if (e.length >= 2) {
+    const index = e.at(-1) - 1 || 0
+    const id = list.value[index].id || ''
+    onGetHistoryList(id, index)
+  }
+}
 </script>
 <template>
   <div class="pending_list" v-if="props.listData && props.listData.length">
-    <van-collapse v-model="collArray" class="fold" ref="fold">
+    <van-collapse
+      v-model="collArray"
+      class="fold"
+      ref="fold"
+      @change="onCollapseChange"
+    >
       <van-collapse-item
         :name="collIndex + 1"
         v-for="(res, collIndex) in list"
@@ -292,9 +322,11 @@ function openChat(id) {
                 {{ type_list[res.task_status].label }}
               </div>
             </div>
-            <div class="title_manage" >
-          <div :class="{ warning: !res.task_user_name }">    接待人：{{ res.task_user_name || t('message.waitDistributed') }}</div>
-          <div>{{  t('message.address')}}:{{ res.immigration_office }}</div>
+            <div class="title_manage">
+              <div :class="{ warning: !res.task_user_name }">
+                接待人：{{ res.task_user_name || t('message.waitDistributed') }}
+              </div>
+              <div>{{ t('message.address') }}:{{ res.immigration_office }}</div>
             </div>
             <van-checkbox
               :name="res.id"
@@ -421,11 +453,25 @@ function openChat(id) {
                 :placeholder="t('message.pleaseRemark')"
               />
               <div class="buttones" :class="{ default: !res.message }">
-                <span class="cencel" @click="submitMessage(res, collIndex)">
+                <span
+                  class="cencel"
+                  @click="submitMessage(res, collIndex, 'cencel')"
+                >
                   取消
                 </span>
-                <span class="save" @click="submitMessage(res)"> 保存 </span>
+                <span
+                  class="save"
+                  @click="submitMessage(res, collIndex, 'save')"
+                >
+                  保存
+                </span>
               </div>
+            </div>
+            <div style="margin-top: 25px">
+              <HistoryDemand
+                v-if="res.demand && res.demand.length > 0"
+                :demand="res.demand"
+              ></HistoryDemand>
             </div>
           </div>
           <div class="fold_item_content_action block">
@@ -470,35 +516,43 @@ function openChat(id) {
   vertical-align: baseline;
   color: #9b9b9b;
 }
+
 .pending_list {
   background: #f8f8f8;
   flex: 1;
   overflow-y: auto;
+
   .fold {
     &_item {
       margin: 32px;
       border-radius: 20px;
       overflow: hidden;
+
       :deep(.van-collapse-item__title) {
         padding: 32px;
       }
+
       .title_box {
         display: flex;
         // justify-content: space-between;
         align-items: center;
         font-size: 32px;
+
         div {
           margin-right: 16px;
           font-weight: 500;
         }
+
         &_left {
           display: flex;
+
           .time {
             // padding-right: 16px;
             margin-right: 0;
             position: relative;
           }
         }
+
         &_name {
           max-width: 190px;
           color: #198cff;
@@ -508,6 +562,7 @@ function openChat(id) {
           overflow: hidden;
           word-break: break-all;
           white-space: nowrap;
+
           &::after,
           &::before {
             content: '';
@@ -519,10 +574,12 @@ function openChat(id) {
             height: 24px;
             background: #e1e1e1;
           }
+
           &::before {
             left: 0;
           }
         }
+
         &_type {
           font-size: 22px;
           padding: 0 8px;
@@ -532,55 +589,68 @@ function openChat(id) {
           // background: rgba(62, 205, 195, 0.08);
         }
       }
+
       .title_manage {
         display: flex;
         align-items: center;
         justify-content: space-between;
         font-size: 26px;
         color: #888f98;
-        padding-right:55px;
+        padding-right: 55px;
       }
+
       .warning {
         color: #ff5c00;
       }
+
       :deep(.van-collapse-item__content) {
         padding: 42px 36px;
       }
+
       &_content {
         color: #222222;
         font-size: 30px;
+
         .block {
           padding: 42px 0;
           border-bottom: 1px solid #f0f0f0;
+
           &:last-of-type {
             border-bottom: none;
             padding-bottom: 0;
           }
+
           &:first-of-type {
             padding-top: 0;
           }
         }
+
         &_message {
           background: #f8f9fb;
           border-radius: 12px;
           padding: 32px 0;
           font-size: 26px;
+
           .info {
             padding: 0 28px;
             display: flex;
             justify-content: space-between;
             margin-bottom: 32px;
+
             span {
               color: #888f98;
             }
+
             .service_phone {
               color: #198cff;
+
               a {
                 color: #198cff;
                 display: flex;
                 height: 36px;
                 align-items: center;
               }
+
               .iconfont {
                 margin-left: 16px;
                 font-size: 36px;
@@ -590,10 +660,12 @@ function openChat(id) {
             &_block {
               max-width: 422px;
             }
+
             .d-flex {
               justify-content: flex-end;
               align-items: center;
               margin-top: 8px;
+
               span {
                 display: block;
                 margin-left: 12px;
@@ -604,26 +676,31 @@ function openChat(id) {
                 color: #198cff;
                 background: rgba(25, 140, 255, 0.08);
               }
+
               .used_name {
                 color: #9060f6;
                 background: rgba(144, 96, 246, 0.08);
               }
+
               .break_married {
                 color: #757c86;
                 background: rgba(136, 143, 152, 0.08);
               }
             }
+
             .user_list_name {
               display: flex;
               justify-content: flex-end;
             }
           }
+
           .transmit {
             border-top: 1px solid #f0f0f0;
             font-size: 26px;
             display: flex;
             justify-content: flex-end;
             padding: 24px 28px 0 0;
+
             &_button {
               width: 142px;
               height: 60px;
@@ -634,11 +711,13 @@ function openChat(id) {
             }
           }
         }
+
         &_servise {
           .tages {
             padding-top: 24px;
           }
         }
+
         &_action {
           .upload {
             margin-top: 24px;
@@ -649,12 +728,14 @@ function openChat(id) {
             border: 1px dashed #4388ff;
             background: #fff;
             font-size: 28px;
+
             .iconfont {
               font-size: 32px;
               margin-right: 8px;
             }
           }
         }
+
         &_text {
           .histroy {
             span {
@@ -664,22 +745,27 @@ function openChat(id) {
               }
             }
           }
+
           .content {
             margin-top: 24px;
+
             .van-field {
               background: #f8f9fb;
               border-top-right-radius: 12px;
               border-top-left-radius: 12px;
               padding: 24px 28px;
             }
+
             border-radius: 12px;
             background: #f8f9fb;
+
             .buttones {
               padding: 16px 0;
               text-align: right;
               font-size: 24px;
               display: flex;
               justify-content: flex-end;
+
               span {
                 margin-right: 16px;
                 width: 112px;
@@ -691,11 +777,13 @@ function openChat(id) {
                 align-items: center;
                 color: #222222;
               }
+
               .save {
                 background: #198cff;
                 color: #fff;
               }
             }
+
             .default {
               span {
                 opacity: 0.3;
@@ -706,38 +794,49 @@ function openChat(id) {
         }
       }
     }
+
     .hiddenIcon {
       :deep(.van-cell__right-icon) {
         display: none;
       }
+
       .title {
         position: relative;
+
         .van-checkbox {
           position: absolute;
           right: 0;
           top: 50%;
           transform: translateY(-50%);
+
           :deep(.van-icon) {
             font-size: 28px;
           }
         }
       }
     }
+
     &::after {
       border-width: 0;
     }
   }
+
   &_loadingText {
     text-align: center;
     padding-top: 20px;
   }
 }
+
 .not_data {
   font-size: 28px;
   padding-top: 50px;
   color: #999;
 }
+
 .history_demand {
   padding: 120px 28px;
+}
+:deep(.historyDemand .row .content) {
+  padding-bottom: 0;
 }
 </style>

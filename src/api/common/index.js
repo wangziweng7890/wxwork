@@ -36,6 +36,9 @@ export const workWechatOauth = params => api.get(`/frontend/work-wechat/oauth`, 
 // 获取签名
 export const getWorkWechatConfig = params => api.get(`/frontend/work-wechat/config`, { params })
 
+// JS-SDK 获取签名
+export const getSdkSignature= params => api.get(`/frontend/work-wechat/jsapi-auth`, { params })
+
 // 后端中转上传
 export const uploadFile = params => {
   const formData = new FormData();

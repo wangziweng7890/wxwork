@@ -8,6 +8,14 @@
  */
 export default [
   {
+    // 该页面进行中转，直接使用默认浏览器打开目标页面
+    path: "/redirect_browser",
+    component: () => import("@/views/RedirectToBrowser/RedirectToBrowser.vue"),
+    meta: {
+      title: "跳转浏览器",
+    },
+  },
+  {
     path: "/",
     component: () => import("@/views/Login/Login.vue"),
   },

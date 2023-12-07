@@ -1,5 +1,5 @@
 <script setup>
-import { getReintroduceInfo } from '@/api/reintroduce_code'
+import { getReintroduceInfo, getUserRoleCheck } from '@/api/reintroduce_code'
 import { ref } from 'vue'
 import * as wx from '@wecom/jssdk'
 import { showToast } from 'vant'
@@ -17,15 +17,20 @@ const btnLoading = ref(false)
 const showTips = ref(false)
 const IS_MOBILE = isMobile()
 
+const pureIcon = ref(new URL(`@/assets/pure.png`, import.meta.url))
+const enjoyIcon = ref(new URL(`@/assets/enjoy.png`, import.meta.url))
+
 const images = computed(() => {
   return [
     {
-      text: '纯净版(可点击箭头切换)',
+      // text: '纯净版(可点击箭头切换)',
+      icon: pureIcon.value,
       imgUrl: imgPureUrl.value,
       id: 'imgUrl'
     },
     {
-      text: '尊享版(可点击箭头切换)',
+      // text: '尊享版(可点击箭头切换)',
+      icon: enjoyIcon.value,
       imgUrl: imgUrl.value,
       id: 'imgPureUrl'
     }
@@ -53,9 +58,9 @@ const getUserInfo = async (userId) => {
 }
 
 // 文案
-function getTipsInfo() {
-  // showTips.value = true;
-  console.log('预留调是否展示文案接口')
+const getTipsInfo = async () => {
+  const { data } = await getUserRoleCheck()
+  showTips.value = data
 }
 
 // 获取外部联系人
@@ -63,11 +68,12 @@ const getExternalInfo = async () => {
   try {
     const res = await wx.getCurExternalContact()
     getUserInfo(res.userId)
+    getTipsInfo()
   } catch (error) {
     setTimeout(async () => {
       const res = await wx.getCurExternalContact()
-      getUserInfo(res.userId)
       getTipsInfo()
+      getUserInfo(res.userId)
     }, 1000)
   }
 }
@@ -86,7 +92,7 @@ const getImageUrl = async () => {
       ? 'https://picture-create.galaxy-immi.com'
       : 'https://test-picture-create.galaxy-immi.com'
   const src = `${defaultSrc}/ps/recommend-api?avatar_url=${avatar_url}&counselor_name=${counselor_name}&evaluation_wx_url=${url}&nickname=${nickname}&big_code=${big_code}`
-  const pureSrc = `${defaultSrc}/ps/recommend-api?avatar_url=${avatar_url}&counselor_name=&evaluation_wx_url=${url}&nickname=${nickname}&big_code=${big_code}&isPure=1`
+  const pureSrc = src + '&isPure=1'
   imgUrl.value = src
   imgPureUrl.value = pureSrc
 }
@@ -158,12 +164,17 @@ init()
 <template>
   <div class="img-wrap">
     <p class="tips" v-if="showTips">
-      您的企微关联CRM账号并非顾问、客户经理相关角色，线索可能无法由您主动分配！
+      您的企微关联CRM账号并非顾问、客户经理相关角色，线索将由系统分配！
     </p>
     <div class="swipe">
       <div class="swipe-wrap" :style="{ transform: swipeTransform }">
         <div class="swipe-item" v-for="(image, index) in images" :key="image">
-          <p class="swipe-item-title">{{ image.text }}</p>
+          <!-- <p class="swipe-item-title">{{ image.text }}</p> -->
+          <van-image
+            :src="image.icon"
+            class="swipe-icon"
+            v-if="btnArrShow[index]"
+          ></van-image>
           <van-image
             :src="image.imgUrl"
             :id="image.id"
@@ -209,6 +220,11 @@ init()
 .img-wrap {
   min-height: 100vh;
   overflow-x: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 20px 0;
   .tips {
     color: red;
     line-height: 34px;
@@ -237,9 +253,18 @@ init()
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      position: relative;
       .swipe-item-title {
         font-size: 30px;
         margin-bottom: 12px;
+      }
+      .swipe-icon {
+        position: absolute;
+        width: 120px;
+        height: 40px;
+        top: 190px;
+        left: calc(50% - 60px);
+        z-index: 22;
       }
     }
     .swipe-arrow {

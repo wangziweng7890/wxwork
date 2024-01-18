@@ -24,7 +24,7 @@ const images = computed(() => {
   return [
     {
       // text: '纯净版(可点击箭头切换)',
-      icon: pureIcon.value,
+      icon: '', // pureIcon.value,
       imgUrl: imgPureUrl.value,
       id: 'imgUrl'
     },
@@ -173,7 +173,7 @@ init()
           <van-image
             :src="image.icon"
             class="swipe-icon"
-            v-if="btnArrShow[index]"
+            v-if="btnArrShow[index] && image.icon"
           ></van-image>
           <van-image
             :src="image.imgUrl"
@@ -218,83 +218,82 @@ init()
 
 <style scoped lang="less">
 .img-wrap {
-  min-height: 100vh;
-  overflow-x: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  padding: 20px 0;
-  .tips {
-    color: red;
-    line-height: 34px;
-    width: 300px;
-    font-size: 30px;
-    width: 85vw;
-    margin-bottom: 20px;
-  }
-  .text {
-    color: #666;
-    font-size: 30px;
-  }
-  .swipe {
-    position: relative;
-    overflow: hidden;
-    width: 100vw;
-    .swipe-wrap {
-      width: 100vw;
-      display: flex;
-      transition: all 0.5s;
-    }
-    .swipe-item {
-      width: 100vw;
-      flex-shrink: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      .swipe-item-title {
+    min-height: 100vh;
+    overflow-x: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 20px 0;
+    .tips {
+        color: red;
+        line-height: 34px;
         font-size: 30px;
-        margin-bottom: 12px;
-      }
-      .swipe-icon {
-        position: absolute;
-        width: 120px;
-        height: 40px;
-        top: 190px;
-        left: calc(50% - 60px);
-        z-index: 22;
-      }
+        width: 85vw;
+        margin-bottom: 20px;
     }
-    .swipe-arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      color: white;
-      background-color: rgba(31, 45, 61, 0.11);
-      border-radius: 50%;
-      padding: 6px;
-      cursor: pointer;
-      z-index: 2;
+    .text {
+        color: #666;
+        font-size: 30px;
     }
-    .van-icon-arrow-left {
-      left: 8px;
+    .swipe {
+        position: relative;
+        overflow: hidden;
+        width: 100vw;
+        .swipe-wrap {
+            width: 100vw;
+            display: flex;
+            transition: all 0.5s;
+        }
+        .swipe-item {
+            width: 100vw;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            .swipe-item-title {
+                font-size: 30px;
+                margin-bottom: 12px;
+            }
+            .swipe-icon {
+                position: absolute;
+                width: 120px;
+                height: 40px;
+                top: 190px;
+                left: calc(50% - 60px);
+                z-index: 22;
+            }
+        }
+        .swipe-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            background-color: rgb(31 45 61 / 11%);
+            border-radius: 50%;
+            padding: 6px;
+            cursor: pointer;
+            z-index: 2;
+        }
+        .van-icon-arrow-left {
+            left: 8px;
+        }
+        .van-icon-arrow {
+            right: 8px;
+        }
     }
-    .van-icon-arrow {
-      right: 8px;
+    .my-image {
+        width: 650px;
+        height: 1072px;
+        margin-bottom: 20px;
     }
-  }
-  .my-image {
-    width: 650px;
-    height: 1072px;
-    margin-bottom: 20px;
-  }
-  .van-button {
-    width: 288px;
-    + .van-button {
-      margin-left: 32px;
+    .van-button {
+        width: 288px;
+        + .van-button {
+            margin-left: 32px;
+        }
     }
-  }
 }
 </style>

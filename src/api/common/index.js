@@ -9,6 +9,7 @@
 import api from '@/utils/request'
 import { http } from '@/utils/request'
 import { useUserStore } from "@/stores/modules/user";
+import fileService from "@/utils/fileService";
 
 // 获取oss /common/sts-credential
 export const getOssConfig = params => http.get(`/common/sts-credential`, { params })
@@ -20,7 +21,8 @@ export const getOssConfig = params => http.get(`/common/sts-credential`, { param
 // }
 
 // 私有化预览
-export const previewOss = params => http.get(`/service-acceleration/push/storage/grant`, { params }).then(res => res.data.url)
+// export const previewOss = params => http.get(`/service-acceleration/push/storage/grant`, { params }).then(res => res.data.url)
+export const previewOss = params => fileService.getOssFilePublicUrlAsync(params.object)
 
 // 换取dwptoken
 export const getDwptoken = token => {

@@ -82,6 +82,9 @@ devDependencies:
   '@antfu/eslint-config':
     specifier: ^0.25.2
     version: 0.25.2(eslint@8.40.0)(typescript@4.7.4)
+  '@galaxy-fe/utils':
+    specifier: ^1.0.12
+    version: 1.0.12
   '@galaxy-fe/vite-plugin-unocss-iconfont':
     specifier: ^1.2.1
     version: 1.2.1(vite@4.3.8)
@@ -809,6 +812,10 @@ packages:
   /@eslint/js@8.40.0:
     resolution: {integrity: sha512-ElyB54bJIhXQYVKjDSvCkPO1iU1tSAeVQJbllWJq1XQSmmA4dgFk8CbiBGpiOPxleE48vDogxCtmMYku4HSVLA==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+    dev: true
+
+  /@galaxy-fe/utils@1.0.12:
+    resolution: {integrity: sha512-STyCJbxiRjttwIJGOq7O1mzRonwQf8a9EnpYOMFRvlMjX7vJ/gtZDWSO/F/+jvj78bL0EesbsBPsZkN50k79Lg==}
     dev: true
 
   /@galaxy-fe/vite-plugin-unocss-iconfont@1.2.1(vite@4.3.8):

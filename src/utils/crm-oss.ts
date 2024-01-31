@@ -1,6 +1,7 @@
 import { jsonp } from 'vue-jsonp'
 import OSS from 'ali-oss'
 import cryptoAES from './cryptoAES'
+import fileService from '@/utils/fileService'
 
 let oss = null
 // 获取oss示例
@@ -44,13 +45,15 @@ export const createStorePath = (file) => {
 
 // 上传
 export async function uploadFile(file) {
-    const ossClient = await fetchOss()
-    const storeAs = createStorePath(file)
-    return ossClient.multipartUpload(storeAs, file).then(async (res) => {
-        return { ...res, oriName: file.name, type: file.type, url: getPreviewUrl(res.name) }
-    })
+    // const ossClient = await fetchOss()
+    // const storeAs = createStorePath(file)
+    // return ossClient.multipartUpload(storeAs, file).then(async (res) => {
+    //     return { ...res, oriName: file.name, type: file.type, url: getPreviewUrl(res.name) }
+    // })
+    const url = await fileService.publicUploadFile(file)
+    return { oriName: file.name, type: file.type, url}
 }
 
-export function getPreviewUrl(name) {
-  return `${import.meta.env.VITE_OSS_BASE_URL}${name}`
-}
+// export function getPreviewUrl(name) {
+//   return `${import.meta.env.VITE_OSS_BASE_URL}${name}`
+// }

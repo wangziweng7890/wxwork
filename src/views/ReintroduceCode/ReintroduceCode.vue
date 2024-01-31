@@ -4,6 +4,7 @@ import { ref } from 'vue'
 import * as wx from '@wecom/jssdk'
 import { showToast } from 'vant'
 import { isMobile } from '@/utils/index'
+import fileService from '@/utils/fileService'
 
 // 尊享版url
 const imgUrl = ref('')
